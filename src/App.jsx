@@ -141,9 +141,7 @@ function App() {
           ))}
         </Fade>
         <div className="catch-phrase">
-          <h2>
-            I design and develop experiences that make peoples lives simple
-          </h2>
+          <h2>I develop experiences that make peoples lives simple</h2>
         </div>
       </header>
       <PortfolioSection portfolioItems={portfolioItems} />
