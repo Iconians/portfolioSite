@@ -1,7 +1,7 @@
 import React from "react";
 import "./PortfolioSection.css";
 
-const PortfolioSection = ({ portfolioItems }) => {
+const PortfolioSection = ({ portfolioItems, modal }) => {
   return (
     <div className="portfolio-wrapper">
       {portfolioItems.map((item) => (
@@ -9,7 +9,7 @@ const PortfolioSection = ({ portfolioItems }) => {
           <div className="img-wrapper">
             <img src={item.img} alt={item.caption} />
           </div>
-          <div className="card-popup-box">
+          <div className="card-popup-box" id={item.id} onClick={modal}>
             <div>{item.category}</div>
             <h3>{item.caption}</h3>
           </div>

@@ -1,0 +1,26 @@
+.modal-wrapper {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  padding: 1rem;
+  visibility: hidden;
+  opacity: 0;
+  background-color: white;
+  z-index: 10;
+}
+
+.is-visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.img-div {
+  width: 1000px;
+  margin: auto;
+}
+
+.img-div > img {
+  height: 330px;
+}

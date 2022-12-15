@@ -6,12 +6,18 @@ import porfolio from "./assets/portfoliositepic.png";
 import todoApp from "./assets/todoapp.jpg";
 import sass from "./assets/SaaSTopPage.png";
 import adviceApp from "./assets/adviceApp.jpg";
+import podpic from "./assets/podpic.png";
 import "react-slideshow-image/dist/styles.css";
 import "./App.css";
 import Nav from "./Components/Nav/Nav";
 import PortfolioSection from "./Components/PortfolioSection/PortfolioSection";
+import { useState } from "react";
+import Modal from "./Components/Modal/Modal";
 
 function App() {
+  const [openModal, setOpenModal] = useState(false);
+  const [modalData, setModalData] = useState([]);
+
   const images = [
     {
       url: minimalista,
@@ -43,22 +49,25 @@ function App() {
       category: "Landing Page",
       url: "https://claysminimalistapro.netlify.app/",
       key: 1,
+      id: 7,
     },
     {
       img: porfolio,
       caption: "Portfolio landing page",
       desc: "This is a portfolio site that has some nice features built into it like light and dark modes and popups and more",
       category: "Landing Page",
-      url: "https://claysfolio.netlif/",
+      url: "https://claysfolio.netlify.app/",
       key: 2,
+      id: 6,
     },
     {
       img: codeRad,
       caption: "codeRad Landing page",
       desc: "This is a landing page that has some nice visuals",
       category: "Landing Page",
-      url: "https://clayscoderad/",
+      url: "https://clayscoderad.netlify.app/",
       key: 3,
+      id: 5,
     },
     {
       img: sass,
@@ -67,6 +76,7 @@ function App() {
       category: "Landing Page",
       url: "https://clayssass.netlify.app/",
       key: 4,
+      id: 4,
     },
     {
       img: fullStack,
@@ -75,6 +85,7 @@ function App() {
       category: "React App",
       url: "https://iconians.github.io/shopperApp/",
       key: 5,
+      id: 3,
     },
     {
       img: todoApp,
@@ -83,6 +94,7 @@ function App() {
       category: "React App",
       url: "https://iconians.github.io/todoApp/",
       key: 6,
+      id: 2,
     },
     {
       img: adviceApp,
@@ -91,6 +103,16 @@ function App() {
       category: "React App",
       url: "https://iconians.github.io/advice-app/",
       key: 7,
+      id: 1,
+    },
+    {
+      img: podpic,
+      caption: "Podcast page",
+      desc: "this is an example of a podcast webpage ",
+      category: "Landing Page",
+      url: "https://clayspodcastproject.netlify.app/",
+      key: 8,
+      id: 0,
     },
   ];
 
@@ -126,6 +148,19 @@ function App() {
     ),
   };
 
+  const modalOpen = ({ target: { id } }) => {
+    const selectedItem = portfolioItems.filter(
+      (item) => item.id === parseInt(id)
+    );
+    console.log(id, selectedItem);
+    setModalData(selectedItem);
+    setOpenModal(true);
+  };
+
+  const modalClose = () => {
+    setOpenModal(false);
+  };
+
   return (
     <div className="App">
       <header className="">
@@ -144,7 +179,12 @@ function App() {
           <h2>I develop experiences that make peoples lives simple</h2>
         </div>
       </header>
-      <PortfolioSection portfolioItems={portfolioItems} />
+      <PortfolioSection portfolioItems={portfolioItems} modal={modalOpen} />
+      <Modal
+        modalData={modalData}
+        modalClose={modalClose}
+        openModal={openModal}
+      />
     </div>
   );
 }
