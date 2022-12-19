@@ -30,6 +30,7 @@
 .is-visible {
   visibility: visible;
   opacity: 1;
+  transition: all 0.5s;
 }
 
 .img-div {margin: auto;}
@@ -37,17 +38,4 @@
 .img-div > img {
   height: 330px;
   width: 100%;
-}
-
-[data-animation="slideInOutTop"] .modal-dialog {
-  opacity: 0;
-  transition: all 0.5s;
-}
-
-[data-animation="slideInOutTop"] .modal-dialog {
-  transform: translateY(-100%);
-}
-
-[data-animation="slideInOutTop"].is-visible .modal-dialog {
-  transform: none;
 }

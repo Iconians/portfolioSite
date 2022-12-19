@@ -5,10 +5,9 @@ import Nav from "./Components/Nav/Nav";
 import PortfolioSection from "./Components/PortfolioSection/PortfolioSection";
 import Modal from "./Components/Modal/Modal";
 import { portfolioItems } from "./PorfolioItems";
-import { useAppContext } from "../Providers/app.Context";
+import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
 
 function App() {
-  const {} = useAppContext();
   const buttonStyle = {
     width: "30px",
     background: "none",
@@ -62,12 +61,9 @@ function App() {
           <h2>I develop experiences that make peoples lives simple</h2>
         </div>
       </header>
+      <JokeAdviceComponent />
       <PortfolioSection />
-      <Modal
-      // modalData={modalData}
-      // modalClose={modalClose}
-      // openModal={openModal}
-      />
+      <Modal />
     </div>
   );
 }
