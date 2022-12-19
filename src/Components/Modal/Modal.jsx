@@ -1,12 +1,14 @@
 import React from "react";
+import { useAppContext } from "../../../Providers/app.Context";
 import "./Modal.css";
 
-const Modal = ({ modalData, modalClose, openModal }) => {
+const Modal = () => {
+  const { modalData, modalClose, openModal } = useAppContext();
   return (
     <div className={`modal-wrapper ${!openModal ? null : "is-visible"}`}>
       {modalData.map((item) => (
-        <>
-          <div>
+        <div className="modal-dialog">
+          <div className="btn-div">
             <button onClick={modalClose}>Back</button>
           </div>
           <div className="project-name">
@@ -20,7 +22,7 @@ const Modal = ({ modalData, modalClose, openModal }) => {
             <p>{item.desc}</p>
             <a href={item.url}>Click here to view Site</a>
           </div>
-        </>
+        </div>
       ))}
     </div>
   );

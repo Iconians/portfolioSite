@@ -9,6 +9,22 @@
   opacity: 0;
   background-color: white;
   z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.8);
+  cursor: pointer;
+}
+
+.modal-dialog {
+  max-width: 800px;
+  max-height: 80vh;
+  background: #fff;
+  color: #161c2d;
+  overflow: hidden;
+  padding: 1.25rem 1.85rem;
+  border-radius: 5px;
+  cursor: default;
 }
 
 .is-visible {
@@ -16,11 +32,22 @@
   opacity: 1;
 }
 
-.img-div {
-  width: 1000px;
-  margin: auto;
-}
+.img-div {margin: auto;}
 
 .img-div > img {
   height: 330px;
+  width: 100%;
+}
+
+[data-animation="slideInOutTop"] .modal-dialog {
+  opacity: 0;
+  transition: all 0.5s;
+}
+
+[data-animation="slideInOutTop"] .modal-dialog {
+  transform: translateY(-100%);
+}
+
+[data-animation="slideInOutTop"].is-visible .modal-dialog {
+  transform: none;
 }
