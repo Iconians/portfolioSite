@@ -6,6 +6,7 @@ import PortfolioSection from "./Components/PortfolioSection/PortfolioSection";
 import Modal from "./Components/Modal/Modal";
 import { portfolioItems } from "./PorfolioItems";
 import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
+import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
 
 function App() {
   const buttonStyle = {
@@ -64,6 +65,7 @@ function App() {
       <JokeAdviceComponent />
       <PortfolioSection />
       <Modal />
+      <ReviewComponent />
     </div>
   );
 }

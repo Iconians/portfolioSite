@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductService from "../../../fetches/adviceFetch";
 import { jokeFetch } from "../../../fetches/jokeFetch";
+import "./JokeAdviceComponent.css";
 
 const advice = new ProductService();
 export const JokeAdviceComponent = () => {
@@ -13,7 +14,6 @@ export const JokeAdviceComponent = () => {
   useEffect(() => {
     advice.fetchAdvice().then((res) => {
       if (res && res.response.ok) {
-        console.log(res);
         setpeiceAdvice([res.advice]);
       }
     });

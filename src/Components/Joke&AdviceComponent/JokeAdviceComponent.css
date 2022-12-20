@@ -1,0 +1,8 @@
+.joke-advice-wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.joke-container, .advice-container {
+  width: 500px;
+}
