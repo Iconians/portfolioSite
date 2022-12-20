@@ -16,7 +16,12 @@ const PortfolioSection = () => {
             <div className="img-wrapper">
               <img src={item.img} alt={item.caption} />
             </div>
-            <div className="card-popup-box" id={item.id} onClick={modalOpen}>
+            <div
+              className="card-popup-box"
+              name="portfolioItems"
+              id={item.id}
+              onClick={modalOpen}
+            >
               <div>{item.category}</div>
               <h3>{item.caption}</h3>
             </div>

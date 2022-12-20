@@ -6,6 +6,7 @@ const AppContext = createContext({});
 export const AppProvider = ({ children }) => {
   const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState([]);
+  const [openSchedule, setOpenSchedule] = useState(false);
 
   const modalOpen = ({ target: { id } }) => {
     const selectedItem = portfolioItems.filter(
@@ -18,6 +19,14 @@ export const AppProvider = ({ children }) => {
   const modalClose = () => {
     setOpenModal(false);
   };
+
+  const openScheduleBtn = () => {
+    setOpenSchedule(true);
+  };
+
+  const closeSchedule = () => {
+    setOpenSchedule(false);
+  };
   return (
     <AppContext.Provider
       value={{
@@ -25,6 +34,9 @@ export const AppProvider = ({ children }) => {
         modalData,
         modalOpen,
         modalClose,
+        openSchedule,
+        closeSchedule,
+        openScheduleBtn,
       }}
     >
       {children}
@@ -39,5 +51,8 @@ export const useAppContext = () => {
     modalData: context.modalData,
     modalOpen: context.modalOpen,
     modalClose: context.modalClose,
+    openSchedule: context.openSchedule,
+    closeSchedule: context.closeSchedule,
+    openScheduleBtn: context.openScheduleBtn,
   };
 };

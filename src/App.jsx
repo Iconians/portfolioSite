@@ -7,6 +7,8 @@ import Modal from "./Components/Modal/Modal";
 import { portfolioItems } from "./PorfolioItems";
 import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
 import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
+import { ScheduleComponent } from "./Components/ScheduleBtn/ScheduleBtn";
+import { ScheduleModal } from "./Components/ScheduleModal/ScheduleModal";
 
 function App() {
   const buttonStyle = {
@@ -63,9 +65,11 @@ function App() {
         </div>
       </header>
       <JokeAdviceComponent />
+      <ScheduleComponent />
       <PortfolioSection />
       <Modal />
       <ReviewComponent />
+      <ScheduleModal />
     </div>
   );
 }
