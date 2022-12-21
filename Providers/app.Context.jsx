@@ -55,8 +55,6 @@ export const AppProvider = ({ children }) => {
         modalOpen,
         modalClose,
         openSchedule,
-        // closeSchedule,
-        // openScheduleBtn,
         openAbout,
         openContact,
       }}
@@ -74,8 +72,6 @@ export const useAppContext = () => {
     modalOpen: context.modalOpen,
     modalClose: context.modalClose,
     openSchedule: context.openSchedule,
-    // closeSchedule: context.closeSchedule,
-    // openScheduleBtn: context.openScheduleBtn,
     openAbout: context.openAbout,
     openContact: context.openContact,
   };

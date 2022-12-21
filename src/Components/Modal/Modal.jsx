@@ -7,7 +7,7 @@ const Modal = () => {
   return (
     <div className={`modal-wrapper ${!openModal ? null : "is-visible"}`}>
       {modalData.map((item) => (
-        <div data-animation="slideInOutTop">
+        <div data-animation="slideInOutTop" key={item.id}>
           <div className={`${!openModal ? null : "is-visible"} modal-dialog`}>
             <div className="btn-div">
               <button name="portfolioItems" onClick={modalClose}>

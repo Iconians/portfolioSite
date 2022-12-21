@@ -1,0 +1,63 @@
+.contact-modal-wrapper {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  visibility: hidden;
+  opacity: 0;
+  background-color: white;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.8);
+  cursor: pointer;
+}
+
+.contant-dialog {
+  width: 30%;
+  height: 70%;
+  background: #fff;
+  color: #161c2d;
+  overflow: hidden;
+  padding: 1.25rem 1.85rem;
+  border-radius: 5px;
+  cursor: default;
+}
+
+.is-visible {
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.5s;
+}
+
+.form-grid {
+  display: grid;
+  width: 90%;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.input {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  line-height: 26px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
+  outline: none;
+  background: transparent;
+}
+
+.input-submit {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #b6a8a8;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}

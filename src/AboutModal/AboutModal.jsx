@@ -26,7 +26,10 @@ export const AboutModal = () => {
                 since then. I will put my extensive knowlege to work for you and
                 create a beautiful website for your passion or brand. have a
                 site you want created, please schedule a meeting
-                <a href=""> click Here</a>
+                <a href="https://ScheduleacallwithClaytonCripe.as.me/Upwork">
+                  {" "}
+                  click Here
+                </a>
               </p>
             </div>
           </div>

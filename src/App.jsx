@@ -10,6 +10,7 @@ import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
 import { ScheduleComponent } from "./Components/ScheduleBtn/ScheduleBtn";
 import { ScheduleModal } from "./Components/ScheduleModal/ScheduleModal";
 import { AboutModal } from "./AboutModal/AboutModal";
+import { ContactModal } from "./Components/ContactModal/ContactModal";
 
 function App() {
   const buttonStyle = {
@@ -72,6 +73,7 @@ function App() {
       <ReviewComponent />
       <ScheduleModal />
       <AboutModal />
+      <ContactModal />
     </div>
   );
 }

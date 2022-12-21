@@ -13,8 +13,7 @@ export const ScheduleModal = () => {
         </div>
         <div className="iframe-wrapper">
           <iframe
-            src="https://app.squarespacescheduling.com/schedule.php?owner=25150356"
-            title="Schedule Appointment"
+            src="https://app.squarespacescheduling.com/schedule.php?owner=25150356&appointmentType=29960941"
             width="100%"
             height="500"
             frameBorder="0"
