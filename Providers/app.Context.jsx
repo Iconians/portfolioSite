@@ -7,26 +7,46 @@ export const AppProvider = ({ children }) => {
   const [openModal, setOpenModal] = useState(false);
   const [modalData, setModalData] = useState([]);
   const [openSchedule, setOpenSchedule] = useState(false);
+  const [openAbout, setAbout] = useState(false);
+  const [openContact, setContact] = useState(false);
 
-  const modalOpen = ({ target: { id } }) => {
-    const selectedItem = portfolioItems.filter(
-      (item) => item.id === parseInt(id)
-    );
-    setModalData(selectedItem);
-    setOpenModal(true);
+  const modalOpen = ({ target: { name, id } }) => {
+    console.log(name);
+    if (name === undefined) {
+      const selectedItem = portfolioItems.filter(
+        (item) => item.id === parseInt(id)
+      );
+      setModalData(selectedItem);
+      setOpenModal(true);
+    }
+
+    if (name === "schedule") {
+      setOpenSchedule(true);
+    }
+    if (name === "about") {
+      setAbout(true);
+    }
+    if (name === "contact") {
+      setContact(true);
+    }
   };
 
-  const modalClose = () => {
-    setOpenModal(false);
+  const modalClose = ({ target: { name } }) => {
+    console.log(name);
+    if (name === "portfolioItems") {
+      setOpenModal(false);
+    }
+    if (name === "schedule") {
+      setOpenSchedule(false);
+    }
+    if (name === "about") {
+      setAbout(false);
+    }
+    if (name === "contact") {
+      setContact(false);
+    }
   };
 
-  const openScheduleBtn = () => {
-    setOpenSchedule(true);
-  };
-
-  const closeSchedule = () => {
-    setOpenSchedule(false);
-  };
   return (
     <AppContext.Provider
       value={{
@@ -35,8 +55,10 @@ export const AppProvider = ({ children }) => {
         modalOpen,
         modalClose,
         openSchedule,
-        closeSchedule,
-        openScheduleBtn,
+        // closeSchedule,
+        // openScheduleBtn,
+        openAbout,
+        openContact,
       }}
     >
       {children}
@@ -52,7 +74,9 @@ export const useAppContext = () => {
     modalOpen: context.modalOpen,
     modalClose: context.modalClose,
     openSchedule: context.openSchedule,
-    closeSchedule: context.closeSchedule,
-    openScheduleBtn: context.openScheduleBtn,
+    // closeSchedule: context.closeSchedule,
+    // openScheduleBtn: context.openScheduleBtn,
+    openAbout: context.openAbout,
+    openContact: context.openContact,
   };
 };

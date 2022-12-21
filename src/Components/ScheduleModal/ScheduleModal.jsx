@@ -3,7 +3,7 @@ import { useAppContext } from "../../../Providers/app.Context";
 import "./ScheduleModal.css";
 
 export const ScheduleModal = () => {
-  const { closeSchedule, openSchedule } = useAppContext();
+  const { modalClose, openSchedule } = useAppContext();
 
   return (
     <div className={`schedule-wrapper ${openSchedule ? "is-visible" : null}`}>
@@ -25,7 +25,9 @@ export const ScheduleModal = () => {
           ></script>
         </div>
         <div className="btn-wrapper">
-          <button onClick={closeSchedule}>Close</button>
+          <button name="schedule" onClick={modalClose}>
+            Close
+          </button>
         </div>
       </div>
     </div>

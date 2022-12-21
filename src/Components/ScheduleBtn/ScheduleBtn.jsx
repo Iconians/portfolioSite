@@ -2,11 +2,13 @@ import React from "react";
 import { useAppContext } from "../../../Providers/app.Context";
 
 export const ScheduleComponent = () => {
-  const { openScheduleBtn } = useAppContext();
+  const { modalOpen } = useAppContext();
 
   return (
     <div>
-      <button onClick={openScheduleBtn}>Schedule </button>
+      <button name="schedule" onClick={modalOpen}>
+        Schedule{" "}
+      </button>
     </div>
   );
 };

@@ -10,7 +10,9 @@ const Modal = () => {
         <div data-animation="slideInOutTop">
           <div className={`${!openModal ? null : "is-visible"} modal-dialog`}>
             <div className="btn-div">
-              <button onClick={modalClose}>Back</button>
+              <button name="portfolioItems" onClick={modalClose}>
+                Back
+              </button>
             </div>
             <div className="project-name">
               <h2>{item.caption}</h2>
