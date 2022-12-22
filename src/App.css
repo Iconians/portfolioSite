@@ -16,6 +16,16 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+.react-slideshow-fadezoom-wrapper {
+  
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.react-slideshow-fadezoom-images-wrap {
+  width: 100%;
+  z-index: 1000;
+}
 
 .each-slide {
   display: flex;
@@ -52,7 +62,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: antiquewhite;;
+  color: antiquewhite;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 @keyframes logo-spin {
@@ -77,3 +89,11 @@
 .read-the-docs {
   color: #888;
 }
+
+/* @media (max-width: 1400px) {
+  .react-slideshow-fadezoom-wrapper {
+    width: 1100px;
+    z-index: 1000;
+
+  }   */
+/* } */

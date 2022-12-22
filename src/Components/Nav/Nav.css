@@ -8,4 +8,11 @@
   display: flex;
 }
 
-.ul-list ul li { margin-right: 10px;}
+.ul-list ul li {margin-right: 10px;}
+
+.ul-list ul li input {
+  font-size: 16px;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+}

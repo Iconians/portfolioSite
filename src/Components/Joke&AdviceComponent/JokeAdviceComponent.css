@@ -1,6 +1,7 @@
 .joke-advice-wrapper {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .joke-container, .advice-container {
