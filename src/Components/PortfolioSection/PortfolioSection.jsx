@@ -1,6 +1,7 @@
 import React from "react";
-import { useAppContext } from "../../../Providers/app.Context";
 import { portfolioItems } from "../../PorfolioItems";
+import { useAppContext } from "../../Providers/app.Context";
+
 import "./PortfolioSection.css";
 
 const PortfolioSection = () => {

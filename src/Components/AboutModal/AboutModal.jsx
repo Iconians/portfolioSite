@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppContext } from "../../Providers/app.Context";
-import profilePic from "../assets/profilePic.jpg";
+import profilePic from "../../assets/profilePic.jpg";
 import "./AboutModal.css";
 
 export const AboutModal = () => {

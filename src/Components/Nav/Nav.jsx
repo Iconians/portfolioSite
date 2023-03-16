@@ -1,5 +1,5 @@
 import React from "react";
-import { useAppContext } from "../../../Providers/app.Context";
+import { useAppContext } from "../../Providers/app.Context";
 import "./Nav.css";
 
 const Nav = () => {
@@ -8,7 +8,7 @@ const Nav = () => {
     <div>
       <nav className="nav-bar">
         <div className="brand">
-          <h2>Handy Websites</h2>
+          <h2>Clayton Cripe</h2>
         </div>
         <div className="ul-list">
           <ul>
@@ -20,14 +20,14 @@ const Nav = () => {
                 value="About Me"
               />
             </li>
-            <li name="contact" onClick={modalOpen}>
+            {/* <li name="contact" onClick={modalOpen}>
               <input
                 type="submit"
                 name="contact"
                 onClick={modalOpen}
                 value="Contact"
               />
-            </li>
+            </li> */}
           </ul>
         </div>
       </nav>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useAppContext } from "../../../Providers/app.Context";
+import { useAppContext } from "../../Providers/app.Context";
 import "./ContactModal.css";
 
 export const ContactModal = () => {

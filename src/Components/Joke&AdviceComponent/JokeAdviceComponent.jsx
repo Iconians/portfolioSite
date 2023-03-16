@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import ProductService from "../../../fetches/adviceFetch";
-import { jokeFetch } from "../../../fetches/jokeFetch";
+import ProductService from "../../fetches/adviceFetch";
+import { jokeFetch } from "../../fetches/jokeFetch";
 import "./JokeAdviceComponent.css";
 
 const advice = new ProductService();

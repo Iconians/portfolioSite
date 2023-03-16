@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { portfolioItems } from "../src/PorfolioItems";
+import { portfolioItems } from "../PorfolioItems";
 
 const AppContext = createContext({});
 
@@ -11,7 +11,6 @@ export const AppProvider = ({ children }) => {
   const [openContact, setContact] = useState(false);
 
   const modalOpen = ({ target: { name, id } }) => {
-    console.log(name);
     if (name === undefined) {
       const selectedItem = portfolioItems.filter(
         (item) => item.id === parseInt(id)

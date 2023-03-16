@@ -1,5 +1,5 @@
 import React from "react";
-import { useAppContext } from "../../../Providers/app.Context";
+import { useAppContext } from "../../Providers/app.Context";
 import "./ScheduleModal.css";
 
 export const ScheduleModal = () => {
@@ -14,6 +14,7 @@ export const ScheduleModal = () => {
         <div className="iframe-wrapper">
           <iframe
             src="https://app.squarespacescheduling.com/schedule.php?owner=25150356&appointmentType=29960941"
+            title="Schedule Appointment"
             width="100%"
             height="500"
             frameBorder="0"
