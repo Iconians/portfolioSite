@@ -2,7 +2,7 @@ import minimalista from "./assets/minimalistapic.png";
 import fullStack from "./assets/fullstackapppic.jpg";
 import codeRad from "./assets/codeRadPic.png";
 import porfolio from "./assets/portfoliositepic.png";
-import todoApp from "./assets/todoapp.jpg";
+import todoApp from "./assets/todoApp.jpg";
 import sass from "./assets/SaaSTopPage.png";
 import adviceApp from "./assets/adviceApp.jpg";
 import podpic from "./assets/podpic.png";
