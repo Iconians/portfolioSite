@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppContext } from "../../Providers/app.Context";
-import profilePic from "../../assets/profilePic.jpg";
+import profilePic from "../../assets/profilepic.jpg";
 import "./AboutModal.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
