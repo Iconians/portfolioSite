@@ -16,9 +16,18 @@
   cursor: pointer;
 }
 
+.title-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.schedule-fa-times {
+  font-size: 25px;
+}
+
 .schedule-dialog {
   width: 800px;
-  height: 80vh;
+  height: 62vh;
   background: #fff;
   color: #161c2d;
   overflow: hidden;

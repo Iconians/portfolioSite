@@ -16,6 +16,14 @@
   cursor: pointer;
 }
 
+.btn-div {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 25px;
+}
+
+.fa-times {cursor: pointer;}
+
 .modal-dialog {
   max-width: 800px;
   max-height: 80vh;

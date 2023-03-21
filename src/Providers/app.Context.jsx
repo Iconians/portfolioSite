@@ -30,20 +30,11 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const modalClose = ({ target: { name } }) => {
-    console.log(name);
-    if (name === "portfolioItems") {
-      setOpenModal(false);
-    }
-    if (name === "schedule") {
-      setOpenSchedule(false);
-    }
-    if (name === "about") {
-      setAbout(false);
-    }
-    if (name === "contact") {
-      setContact(false);
-    }
+  const modalClose = () => {
+    setOpenModal(false);
+    setOpenSchedule(false);
+    setAbout(false);
+    setContact(false);
   };
 
   return (

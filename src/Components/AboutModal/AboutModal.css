@@ -26,6 +26,11 @@
   cursor: default;
 }
 
+.about-fa-times {
+  font-size: 30px;
+  margin-top: 5px;
+}
+
 .is-visible {
   visibility: visible;
   opacity: 1;
@@ -46,4 +51,22 @@
 
 .desc-wrappper {
   width: 500px;
+}
+
+#about-a {
+  color: darkcyan;
+  text-decoration: none;
+}
+
+#about-a:hover {
+  color: darkcyan;
+  text-decoration: underline;
+}
+
+.skills {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 2rem;
 }

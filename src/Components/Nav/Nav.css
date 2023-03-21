@@ -16,3 +16,8 @@
   background-color: white;
   cursor: pointer;
 }
+
+.ul-list ul li input:hover {
+  color: darkcyan;
+  text-decoration: underline;
+} 

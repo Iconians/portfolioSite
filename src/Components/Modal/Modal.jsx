@@ -1,3 +1,5 @@
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useAppContext } from "../../Providers/app.Context";
 import "./Modal.css";
@@ -10,9 +12,11 @@ const Modal = () => {
         <div data-animation="slideInOutTop" key={item.id}>
           <div className={`${!openModal ? null : "is-visible"} modal-dialog`}>
             <div className="btn-div">
-              <button name="portfolioItems" onClick={modalClose}>
-                Back
-              </button>
+              <FontAwesomeIcon
+                icon={faTimes}
+                onClick={modalClose}
+                className="fa-times"
+              />
             </div>
             <div className="project-name">
               <h2>{item.caption}</h2>

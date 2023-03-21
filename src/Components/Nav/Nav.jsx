@@ -18,16 +18,9 @@ const Nav = () => {
                 name="about"
                 onClick={modalOpen}
                 value="About Me"
+                className="aboutme-Btn"
               />
             </li>
-            {/* <li name="contact" onClick={modalOpen}>
-              <input
-                type="submit"
-                name="contact"
-                onClick={modalOpen}
-                value="Contact"
-              />
-            </li> */}
           </ul>
         </div>
       </nav>
