@@ -142,7 +142,7 @@
   #root {
     padding: 0;
   } 
-  
+
   header, button, .portfolio-wrapper, .portfolio-cards {
     width: 250px;
     margin: auto;
@@ -153,11 +153,8 @@
 
   .ul-list {
     margin: auto;
+    display: none;
   }
-  /* button {
-    width: 250px;
-  }
-  .portfolio-wrapper {
-    width: 250px;
-  } */
+
+
 }
