@@ -67,3 +67,27 @@
   font-weight: 700;
   margin-bottom: 0;
 }
+
+@media (max-width: 863px) {
+  .portfolio-card {
+    margin: auto;
+  }
+}
+
+@media (max-width: 703px) {
+  .portfolio-wrapper {
+    width: 320px;
+    margin: auto;
+  }
+  .portfolio-card {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 383px) {
+  .portfolio-card {
+    padding: 0;
+    width: 250px;
+  }
+  
+}

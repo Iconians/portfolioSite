@@ -132,11 +132,32 @@
   }
 }
 
-@media (max-width: 460px) {
+@media (max-width: 465px) {
   .react-slideshow-fadezoom-wrapper, .catch-phrase, .review-wrapper {
     display: none;
   }  
-  .joke-container, .advice-container {
-    width: 300px;
+}
+
+@media (max-width: 383px) {
+  #root {
+    padding: 0;
+  } 
+  
+  header, button, .portfolio-wrapper, .portfolio-cards {
+    width: 250px;
+    margin: auto;
   }
+  .nav-bar {
+    flex-direction: column;
+  }
+
+  .ul-list {
+    margin: auto;
+  }
+  /* button {
+    width: 250px;
+  }
+  .portfolio-wrapper {
+    width: 250px;
+  } */
 }
