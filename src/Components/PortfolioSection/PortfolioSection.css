@@ -71,6 +71,7 @@
 @media (max-width: 863px) {
   .portfolio-card {
     margin: auto;
+    margin-bottom: 20px;
   }
 }
 
