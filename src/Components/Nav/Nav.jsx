@@ -1,9 +1,8 @@
 import React from "react";
-import { useAppContext } from "../../Providers/app.Context";
+import { Link } from "react-router-dom";
 import "./Nav.css";
 
-const Nav = () => {
-  const { modalOpen } = useAppContext();
+export const Nav = () => {
   return (
     <div>
       <nav className="nav-bar">
@@ -11,17 +10,12 @@ const Nav = () => {
           <h2>Clayton Cripe</h2>
         </div>
         <div className="ul-list">
-          <ul>
-            <li>
-              <input
-                type="submit"
-                name="about"
-                onClick={modalOpen}
-                value="About Me"
-                className="aboutme-Btn"
-              />
-            </li>
-          </ul>
+          <Link className="about-Btn" to="/about">
+            About
+          </Link>
+          <Link className="schedule-Btn" to="/schedule">
+            Schedule
+          </Link>
         </div>
       </nav>
     </div>

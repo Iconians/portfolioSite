@@ -3,21 +3,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useAppContext } from "../../Providers/app.Context";
 import "./ScheduleModal.css";
+import Nav from "../Nav/Nav";
 
 export const ScheduleModal = () => {
   const { modalClose, openSchedule } = useAppContext();
 
   return (
-    <div className={`schedule-wrapper ${openSchedule ? "is-visible" : null}`}>
+    // ${openSchedule ? "is-visible" : null}
+    <div className={`schedule-wrapper `}>
+      <Nav />
       <div className="schedule-dialog ">
         <div className="title-wrapper">
           <h2>Schedule A Time to Talk</h2>
-          <FontAwesomeIcon
+          {/* <FontAwesomeIcon
             icon={faTimes}
             name="schedule"
             onClick={modalClose}
             className="fa-times schedule-fa-times"
-          />
+          /> */}
         </div>
         <div className="iframe-wrapper">
           <iframe

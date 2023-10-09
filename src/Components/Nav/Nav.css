@@ -17,7 +17,16 @@
   cursor: pointer;
 }
 
-.ul-list ul li input:hover {
+.about-Btn, .schedule-Btn {
+  background-color: white;
+  margin: 20px;
+  color: black;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.about-Btn:hover, .schedule-Btn:hover {
   color: darkcyan;
   text-decoration: underline;
 } 

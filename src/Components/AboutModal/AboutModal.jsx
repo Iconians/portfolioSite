@@ -4,19 +4,22 @@ import profilePic from "../../assets/profilepic.jpg";
 import "./AboutModal.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { Nav } from "../Nav/Nav";
 
 export const AboutModal = () => {
-  const { openAbout, modalClose } = useAppContext();
+  // const { openAbout, modalClose } = useAppContext();
   return (
-    <div className={`about-modal ${openAbout ? "is-visible" : null}`}>
+    // ${openAbout ? "is-visible" : null}
+    <div className={`about-modal`}>
       <div className="about-dialog ">
         <div className="title-wrapper">
-          <h2>About Page</h2>
-          <FontAwesomeIcon
+          <Nav />
+          {/* <h2>About Page</h2> */}
+          {/* <FontAwesomeIcon
             icon={faTimes}
-            onClick={modalClose}
+            // onClick={modalClose}
             className="fa-times about-fa-times"
-          />
+          /> */}
         </div>
         <div className="flex">
           <div className="img-container">

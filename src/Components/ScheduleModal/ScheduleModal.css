@@ -1,4 +1,4 @@
-.schedule-wrapper {
+/* .schedule-wrapper {
   position: fixed;
   right: 0;
   left: 0;
@@ -14,7 +14,7 @@
   align-items: center;
   background: rgba(0,0,0,0.8);
   cursor: pointer;
-}
+} */
 
 .title-wrapper {
   display: flex;
