@@ -18,7 +18,7 @@
 
 .title-wrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .schedule-fa-times {
@@ -27,13 +27,18 @@
 
 .schedule-dialog {
   width: 800px;
-  height: 62vh;
+  height: 100vh;
   background: #fff;
   color: #161c2d;
   overflow: hidden;
   padding: 1.25rem 1.85rem;
   border-radius: 5px;
   cursor: default;
+}
+
+.iframe-wrapper > iframe {
+  width: 100%;
+  height: 600px;
 }
 
 
