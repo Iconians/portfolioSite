@@ -106,7 +106,7 @@ width: 100%;
 
 @media (max-width: 365px) {
   .about-modal {
-    width: 200px;
+    width: 90vw;
   }
 }
 
