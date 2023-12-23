@@ -1,5 +1,5 @@
 .about-modal {
-  width: 90vw;
+  width: 1200px;
   height: 90vh;
   display: flex;
   justify-content: center;
@@ -73,3 +73,40 @@ width: 100%;
   justify-content: space-around;
   margin-top: 2rem;
 }
+
+@media (max-width: 1260px) {
+  .about-modal {
+    width: 1000px;
+  }
+}
+
+@media (max-width: 1060px) {
+  .about-modal {
+    width: 800px;
+  }
+}
+
+@media (max-width: 860px) {
+  .about-modal {
+    width: 600px;
+  }
+}
+
+@media (max-width: 660px) {
+  .about-modal {
+    width: 400px;
+  }
+}
+
+@media (max-width: 460px) {
+  .about-modal {
+    width: 300px;
+  }
+}
+
+@media (max-width: 365px) {
+  .about-modal {
+    width: 200px;
+  }
+}
+

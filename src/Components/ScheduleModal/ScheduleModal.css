@@ -1,20 +1,6 @@
-/* .schedule-wrapper {
-  position: fixed;
-  right: 0;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  padding: 1rem;
-  visibility: hidden;
-  opacity: 0;
-  background-color: white;
-  z-index: 10;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.8);
-  cursor: pointer;
-} */
+.schedule-wrapper {
+  width: 1200px;
+}
 
 .title-wrapper {
   display: flex;
@@ -26,7 +12,6 @@
 }
 
 .schedule-dialog {
-  width: 90vw;
   height: 100vh;
   background: #fff;
   color: #161c2d;
@@ -46,4 +31,40 @@
   visibility: visible;
   opacity: 1;
   transition: all 0.5s;
+}
+
+@media (max-width: 1260px) {
+  .schedule-wrapper {
+    width: 1000px;
+  }
+}
+
+@media (max-width: 1060px) {
+  .schedule-wrapper  {
+    width: 800px;
+  }
+}
+
+@media (max-width: 860px) {
+  .schedule-wrapper  {
+    width: 600px;
+  }
+}
+
+@media (max-width: 660px) {
+  .schedule-wrapper  {
+    width: 400px;
+  }
+}
+
+@media (max-width: 460px) {
+  .schedule-wrapper  {
+    width: 300px;
+  }
+}
+
+@media (max-width: 365px) {
+  .schedule-wrapper  {
+    width: 200px;
+  }
 }
