@@ -4,12 +4,15 @@ import "./Nav.css";
 
 export const Nav = () => {
   return (
-    <div>
+    <div className="nav-wrapper">
       <nav className="nav-bar">
         <div className="brand">
           <h2>Clayton Cripe</h2>
         </div>
         <div className="ul-list">
+          <Link className="home-Btn" to="/">
+            Home
+          </Link>
           <Link className="about-Btn" to="/about">
             About
           </Link>

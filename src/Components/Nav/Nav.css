@@ -17,8 +17,8 @@
   cursor: pointer;
 }
 
-.about-Btn, .schedule-Btn {
-  background-color: white;
+.about-Btn, .schedule-Btn, .home-Btn {
+  /* background-color: white; */
   margin: 20px;
   color: black;
   border: none;
@@ -26,7 +26,13 @@
   cursor: pointer;
 }
 
-.about-Btn:hover, .schedule-Btn:hover {
+@media (prefers-color-scheme: dark) {
+  .home-Btn, .about-Btn, .schedule-Btn {
+    color: white;
+  }
+}
+
+.about-Btn:hover, .schedule-Btn:hover, .home-Btn:hover {
   color: darkcyan;
   text-decoration: underline;
 } 

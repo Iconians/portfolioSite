@@ -20,12 +20,17 @@ export const ReviewComponent = () => {
     },
   ];
 
+  const isDarkMode =
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
+
   const buttonStyle = {
     width: "30px",
     background: "none",
     border: "0px",
     padding: 0,
     outline: "none",
+    color: "white",
   };
 
   const properties = {
@@ -34,7 +39,7 @@ export const ReviewComponent = () => {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
-          fill="black"
+          fill={isDarkMode ? "white" : "black"}
         >
           <path d="M242 180.6v-138L0 256l242 213.4V331.2h270V180.6z" />
         </svg>
@@ -45,7 +50,7 @@ export const ReviewComponent = () => {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"
-          fill="black"
+          fill={isDarkMode ? "white" : "black"}
         >
           <path d="M512 256L270 42.6v138.2H0v150.6h270v138z" />
         </svg>

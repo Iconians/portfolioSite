@@ -5,9 +5,18 @@ import { useAppContext } from "../../Providers/app.Context";
 import "./Modal.css";
 
 const Modal = () => {
+  const handleWrapperClick = (e) => {
+    if (e.target === e.currentTarget && modalClose) {
+      modalClose();
+    }
+  };
+
   const { modalData, modalClose, openModal } = useAppContext();
   return (
-    <div className={`modal-wrapper ${!openModal ? null : "is-visible"}`}>
+    <div
+      className={`modal-wrapper ${!openModal ? null : "is-visible"}`}
+      onClick={handleWrapperClick}
+    >
       {modalData.map((item) => (
         <div data-animation="slideInOutTop" key={item.id}>
           <div className={`${!openModal ? null : "is-visible"} modal-dialog`}>

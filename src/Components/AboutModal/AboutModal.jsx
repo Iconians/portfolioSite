@@ -11,8 +11,8 @@ export const AboutModal = () => {
   return (
     // ${openAbout ? "is-visible" : null}
     <div className={`about-modal`}>
+      <Nav />
       <div className="about-dialog ">
-        <Nav />
         <div className="title-wrapper">
           {/* <h2>About Page</h2> */}
           {/* <FontAwesomeIcon

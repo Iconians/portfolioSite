@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { portfolioItems } from "../PorfolioItems";
 
 const AppContext = createContext({});
@@ -36,6 +36,12 @@ export const AppProvider = ({ children }) => {
     setAbout(false);
     setContact(false);
   };
+
+  useEffect(() => {
+    openModal
+      ? (document.body.style.overflow = "hidden")
+      : (document.body.style.overflow = "unset");
+  }, [openModal]);
 
   return (
     <AppContext.Provider
