@@ -21,7 +21,7 @@ width: 100%;
   padding: 1.25rem 1.85rem;
   border-radius: 5px;
   cursor: default;
-  overflow-y: auto;
+
 }
 
 .ul-list {
@@ -83,6 +83,9 @@ width: 100%;
 @media (max-width: 1060px) {
   .about-modal {
     width: 800px;
+  }
+  .about-dialog {
+    overflow-y: auto;
   }
 }
 

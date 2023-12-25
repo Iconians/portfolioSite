@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { AboutModal } from "./Components/AboutModal/AboutModal";
 import { Home } from "./Components/Home/Home";
 import { ScheduleModal } from "./Components/ScheduleModal/ScheduleModal";
