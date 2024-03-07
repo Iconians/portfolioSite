@@ -12,8 +12,8 @@ export const portfolioItems = [
     desc: "this is a freelance project for a self service dog wash company",
     category: "React App",
     url: "https://www.theroyalcaninedogwash.com",
-    key: 9,
-    id: 8,
+    key: 0,
+    id: 5,
   },
   {
     img: drAlderSite,
@@ -22,7 +22,7 @@ export const portfolioItems = [
     category: "WordPress",
     url: "https://alderfamilychiropractic.com/",
     key: 1,
-    id: 7,
+    id: 4,
   },
   {
     img: porfolio,
@@ -31,7 +31,7 @@ export const portfolioItems = [
     category: "Landing Page",
     url: "https://claysfolio.netlify.app/",
     key: 2,
-    id: 6,
+    id: 3,
   },
   {
     img: sass,
@@ -39,8 +39,8 @@ export const portfolioItems = [
     desc: "This is a software as a service or SaaS for short landing page",
     category: "Landing Page",
     url: "https://clayssass.netlify.app/",
-    key: 4,
-    id: 4,
+    key: 3,
+    id: 2,
   },
   {
     img: fullStack,
@@ -48,8 +48,8 @@ export const portfolioItems = [
     desc: "This is a E-commerce Site that is similar amazon but without the full back-end hooked up as I didn't want to get into the business of selling clothing",
     category: "React App",
     url: "https://iconians.github.io/shopperApp/",
-    key: 5,
-    id: 3,
+    key: 4,
+    id: 1,
   },
   {
     img: podpic,
@@ -57,7 +57,7 @@ export const portfolioItems = [
     desc: "this is an example of a podcast webpage ",
     category: "Landing Page",
     url: "https://clayspodcastproject.netlify.app/",
-    key: 8,
+    key: 5,
     id: 0,
   },
 ];
