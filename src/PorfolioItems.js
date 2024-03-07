@@ -1,12 +1,9 @@
-import minimalista from "./assets/minimalistapic.png";
 import fullStack from "./assets/fullstackapppic.jpg";
-import codeRad from "./assets/codeRadPic.png";
 import porfolio from "./assets/portfoliositepic.png";
-import todoApp from "./assets/todoApp.jpg";
 import sass from "./assets/SaaSTopPage.png";
-import adviceApp from "./assets/adviceApp.jpg";
 import podpic from "./assets/podpic.png";
 import RoyalCaninePic from "./assets/RoyalCaninePic.png";
+import drAlderSite from "./assets/drAlderSite.png";
 
 export const portfolioItems = [
   {
@@ -14,19 +11,19 @@ export const portfolioItems = [
     caption: "The Royal Canine",
     desc: "this is a freelance project for a self service dog wash company",
     category: "React App",
-    url: "www.theroyalcaninedogwash.com",
+    url: "https://www.theroyalcaninedogwash.com",
     key: 9,
     id: 8,
   },
-  // {
-  //   img: minimalista,
-  //   caption: "Minimalista landing page",
-  //   desc: "This is a simple static Landing page",
-  //   category: "Landing Page",
-  //   url: "https://claysminimalistapro.netlify.app/",
-  //   key: 1,
-  //   id: 7,
-  // },
+  {
+    img: drAlderSite,
+    caption: "Alder Family Chiropractic",
+    desc: "I helped a chiropractor with his website and made it more modern and updated",
+    category: "WordPress",
+    url: "https://alderfamilychiropractic.com/",
+    key: 1,
+    id: 7,
+  },
   {
     img: porfolio,
     caption: "Portfolio landing page",
@@ -36,15 +33,6 @@ export const portfolioItems = [
     key: 2,
     id: 6,
   },
-  // {
-  //   img: codeRad,
-  //   caption: "codeRad Landing page",
-  //   desc: "This is a landing page that has some nice visuals",
-  //   category: "Landing Page",
-  //   url: "https://clayscoderad.netlify.app/",
-  //   key: 3,
-  //   id: 5,
-  // },
   {
     img: sass,
     caption: "Front Landing page",
@@ -63,24 +51,6 @@ export const portfolioItems = [
     key: 5,
     id: 3,
   },
-  // {
-  //   img: todoApp,
-  //   caption: "To Do App",
-  //   desc: "This is a simple to do app that you can put your notes or list of items in",
-  //   category: "React App",
-  //   url: "https://iconians.github.io/todoApp/",
-  //   key: 6,
-  //   id: 2,
-  // },
-  // {
-  //   img: adviceApp,
-  //   caption: "advice App",
-  //   desc: "This is a app that generates a piece of advice ",
-  //   category: "React App",
-  //   url: "https://iconians.github.io/advice-app/",
-  //   key: 7,
-  //   id: 1,
-  // },
   {
     img: podpic,
     caption: "Podcast page",
