@@ -1,15 +1,14 @@
 import { Fade } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import "./Home.css";
-// import Nav from "../Nav/Nav";
 import PortfolioSection from "../PortfolioSection/PortfolioSection";
 import Modal from "../Modal/Modal";
 import { portfolioItems } from "../../PorfolioItems";
 import { JokeAdviceComponent } from "../Joke&AdviceComponent/JokeAdviceComponent";
 import { ReviewComponent } from "../ReviewComponet/ReviewComponent";
-// import { ScheduleComponent } from "../ScheduleBtn/ScheduleBtn";
 import { ScheduleModal } from "../ScheduleModal/ScheduleModal";
 import { AboutModal } from "../AboutModal/AboutModal";
+import { PhotoCarousel } from "../photoCarousel/PhotoCarousel";
 import Nav from "../Nav/Nav";
 
 export const Home = () => {
@@ -52,7 +51,8 @@ export const Home = () => {
         <div>
           <h1>Welcome</h1>
         </div>
-        <Fade {...properties}>
+        <PhotoCarousel />
+        {/* <Fade {...properties}>
           {portfolioItems.map((img) => (
             <div className="each-slide" key={img.key}>
               <div>
@@ -61,7 +61,7 @@ export const Home = () => {
               <h3>{img.caption}</h3>
             </div>
           ))}
-        </Fade>
+        </Fade> */}
         <div className="catch-phrase">
           <h2>I develop experiences that make peoples lives simple</h2>
         </div>
