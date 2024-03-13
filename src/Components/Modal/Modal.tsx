@@ -1,11 +1,10 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 import { useAppContext } from "../../Providers/app.Context";
 import "./Modal.css";
 
 const Modal = () => {
-  const handleWrapperClick = (e) => {
+  const handleWrapperClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget && modalClose) {
       modalClose();
     }

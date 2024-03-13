@@ -1,19 +1,49 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { portfolioItems } from "../PorfolioItems";
 
-const AppContext = createContext({});
+type AppContextProps = {
+  children?: JSX.Element | JSX.Element[];
+};
 
-export const AppProvider = ({ children }) => {
+type portfolioItem = {
+  img: string;
+  caption: string;
+  desc: string;
+  category: string;
+  url: string;
+  key: number;
+  id: number;
+};
+
+type modalOpen = (event: React.MouseEvent<HTMLDivElement>) => void;
+
+type AppContext = {
+  openModal: boolean;
+  modalData: portfolioItem[] | [];
+  modalOpen: modalOpen;
+  modalClose: () => void;
+  openSchedule: boolean;
+  openAbout: boolean;
+  openContact: boolean;
+};
+
+const AppContext = createContext({} as AppContext);
+
+export const AppProvider = ({ children }: AppContextProps) => {
   const [openModal, setOpenModal] = useState(false);
-  const [modalData, setModalData] = useState([]);
+  const [modalData, setModalData] = useState<portfolioItem[]>([]);
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openAbout, setAbout] = useState(false);
   const [openContact, setContact] = useState(false);
 
-  const modalOpen = ({ target: { name, id } }) => {
-    if (name === undefined) {
+  const modalOpen = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    const name = target.getAttribute("name");
+    const id = target.getAttribute("id");
+    console.log(name, id);
+    if (name === null) {
       const selectedItem = portfolioItems.filter(
-        (item) => item.id === parseInt(id)
+        (item) => item.id === parseInt(id || "")
       );
       setModalData(selectedItem);
       setOpenModal(true);

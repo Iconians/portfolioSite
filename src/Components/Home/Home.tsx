@@ -8,7 +8,7 @@ import { JokeAdviceComponent } from "../Joke&AdviceComponent/JokeAdviceComponent
 import { ReviewComponent } from "../ReviewComponet/ReviewComponent";
 import { ScheduleModal } from "../ScheduleModal/ScheduleModal";
 import { AboutModal } from "../AboutModal/AboutModal";
-import { PhotoCarousel } from "../photoCarousel/PhotoCarousel";
+import { PhotoCarousel } from "../PhotoCarousel/PhotoCarousel";
 import Nav from "../Nav/Nav";
 
 export const Home = () => {
