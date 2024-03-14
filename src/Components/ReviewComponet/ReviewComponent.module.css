@@ -11,8 +11,6 @@
   align-items: center;
   background-color: black;
   border-radius: 20px;
-  /* border-top-left-radius: 20px;
-  border-top-right-radius: 20px; */
 }
 
 .mainCarouselWrapper {
@@ -33,6 +31,14 @@
   outline: none;
   border: none;
   color: white;
+}
+
+.carouselReviewsWrapper {
+  position: absolute;
+  left: 10%;
+  width: 80%;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .carouselReview  {
@@ -89,9 +95,6 @@
 @media (max-width: 820px) {
   .mainCarouselWrapper {
     width: 600px; 
-  }
-  .carouselReview  {
-    overflow-y: auto;
   }
 }
 

@@ -46,22 +46,24 @@ export const ReviewComponent = () => {
           <button onClick={prevSlide} className={styles.carouselLeftBtn}>
             {<FontAwesomeIcon icon={faChevronLeft} />}
           </button>
-          {review.map((review, index) => (
-            <div
-              className={`${styles.carouselReview} ${
-                currentIndex === index ? styles.selected : ""
-              }`}
-              key={review.id}
-            >
-              <div className={styles.cardTitle}>
-                <h3>{review.title}</h3>
-                <p>{review.stars}</p>
+          <div className={styles.carouselReviewsWrapper}>
+            {review.map((review, index) => (
+              <div
+                className={`${styles.carouselReview} ${
+                  currentIndex === index ? styles.selected : ""
+                }`}
+                key={review.id}
+              >
+                <div className={styles.cardTitle}>
+                  <h3>{review.title}</h3>
+                  <p>{review.stars}</p>
+                </div>
+                <div className={styles.cardReview}>
+                  <p>{review.p}</p>
+                </div>
               </div>
-              <div className={styles.cardReview}>
-                <p>{review.p}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
           <button onClick={nextSlide} className={styles.carouselRightBtn}>
             {<FontAwesomeIcon icon={faChevronRight} />}
           </button>
