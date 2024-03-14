@@ -1,4 +1,3 @@
-import React from "react";
 import { portfolioItems } from "../../PorfolioItems";
 import { useAppContext } from "../../Providers/app.Context";
 import "./PortfolioSection.css";

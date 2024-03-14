@@ -25,6 +25,7 @@ type AppContext = {
   openSchedule: boolean;
   openAbout: boolean;
   openContact: boolean;
+  openFullPageModal: (name: string) => void;
 };
 
 const AppContext = createContext({} as AppContext);
@@ -36,19 +37,20 @@ export const AppProvider = ({ children }: AppContextProps) => {
   const [openAbout, setAbout] = useState(false);
   const [openContact, setContact] = useState(false);
 
-  const modalOpen = (event: React.MouseEvent<HTMLDivElement>) => {
-    const target = event.target as HTMLElement;
-    const name = target.getAttribute("name");
+  const modalOpen = (event: React.MouseEvent<HTMLElement>) => {
+    const target = event.currentTarget as HTMLElement;
     const id = target.getAttribute("id");
-    console.log(name, id);
-    if (name === null) {
-      const selectedItem = portfolioItems.filter(
-        (item) => item.id === parseInt(id || "")
-      );
-      setModalData(selectedItem);
-      setOpenModal(true);
-    }
 
+    // if (name === null) {
+    const selectedItem = portfolioItems.filter(
+      (item) => item.id === parseInt(id || "")
+    );
+    setModalData(selectedItem);
+    setOpenModal(true);
+    // }
+  };
+
+  const openFullPageModal = (name: string) => {
     if (name === "schedule") {
       setOpenSchedule(true);
     }
@@ -83,6 +85,7 @@ export const AppProvider = ({ children }: AppContextProps) => {
         openSchedule,
         openAbout,
         openContact,
+        openFullPageModal,
       }}
     >
       {children}
@@ -100,5 +103,6 @@ export const useAppContext = () => {
     openSchedule: context.openSchedule,
     openAbout: context.openAbout,
     openContact: context.openContact,
+    openFullPageModal: context.openFullPageModal,
   };
 };

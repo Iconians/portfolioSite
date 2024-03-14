@@ -1,14 +1,20 @@
 import React from "react";
 import { useAppContext } from "../../Providers/app.Context";
 
-export const ScheduleComponent = () => {
-  const { modalOpen } = useAppContext();
+// export const ScheduleComponent = () => {
+//   const { openFullPageModal } = useAppContext();
 
-  return (
-    <div>
-      <button name="schedule" onClick={modalOpen}>
-        Schedule{" "}
-      </button>
-    </div>
-  );
-};
+//   const handleClick = (
+//     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+//   ) => {
+//     openFullPageModal("schedule");
+//   };
+
+//   return (
+//     <div>
+//       <button name="schedule" onClick={handleClick}>
+//         Schedule{" "}
+//       </button>
+//     </div>
+//   );
+// };
