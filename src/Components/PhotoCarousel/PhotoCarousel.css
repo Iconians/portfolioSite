@@ -1,0 +1,79 @@
+.carouselWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.mainCarouselWrapper {
+  position: relative;
+  width: 100%;
+  height: 358px;
+}
+
+.carouselLeftBtn {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+  background-color: transparent;
+  font-size: 40px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: white;
+}
+
+.carouselImgs {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
+  object-fit: contain;
+  background-color: black;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.carouselRightBtn {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+  background-color: transparent;
+  font-size: 40px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: white;
+}
+
+.carouselImgs.selected {
+  opacity: 1;
+  transform: opacity 0.5s ease-in-out;
+}
+
+.miniCarouselWrapper {
+  overflow: hidden;
+}
+
+.carouselMiniImgs {
+  width: 100px;
+  height: 100px;
+  opacity: 0.5;
+}
+
+.miniSelected {
+  opacity: 1;
+}
+
+@media (max-width: 465px) {
+  .carouselWrapper  {
+    display: none;
+  } 
+}

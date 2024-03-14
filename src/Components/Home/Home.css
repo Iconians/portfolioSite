@@ -91,7 +91,7 @@
 }
 
 @media (max-width: 1350px) {
-  .react-slideshow-fadezoom-wrapper, .catch-phrase, .review-wrapper {
+  .carouselWrapper, .catch-phrase, .review-wrapper {
     width: 1100px;
     margin: auto;
 
@@ -99,7 +99,7 @@
 }
 
 @media (max-width: 1175px) {
-  .react-slideshow-fadezoom-wrapper, .catch-phrase, .review-wrapper {
+  .carouselWrapper, .catch-phrase, .review-wrapper {
     width: 900px;
     margin: auto;
 
@@ -107,7 +107,7 @@
 }
 
 @media (max-width: 975px) {
-  .react-slideshow-fadezoom-wrapper, .catch-phrase, .review-wrapper {
+  .carouselWrapper, .catch-phrase, .review-wrapper {
     width: 700px;
     margin: auto;
 
@@ -115,7 +115,7 @@
 }
 
 @media (max-width: 775px) {
-  .react-slideshow-fadezoom-wrapper, .catch-phrase, .review-wrapper {
+  .carouselWrapper, .catch-phrase, .review-wrapper {
     width: 500px;
     margin: auto;
 
@@ -123,7 +123,7 @@
 }
 
 @media (max-width: 575px) {
-  .react-slideshow-fadezoom-wrapper, .catch-phrase, .review-wrapper {
+  .carouselWrapper, .catch-phrase, .review-wrapper {
     width: 320px;
     margin: auto;
   }  
@@ -133,7 +133,7 @@
 }
 
 @media (max-width: 465px) {
-  .react-slideshow-fadezoom-wrapper, .catch-phrase, .review-wrapper, .schedule-Btn {
+  .carouselWrapper, .catch-phrase, .review-wrapper, .schedule-Btn {
     display: none;
   }  
 }

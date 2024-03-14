@@ -41,7 +41,7 @@ h1 {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  /* padding: 0.6em 1.2em; */
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
@@ -51,11 +51,11 @@ button {
   width: 200px;
   height: 50px;
 }
-button:hover {
+/* button:hover {
   border-color: #646cff;
   background-color: saddlebrown;
   color: white;
-}
+} */
 button:focus,
 button:focus-visible {
   outline: 8px auto -webkit-focus-ring-color;

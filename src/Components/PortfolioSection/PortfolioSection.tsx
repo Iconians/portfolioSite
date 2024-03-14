@@ -1,7 +1,5 @@
-import React from "react";
 import { portfolioItems } from "../../PorfolioItems";
 import { useAppContext } from "../../Providers/app.Context";
-
 import "./PortfolioSection.css";
 
 const PortfolioSection = () => {
@@ -17,7 +15,11 @@ const PortfolioSection = () => {
             <div className="img-wrapper">
               <img src={item.img} alt={item.caption} />
             </div>
-            <div className="card-popup-box" id={item.id} onClick={modalOpen}>
+            <div
+              className="card-popup-box"
+              id={item.id.toString()}
+              onClick={modalOpen}
+            >
               <div>{item.category}</div>
               <h3>{item.caption}</h3>
             </div>

@@ -1,20 +1,51 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProductService from "../../fetches/adviceFetch";
 import { jokeFetch } from "../../fetches/jokeFetch";
 import "./JokeAdviceComponent.css";
 
+type jokeArr = {
+  category: string;
+  delivery: string;
+  error: boolean;
+  joke: string;
+  flags: {
+    nsfw: boolean;
+    religious: boolean;
+    political: boolean;
+    racist: boolean;
+    sexist: boolean;
+  };
+  id: number;
+  lang: string;
+  safe: boolean;
+  setup: string;
+  type: string;
+}[];
+
+type adviceArr = {
+  advice: string;
+  id: number;
+}[];
+
+type adviceType = {
+  advice: { id: number; advice: string };
+  response: { status: number; ok: true };
+};
+
 const advice = new ProductService();
 export const JokeAdviceComponent = () => {
-  const [joke, setJoke] = useState([]);
-  const [peiceAdvice, setpeiceAdvice] = useState([]);
+  const [joke, setJoke] = useState<jokeArr>([]);
+  const [pieceAdvice, setPieceAdvice] = useState<adviceArr>([]);
   useEffect(() => {
     jokeFetch().then((res) => setJoke([res]));
   }, []);
 
   useEffect(() => {
     advice.fetchAdvice().then((res) => {
-      if (res && res.response.ok) {
-        setpeiceAdvice([res.advice]);
+      const advice = (res as adviceType).advice;
+      const response = (res as adviceType).response;
+      if (res && response.ok) {
+        setPieceAdvice([advice]);
       }
     });
   }, []);
@@ -46,9 +77,9 @@ export const JokeAdviceComponent = () => {
         <div className="h2-wrapper">
           <h2>Here's a piece of advice for the day 😎</h2>
         </div>
-        {peiceAdvice.length ? (
+        {pieceAdvice.length ? (
           <>
-            {peiceAdvice.map((advice) => (
+            {pieceAdvice.map((advice) => (
               <div className="advice-wrapper" key={advice.id}>
                 <div>{advice.advice}</div>
               </div>

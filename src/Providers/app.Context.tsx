@@ -1,24 +1,56 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { portfolioItems } from "../PorfolioItems";
 
-const AppContext = createContext({});
+type AppContextProps = {
+  children?: JSX.Element | JSX.Element[];
+};
 
-export const AppProvider = ({ children }) => {
+type portfolioItem = {
+  img: string;
+  caption: string;
+  desc: string;
+  category: string;
+  url: string;
+  key: number;
+  id: number;
+};
+
+type modalOpen = (event: React.MouseEvent<HTMLDivElement>) => void;
+
+type AppContext = {
+  openModal: boolean;
+  modalData: portfolioItem[] | [];
+  modalOpen: modalOpen;
+  modalClose: () => void;
+  openSchedule: boolean;
+  openAbout: boolean;
+  openContact: boolean;
+  openFullPageModal: (name: string) => void;
+};
+
+const AppContext = createContext({} as AppContext);
+
+export const AppProvider = ({ children }: AppContextProps) => {
   const [openModal, setOpenModal] = useState(false);
-  const [modalData, setModalData] = useState([]);
+  const [modalData, setModalData] = useState<portfolioItem[]>([]);
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openAbout, setAbout] = useState(false);
   const [openContact, setContact] = useState(false);
 
-  const modalOpen = ({ target: { name, id } }) => {
-    if (name === undefined) {
-      const selectedItem = portfolioItems.filter(
-        (item) => item.id === parseInt(id)
-      );
-      setModalData(selectedItem);
-      setOpenModal(true);
-    }
+  const modalOpen = (event: React.MouseEvent<HTMLElement>) => {
+    const target = event.currentTarget as HTMLElement;
+    const id = target.getAttribute("id");
 
+    // if (name === null) {
+    const selectedItem = portfolioItems.filter(
+      (item) => item.id === parseInt(id || "")
+    );
+    setModalData(selectedItem);
+    setOpenModal(true);
+    // }
+  };
+
+  const openFullPageModal = (name: string) => {
     if (name === "schedule") {
       setOpenSchedule(true);
     }
@@ -53,6 +85,7 @@ export const AppProvider = ({ children }) => {
         openSchedule,
         openAbout,
         openContact,
+        openFullPageModal,
       }}
     >
       {children}
@@ -70,5 +103,6 @@ export const useAppContext = () => {
     openSchedule: context.openSchedule,
     openAbout: context.openAbout,
     openContact: context.openContact,
+    openFullPageModal: context.openFullPageModal,
   };
 };
