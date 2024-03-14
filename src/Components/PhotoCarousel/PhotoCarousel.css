@@ -72,29 +72,8 @@
   opacity: 1;
 }
 
-@media (max-width: 820px) {
-  .mainCarouselWrapper {
-    width: 600px;
-  }
-}
-
-@media (max-width: 620px) {
-  .mainCarouselWrapper {
-    width: 400px;
-    height: 400px;
-  }
-}
-
-@media (max-width: 420px) {
-  .mainCarouselWrapper {
-    width: 300px;
-    height: 300px;
-  }
-}
-
-@media (max-width: 330px) {
-  .mainCarouselWrapper {
-    width: 250px;
-    height: 250px;
-  }
+@media (max-width: 465px) {
+  .carouselWrapper  {
+    display: none;
+  } 
 }

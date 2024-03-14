@@ -15,13 +15,15 @@ export const PhotoCarousel = () => {
   };
 
   const prevSlide = () => {
-    setCurrentIndex((currentIndex - 1 + portfolioItems.length) % portfolioItems.length);
+    setCurrentIndex(
+      (currentIndex - 1 + portfolioItems.length) % portfolioItems.length
+    );
   };
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % portfolioItems.length);
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(timer);
   }, []);
@@ -46,19 +48,6 @@ export const PhotoCarousel = () => {
           {<FontAwesomeIcon icon={faChevronRight} />}
         </button>
       </div>
-      {/* <div className="miniCarouselWrapper">
-        {portfolioItems.map((image, index) => (
-          <img
-            src={image.img}
-            alt={image.caption}
-            key={image.id}
-            className={`carouselMiniImgs ${
-              currentIndex === index ? "miniSelected" : ""
-            }`}
-            onClick={() => setCurrentIndex(index)}
-          />
-        ))}
-      </div> */}
     </div>
   );
 };

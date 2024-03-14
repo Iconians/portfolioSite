@@ -1,0 +1,136 @@
+.reviewCard {
+  width: 50%;
+  margin: auto;
+}
+
+.reviewCardWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  border-radius: 20px;
+  /* border-top-left-radius: 20px;
+  border-top-right-radius: 20px; */
+}
+
+.mainCarouselWrapper {
+  position: relative;
+  width: 100%;
+  height: 358px;
+}
+
+.carouselLeftBtn {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+  background-color: transparent;
+  font-size: 40px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: white;
+}
+
+.carouselReview  {
+  position: absolute;
+  left: 10%;
+  width: 80%;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
+  object-fit: contain;
+  background-color: black;
+}
+
+.carouselRightBtn {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+  background-color: transparent;
+  font-size: 40px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: white;
+}
+
+.carouselReview.selected {
+  opacity: 1;
+  transform: opacity 0.5s ease-in-out;
+}
+
+.miniCarouselWrapper {
+  overflow: hidden;
+}
+
+.carouselMiniImgs {
+  width: 100px;
+  height: 100px;
+  opacity: 0.5;
+}
+
+.miniSelected {
+  opacity: 1;
+}
+
+@media (max-width: 1100px) {
+  .carouselReview  {
+    width: 60%;
+    left: 20%;
+  }
+}
+
+@media (max-width: 820px) {
+  .mainCarouselWrapper {
+    width: 600px; 
+  }
+  .carouselReview  {
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .mainCarouselWrapper {
+    width: 400px;
+    height: 400px;
+  }
+
+  .carouselLeftBtn, .carouselRightBtn {
+    width: 0;
+  }
+}
+
+@media (max-width: 575px) {
+  .carouselRightBtn {
+    right: 15px;
+  }
+}
+
+@media (max-width: 500px) {
+  .mainCarouselWrapper {
+    width: 320px;
+    margin: auto;
+  }
+  .carouselRightBtn {
+    right: 25px;
+  }
+}
+@media (max-width: 420px) {
+  .mainCarouselWrapper {
+    width: 300px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 330px) {
+  .mainCarouselWrapper {
+    width: 250px;
+    height: 500px;
+  }
+}

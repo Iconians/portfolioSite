@@ -1,7 +1,13 @@
-import React from "react";
-import { Slide } from "react-slideshow-image";
-import "react-slideshow-image/dist/styles.css";
-import "./ReviewComponent.css";
+// import React from "react";
+// import { Slide } from "react-slideshow-image";
+// import "react-slideshow-image/dist/styles.css";
+import styles from "./ReviewComponent.module.css";
+import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 export const ReviewComponent = () => {
   const review = [
@@ -20,63 +26,46 @@ export const ReviewComponent = () => {
     },
   ];
 
-  const isDarkMode =
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const buttonStyle = {
-    width: "30px",
-    background: "none",
-    border: "0px",
-    padding: 0,
-    outline: "none",
-    color: "white",
+  const nextSlide = () => {
+    setCurrentIndex((currentIndex + 1) % review.length);
   };
 
-  const properties = {
-    prevArrow: (
-      <button style={{ ...buttonStyle }}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-          fill={isDarkMode ? "white" : "black"}
-        >
-          <path d="M242 180.6v-138L0 256l242 213.4V331.2h270V180.6z" />
-        </svg>
-      </button>
-    ),
-    nextArrow: (
-      <button style={{ ...buttonStyle }}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-          fill={isDarkMode ? "white" : "black"}
-        >
-          <path d="M512 256L270 42.6v138.2H0v150.6h270v138z" />
-        </svg>
-      </button>
-    ),
+  const prevSlide = () => {
+    setCurrentIndex((currentIndex - 1 + review.length) % review.length);
   };
 
   return (
-    <div className="review-wrapper">
-      <div className="review-title">
+    <div className={styles.reviewWrapper}>
+      <div className={styles.reviewTitle}>
         <h2>Reviews</h2>
       </div>
-      <div className="review-card-wrapper">
-        <Slide {...properties} autoplay={false} indicators={true} arrows={true}>
-          {review.map((review) => (
-            <div className="review-card" key={review.id}>
-              <div className="card-title">
+      <div className={styles.reviewCardWrapper}>
+        <div className={styles.mainCarouselWrapper}>
+          <button onClick={prevSlide} className={styles.carouselLeftBtn}>
+            {<FontAwesomeIcon icon={faChevronLeft} />}
+          </button>
+          {review.map((review, index) => (
+            <div
+              className={`${styles.carouselReview} ${
+                currentIndex === index ? styles.selected : ""
+              }`}
+              key={review.id}
+            >
+              <div className={styles.cardTitle}>
                 <h3>{review.title}</h3>
                 <p>{review.stars}</p>
               </div>
-              <div className="card-review">
+              <div className={styles.cardReview}>
                 <p>{review.p}</p>
               </div>
             </div>
           ))}
-        </Slide>
+          <button onClick={nextSlide} className={styles.carouselRightBtn}>
+            {<FontAwesomeIcon icon={faChevronRight} />}
+          </button>
+        </div>
       </div>
     </div>
   );

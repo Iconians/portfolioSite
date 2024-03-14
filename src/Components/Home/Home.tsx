@@ -52,27 +52,14 @@ export const Home = () => {
           <h1>Welcome</h1>
         </div>
         <PhotoCarousel />
-        {/* <Fade {...properties}>
-          {portfolioItems.map((img) => (
-            <div className="each-slide" key={img.key}>
-              <div>
-                <img src={img.img} alt={img.caption} />
-              </div>
-              <h3>{img.caption}</h3>
-            </div>
-          ))}
-        </Fade> */}
         <div className="catch-phrase">
           <h2>I develop experiences that make peoples lives simple</h2>
         </div>
       </header>
       <JokeAdviceComponent />
-      {/* <ScheduleComponent /> */}
       <PortfolioSection />
       <Modal />
       <ReviewComponent />
-      {/* <ScheduleModal />
-      <AboutModal /> */}
     </div>
   );
 };
