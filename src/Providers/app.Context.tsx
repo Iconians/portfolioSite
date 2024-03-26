@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { portfolioItems } from "../PorfolioItems";
+import { portfolioItems } from "../utils/PorfolioItems";
 
 type AppContextProps = {
   children?: JSX.Element | JSX.Element[];

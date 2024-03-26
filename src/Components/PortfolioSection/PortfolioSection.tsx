@@ -1,4 +1,4 @@
-import { portfolioItems } from "../../PorfolioItems";
+import { portfolioItems } from "../../utils/PorfolioItems";
 import { useAppContext } from "../../Providers/app.Context";
 import "./PortfolioSection.css";
 
