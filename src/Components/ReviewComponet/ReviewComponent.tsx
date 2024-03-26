@@ -1,6 +1,3 @@
-// import React from "react";
-// import { Slide } from "react-slideshow-image";
-// import "react-slideshow-image/dist/styles.css";
 import styles from "./ReviewComponent.module.css";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,6 +20,19 @@ export const ReviewComponent = () => {
       stars: "⭐⭐⭐⭐⭐",
       p: "Clayton is a hard working and wonderful man, so positive and helpful. He really worked hard. to help me define my vision and purpose, and went above and beyond. He is literally worth many of a thousand dollars. Looking forward to hiring him for more projects.",
       id: 1,
+    },
+    {
+      title: "Dog washing Website in React",
+      stars: "⭐⭐⭐⭐⭐",
+      p: "Big kudos to Clayton for his exceptional work on crafting a React landing page for me. Clayton's expertise in front-end development truly shone through in the polished and professional final product. Throughout the project, Clayton maintained excellent communication and attention to detail, ensuring a seamless collaboration. I wholeheartedly endorse Clayton for any front-end development projects and eagerly anticipate future opportunities to work together.",
+      id: 2,
+    },
+    {
+      title:
+        "We're seeking 85 freelancers to participate in our website testing project!",
+      stars: "⭐⭐⭐⭐⭐",
+      p: "Clayton is wonderful to work with. Very good freelancer and greatly recommended!",
+      id: 3,
     },
   ];
 
