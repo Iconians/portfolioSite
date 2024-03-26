@@ -3,7 +3,7 @@ import "react-slideshow-image/dist/styles.css";
 import "./Home.css";
 import PortfolioSection from "../PortfolioSection/PortfolioSection";
 import Modal from "../Modal/Modal";
-import { portfolioItems } from "../../PorfolioItems";
+import { portfolioItems } from "../../utils/PorfolioItems";
 import { JokeAdviceComponent } from "../Joke&AdviceComponent/JokeAdviceComponent";
 import { ReviewComponent } from "../ReviewComponet/ReviewComponent";
 import { ScheduleModal } from "../ScheduleModal/ScheduleModal";

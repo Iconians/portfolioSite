@@ -5,7 +5,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import "./PhotoCarousel.css";
-import { portfolioItems } from "../../PorfolioItems";
+import { portfolioItems } from "../../utils/PorfolioItems";
 
 export const PhotoCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
