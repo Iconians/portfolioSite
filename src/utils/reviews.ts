@@ -25,4 +25,11 @@ export const review = [
     p: "Clayton is wonderful to work with. Very good freelancer and greatly recommended!",
     id: 3,
   },
+  {
+    title:
+      "Chiropractor website",
+    stars: "⭐⭐⭐⭐⭐",
+    p: "I had Clayton update our existing website to make it more user-friendly across all platforms and enable online appointment scheduling. He did a fantastic job, and I highly recommend him without any reservations.",
+    id: 4,
+  },
 ];
