@@ -10,6 +10,8 @@ import { ScheduleModal } from "../ScheduleModal/ScheduleModal";
 import { AboutModal } from "../AboutModal/AboutModal";
 import { PhotoCarousel } from "../PhotoCarousel/PhotoCarousel";
 import Nav from "../Nav/Nav";
+import { ContinuedLearning } from "../ContinuedLearning/ContinuedLearning";
+import { ArticlesComponent } from "../ArticlesComponent/ArticlesComponent";
 
 export const Home = () => {
   const buttonStyle = {
@@ -59,6 +61,8 @@ export const Home = () => {
       <JokeAdviceComponent />
       <PortfolioSection />
       <Modal />
+      <ContinuedLearning />
+      <ArticlesComponent />
       <ReviewComponent />
     </div>
   );
