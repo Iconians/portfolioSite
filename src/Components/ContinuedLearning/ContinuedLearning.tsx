@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router-dom";
+import "./ContinuedLearning.css";
+
 const learningArray = [
   {
     id: 1,
@@ -21,14 +24,20 @@ export const ContinuedLearning = () => {
       <div>
         <h2>My Continuing Exploration Into Tech</h2>
       </div>
-      {learningArray.map((course) => (
-        <div key={course.id}>
-          <h3>{course.title}</h3>
-          <p>{course.course}</p>
-          <p>{course.site}</p>
-          <a href={course.url}>{course.url}</a>
-        </div>
-      ))}
+      <div className="continuing-ed-container">
+        {learningArray.map((course) => (
+          <div key={course.id} className="continuing-ed-card">
+            <div>
+              <h3>{course.title}</h3>
+              <p>{course.course}</p>
+              <p>{course.site}</p>
+            </div>
+            <a href={course.url} className="card-popup-box">
+              Read Here
+            </a>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

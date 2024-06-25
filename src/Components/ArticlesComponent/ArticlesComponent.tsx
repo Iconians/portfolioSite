@@ -1,3 +1,5 @@
+import "./ArticlesComponent.css";
+
 const articles = [
   {
     id: 1,
@@ -9,7 +11,7 @@ const articles = [
   },
   {
     id: 2,
-    img: "",
+    img: "/contextCode.png",
     title: "React Context API",
     p: "When we talk about React Context a lot of us may think of the origins of where it came from which was Remix. Still, certain parts of Remix got incorporated into React at a certain point.",
     url: "https://medium.com/@claytoncripe/react-context-api-816fd0533338",
@@ -23,14 +25,20 @@ export const ArticlesComponent = () => {
       <div>
         <h2>My Articles</h2>
       </div>
-      {articles.map((article) => (
-        <div key={article.id}>
-          <img src={article.img} alt="" />
-          <h3>{article.title}</h3>
-          <p>{article.p}</p>
-          <a href={article.url}>Read Here</a>
-        </div>
-      ))}
+      <div className="article-container">
+        {articles.map((article) => (
+          <div key={article.id} className="article-card">
+            <div>
+              <img src={article.img} alt="" className="article-img" />
+              <h3>{article.title}</h3>
+              <p>{article.p}</p>
+            </div>
+            <a href={article.url} className="card-popup-box">
+              Read Here
+            </a>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
