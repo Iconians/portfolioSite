@@ -47,4 +47,28 @@ export const articles = [
     url: "https://medium.com/@claytoncripe/bubble-sort-the-simplest-sorting-algorithm-2d1493d8f9b0",
     date: "June 30th 2024",
   },
+  {
+    id: 7,
+    img: "",
+    title: "Understanding Linked Lists: A Beginner’s Guide",
+    p: "Linked lists are a fundamental data structure that many beginners encounter when diving into computer science. They organize data in such a way that allows efficient insertion and deletion operations.",
+    url: "https://medium.com/@claytoncripe/understanding-linked-lists-a-beginners-guide-7b60b156a5c4",
+    date: "July 2nd 2024",
+  },
+  {
+    id: 8,
+    img: "/queue.png",
+    title: "Understanding Queues: A Beginner’s Guide",
+    p: "Queues are one of the most common data structures, widely used in various applications. They are a specific implementation of a linked list",
+    url: "https://medium.com/@claytoncripe/understanding-queues-a-beginners-guide-02650250e2b3",
+    date: "July 2nd 2024",
+  },
+  {
+    id: 9,
+    img: "/stack.png",
+    title: "Understanding Stacks",
+    p: "Stacks are a fundamental data structure that operate on the Last In, First Out (LIFO) principle. They are widely used in various applications",
+    url: "https://medium.com/@claytoncripe/understanding-stacks-592c36f91ea7",
+    date: "July 4th 2024",
+  },
 ]

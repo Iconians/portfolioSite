@@ -2,6 +2,7 @@ import "./ArticlesComponent.css";
 import { articles } from "../../utils/articles";
 
 export const ArticlesComponent = () => {
+  articles.sort(() => Math.random() - 0.5);
   return (
     <div>
       <div>
