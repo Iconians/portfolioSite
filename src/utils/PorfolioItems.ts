@@ -21,11 +21,11 @@ export const portfolioItems = [
       img: "/triviaApp.png",
     caption: "Volcano Trivia App",
     desc: "This is a trivia app that I made for my capstone project at Devslopes which showcases my skills in Vue, Typescript, tailwindcss, and more. since I have a always enjoyed learning about volcanoes and other natural wonders I decided to make a trivia app about them.",
-    category: "Trivia App",
+    category: "Vue App",
     url: "https://volcano-trivia-app.vercel.app/",
     key: 2,
     id: 3,
-  }
+  },
   // {
   //   img: porfolio,
   //   caption: "Portfolio landing page",
@@ -44,15 +44,15 @@ export const portfolioItems = [
   //   key: 3,
   //   id: 2,
   // },
-  // {
-  //   img: fullStack,
-  //   caption: "Clothing Essentials E-commerce site",
-  //   desc: "This is a E-commerce Site that is similar amazon but without the full back-end hooked up as I didn't want to get into the business of selling clothing",
-  //   category: "React App",
-  //   url: "https://iconians.github.io/shopperApp/",
-  //   key: 4,
-  //   id: 1,
-  // },
+  {
+    img: "/clothingEssentialsPic.png",
+    caption: "Clothing Essentials E-commerce site",
+    desc: "This is a E-commerce Site that is similar amazon but without the full back-end hooked up as I didn't want to get into the business of selling clothing",
+    category: "React App",
+    url: "https://iconians.github.io/shopperApp/",
+    key: 4,
+    id: 1,
+  },
   // {
   //   img: podpic,
   //   caption: "Podcast page",
