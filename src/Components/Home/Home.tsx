@@ -10,6 +10,7 @@ import { ContinuedLearning } from "../ContinuedLearning/ContinuedLearning";
 import { ArticlesComponent } from "../ArticlesComponent/ArticlesComponent";
 
 export const Home = () => {
+  // added some text
   return (
     <div className="App">
       <header className="">
