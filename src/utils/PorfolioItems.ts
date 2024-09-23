@@ -27,15 +27,6 @@ export const portfolioItems = [
     id: 3,
   },
   {
-    img: "/clothingEssentialsPic.png",
-    caption: "Clothing Essentials E-commerce site",
-    desc: "This is a E-commerce Site that is similar amazon but without the full back-end hooked up as I didn't want to get into the business of selling clothing",
-    category: "React App",
-    url: "https://iconians.github.io/shopperApp/",
-    key: 4,
-    id: 1,
-  },
-  {
     img: "/constructionSite.png",
     caption: "Downriver Renovations",
     desc: "This is a freelance project for a construction company",
