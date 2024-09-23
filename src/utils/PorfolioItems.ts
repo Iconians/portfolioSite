@@ -37,7 +37,7 @@ export const portfolioItems = [
   },
   {
     img: "/constructionSite.png",
-    caption: "Down River Renovations",
+    caption: "Downriver Renovations",
     desc: "This is a freelance project for a construction company",
     category: "Next App",
     url: "https://www.downriverrenovations.com/",
