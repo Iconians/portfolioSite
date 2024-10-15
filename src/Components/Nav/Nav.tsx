@@ -16,9 +16,9 @@ export const Nav = () => {
           <Link className="about-Btn" to="/about">
             About
           </Link>
-          <Link className="schedule-Btn" to="/schedule">
+          {/* <Link className="schedule-Btn" to="/schedule">
             Schedule
-          </Link>
+          </Link> */}
         </div>
       </nav>
     </div>

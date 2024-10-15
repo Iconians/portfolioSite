@@ -20,18 +20,18 @@ export const AboutModal = () => {
             </div>
             <div className="p-wrapper">
               <p>
-                I am a React front-end web developer that has a passion for
-                computers which developed at a young age and has grown ever
-                since then. I will put my extensive knowlege to work for you and
-                create a beautiful website for your passion or brand. have a
-                site you want created, please schedule a meeting
-                <a
-                  id="about-a"
-                  href="https://ScheduleacallwithClaytonCripe.as.me/Upwork"
-                >
+                I am a passionate full-stack web developer specializing in
+                React. My love for technology began at a young age and has only
+                grown over time. With a deep understanding of web technologies,
+                I’m committed to crafting intuitive and visually appealing
+                websites tailored to your vision. Whether you need a personal
+                project, a business website, or simply want to chat about ideas,
+                I’d love to connect. Check out my work or reach me on
+                <a id="about-a" href="https://linkedin.com/in/claytoncripe">
                   {" "}
-                  click Here
+                  LinkedIn
                 </a>
+                !
               </p>
               <h3>Skills/Technologies I know</h3>
               <ul className="skills">
