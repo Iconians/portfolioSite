@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom";
 import "./ContinuedLearning.css";
 
 const learningArray = [
-  {
-    id: 1,
-    title: "Web Accessibility",
-    course: "Introduction to web accessibility",
-    site: "Frontend Mentors",
-    url: "https://www.frontendmentor.io/learning-paths",
-  },
+  // {
+  //   id: 1,
+  //   title: "Backend Development",
+  //   course: "Backend Development Path",
+  //   site: "boot.dev",
+  //   url: "https://www.boot.dev/u/iconians",
+  // },
   {
     id: 2,
     title: "Algorithms",

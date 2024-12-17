@@ -7,14 +7,14 @@ export const articles = [
     url: "https://medium.com/@claytoncripe/unleash-your-inner-volcanologist-with-this-engaging-trivia-app-57391580c570",
     date: "Mar 27th 2024",
   },
-  {
-    id: 2,
-    img: "/contextCode.png",
-    title: "React Context API",
-    p: "When we talk about React Context a lot of us may think of the origins of where it came from which was Remix. Still, certain parts of Remix got incorporated into React at a certain point.",
-    url: "https://medium.com/@claytoncripe/react-context-api-816fd0533338",
-    date: "Mar 7th 2023",
-  },
+  // {
+  //   id: 2,
+  //   img: "/contextCode.png",
+  //   title: "React Context API",
+  //   p: "When we talk about React Context a lot of us may think of the origins of where it came from which was Remix. Still, certain parts of Remix got incorporated into React at a certain point.",
+  //   url: "https://medium.com/@claytoncripe/react-context-api-816fd0533338",
+  //   date: "Mar 7th 2023",
+  // },
   {
     id: 3,
     img: "",
@@ -71,4 +71,4 @@ export const articles = [
     url: "https://medium.com/@claytoncripe/understanding-stacks-592c36f91ea7",
     date: "July 4th 2024",
   },
-]
+];
