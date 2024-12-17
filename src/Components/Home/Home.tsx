@@ -26,8 +26,8 @@ export const Home = () => {
       <JokeAdviceComponent />
       <PortfolioSection />
       <Modal />
-      <ContinuedLearning />
-      <ArticlesComponent />
+      {/* <ContinuedLearning /> */}
+      {/* <ArticlesComponent /> */}
       <ReviewComponent />
     </div>
   );
