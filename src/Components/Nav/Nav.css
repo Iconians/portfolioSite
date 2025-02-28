@@ -26,12 +26,6 @@
   cursor: pointer;
 }
 
-@media (prefers-color-scheme: dark) {
-  .home-Btn, .about-Btn, .schedule-Btn {
-    color: white;
-  }
-}
-
 .about-Btn:hover, .schedule-Btn:hover, .home-Btn:hover {
   color: darkcyan;
   text-decoration: underline;

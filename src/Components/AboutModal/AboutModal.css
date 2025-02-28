@@ -19,7 +19,7 @@ width: 100%;
   color: #161c2d;
   overflow: hidden;
   padding: 1.25rem 1.85rem;
-  border-radius: 5px;
+  border-radius: 15px;
   cursor: default;
 
 }
@@ -68,10 +68,15 @@ width: 100%;
 
 .skills {
   list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  padding: 0;
+}
+
+.skills li {
+  border-radius: 5px;
+  text-align: center;
 }
 
 @media (max-width: 1260px) {
@@ -105,10 +110,18 @@ width: 100%;
   .about-modal {
     width: 300px;
   }
+
+  .img-container > img {
+    width: 300px;
+  }
 }
 
 @media (max-width: 365px) {
   .about-modal {
+    width: 90vw;
+  }
+
+  .img-container > img {
     width: 90vw;
   }
 }

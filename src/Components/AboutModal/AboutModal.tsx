@@ -3,6 +3,7 @@ import profilePic from "../../assets/profilepic.jpg";
 import "./AboutModal.css";
 
 import { Nav } from "../Nav/Nav";
+import { skillsArr } from "../../utils/skills";
 
 export const AboutModal = () => {
   return (
@@ -35,13 +36,9 @@ export const AboutModal = () => {
               </p>
               <h3>Skills/Technologies I know</h3>
               <ul className="skills">
-                <li>HTML</li>
-                <li>CSS</li>
-                <li>JavaScript</li>
-                <li>TypeScript</li>
-                <li>React</li>
-                <li>Node</li>
-                <li>GitHub</li>
+                {skillsArr.map((skill) => (
+                  <li>{skill}</li>
+                ))}
               </ul>
             </div>
           </div>

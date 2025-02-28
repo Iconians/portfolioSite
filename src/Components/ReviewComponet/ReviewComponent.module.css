@@ -1,6 +1,7 @@
 .reviewCard {
   width: 50%;
   margin: auto;
+
 }
 
 .reviewCardWrapper {
@@ -11,12 +12,13 @@
   align-items: center;
   background-color: black;
   border-radius: 20px;
+  margin-bottom: 50px;
 }
 
 .mainCarouselWrapper {
   position: relative;
   width: 100%;
-  height: 358px;
+  height: 400px;
 }
 
 .carouselLeftBtn {
