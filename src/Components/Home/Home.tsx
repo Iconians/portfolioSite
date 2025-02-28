@@ -27,7 +27,7 @@ export const Home = () => {
       <PortfolioSection />
       <Modal />
       {/* <ContinuedLearning /> */}
-      {/* <ArticlesComponent /> */}
+      <ArticlesComponent />
       <ReviewComponent />
     </div>
   );
