@@ -24,6 +24,15 @@ width: 100%;
 
 }
 
+.contactIcons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.githubIcon {
+  width: 35px;
+}
+
 .ul-list {
   display: flex;
   justify-content: center;

@@ -21,7 +21,7 @@ export const ReviewComponent = () => {
   return (
     <div className={styles.reviewWrapper}>
       <div className={styles.reviewTitle}>
-        <h2>What Our Customers Say</h2>
+        <h2>Client Reviews</h2>
       </div>
       <div className={styles.reviewCardWrapper}>
         <div className={styles.mainCarouselWrapper}>
