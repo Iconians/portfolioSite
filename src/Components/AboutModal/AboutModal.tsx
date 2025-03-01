@@ -1,4 +1,3 @@
-import React from "react";
 import profilePic from "../../assets/profilepic.jpg";
 import "./AboutModal.css";
 
@@ -10,7 +9,17 @@ export const AboutModal = () => {
     <div className={`about-modal`}>
       <Nav />
       <div className="about-dialog ">
-        <div className="title-wrapper"></div>
+        <div className="contactIcons">
+          <a href="mailto:claytoncripe@gmail.com">
+            <img src="https://img.shields.io/badge/Gmail-333333?style=for-the-badge&logo=gmail&logoColor=red" />
+          </a>
+          <a href="https://github.com/Iconians" target="_blank">
+            <img src="/githubLogo.png" className="githubIcon" />
+          </a>
+          <a href="https://www.linkedin.com/in/claytoncripe" target="_blank">
+            <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" />
+          </a>
+        </div>
         <div className="flex">
           <div className="img-container">
             <img src={profilePic} alt="" />
