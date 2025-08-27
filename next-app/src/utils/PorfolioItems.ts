@@ -1,0 +1,38 @@
+export const portfolioItems = [
+  {
+    img: "/RoyalCaninePic.png",
+    caption: "The Royal Canine",
+    desc: "this is a freelance project for a self service dog wash company",
+    category: "React App",
+    url: "https://www.theroyalcaninedogwash.com",
+    key: 0,
+    id: 5,
+  },
+  {
+    img: "/drAlderSite.png",
+    caption: "Alder Family Chiropractic",
+    desc: "I helped a chiropractor with his website and made it more modern and updated",
+    category: "WordPress",
+    url: "https://alderfamilychiropractic.com/",
+    key: 1,
+    id: 4,
+  },
+  {
+    img: "/triviaApp.png",
+    caption: "Volcano Trivia App",
+    desc: "This is a trivia app that I made for my capstone project at Devslopes which showcases my skills in Vue, Typescript, tailwindcss, and more. since I have a always enjoyed learning about volcanoes and other natural wonders I decided to make a trivia app about them.",
+    category: "Vue App",
+    url: "https://volcano-trivia-app.vercel.app/",
+    key: 2,
+    id: 3,
+  },
+  {
+    img: "/constructionSite.png",
+    caption: "Downriver Renovations",
+    desc: "This is a freelance project for a construction company",
+    category: "Next App",
+    url: "https://www.downriverrenovations.com/",
+    key: 6,
+    id: 6,
+  },
+];
