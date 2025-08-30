@@ -1,0 +1,36 @@
+import "./ArticlesComponent.css";
+import { articles } from "@/app/utils/articles";
+import Image from "next/image";
+
+export const ArticlesComponent = () => {
+  articles.sort(() => Math.random() - 0.5);
+  return (
+    <div>
+      <div>
+        <h2>My Articles</h2>
+      </div>
+      <div className="article-container">
+        {articles.map((article) => (
+          <div key={article.id} className="article-card">
+            <div>
+              {article.img && (
+                <Image
+                  width={320}
+                  height={200}
+                  src={article.img}
+                  alt=""
+                  className="article-img"
+                />
+              )}
+              <h3>{article.title}</h3>
+              <p>{article.p}</p>
+            </div>
+            <a href={article.url} className="card-popup-box">
+              Read Here
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
