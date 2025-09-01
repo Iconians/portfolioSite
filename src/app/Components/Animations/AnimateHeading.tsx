@@ -11,7 +11,6 @@ export default function AnimatedHeading({
   level = 2,
   children,
 }: AnimatedHeadingProps) {
-  // Use motion components for each heading level to avoid dynamic tag issues
   const motionTags = {
     h1: motion.h1,
     h2: motion.h2,
