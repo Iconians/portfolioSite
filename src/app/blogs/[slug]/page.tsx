@@ -2,6 +2,7 @@ import { getAllPosts, getPostBySlug } from "@/app/lib/mdx";
 import BlogPostClient from "@/app/Components/BlogPostClient/BlogPostClient";
 import styles from "../blogPage.module.css";
 import Nav from "@/app/Components/Nav/Nav";
+import ClientWrapper from "@/app/Components/ClientWrapper/ClientWrapper";
 
 interface BlogPageProps {
   params: { slug: string };
@@ -16,7 +17,9 @@ export default async function BlogPost({ params }: BlogPageProps) {
     <div className={styles.page}>
       <Nav />
       {/* mark BlogPostClient as client component */}
-      <BlogPostClient frontMatter={frontMatter} mdxSource={mdxSource} />
+      <ClientWrapper>
+        <BlogPostClient frontMatter={frontMatter} mdxSource={mdxSource} />
+      </ClientWrapper>
     </div>
   );
 }
