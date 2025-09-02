@@ -4,13 +4,37 @@ date: "2025-08-30"
 tags: ["Next.js", "React", "Migration", "Portfolio"]
 ---
 
-import AnimatedHeading from "../components/AnimatedHeading";
-import AnimatedList, { AnimatedListItem } from "../components/AnimatedList";
-import AnimatedWrapper from "../components/AnimatedWrapper";
-
 # Migrating a Live Portfolio from React to Next.js
 
+<AnimatedParagraph>
+  When you decide to overhaul your own website, it feels different from working
+  on a client project. There’s no project manager setting deadlines, but there’s
+  also no safety net if things go wrong. Every bug, every deployment
+  misstep—it's all yours.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  I built my portfolio using **Vite and React** because they’re lightweight,
+  fast, and developer-friendly. But as I started adding more projects, images,
+  and interactive features, I hit the limits of static rendering. SEO needed a
+  boost, performance needed a push, and I wanted a stack that could grow with
+  me—not hold me back.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  Enter **Next.js 15**. The framework promised server-side rendering, image
+  optimization, and a cleaner developer experience. The challenge? Moving a live
+  site over **without a single pixel out of place** and **without any
+  downtime.**
+</AnimatedParagraph>
+
 <AnimatedHeading level={2}>The Challenge</AnimatedHeading>
+
+<AnimatedParagraph>
+  This wasn’t just about swapping frameworks—it was a careful rebuild under the
+  hood. The portfolio had to stay online, fully functional, and visually
+  identical from start to finish.
+</AnimatedParagraph>
 
 <AnimatedList>
   <AnimatedListItem>
@@ -22,7 +46,18 @@ import AnimatedWrapper from "../components/AnimatedWrapper";
   </AnimatedListItem>
 </AnimatedList>
 
+<AnimatedParagraph>
+  The goal was to make the migration invisible to visitors. They’d never know
+  the site changed frameworks—only that it loaded faster.
+</AnimatedParagraph>
+
 <AnimatedHeading level={2}>Technical Achievements</AnimatedHeading>
+
+<AnimatedParagraph>
+  The migration required restructuring the app to match Next.js conventions
+  while keeping every feature intact. This included translating components,
+  adjusting routing, and updating image handling.
+</AnimatedParagraph>
 
 <AnimatedList>
   <AnimatedListItem>
@@ -40,7 +75,17 @@ import AnimatedWrapper from "../components/AnimatedWrapper";
   </AnimatedListItem>
 </AnimatedList>
 
+<AnimatedParagraph>
+  This wasn’t a copy-paste job—it was about aligning React components with
+  Next.js’ opinionated, optimized architecture.
+</AnimatedParagraph>
+
 <AnimatedHeading level={2}>Migration Strategy</AnimatedHeading>
+
+<AnimatedParagraph>
+  A successful migration starts with a plan. I avoided the “big bang” rewrite by
+  migrating incrementally and validating each step.
+</AnimatedParagraph>
 
 <AnimatedList>
   <AnimatedListItem>
@@ -57,7 +102,17 @@ import AnimatedWrapper from "../components/AnimatedWrapper";
   </AnimatedListItem>
 </AnimatedList>
 
+<AnimatedParagraph>
+  This approach provided safety nets. If something broke, it happened in
+  development or staging—not on production.
+</AnimatedParagraph>
+
 <AnimatedHeading level={2}>Key Benefits Realized</AnimatedHeading>
+
+<AnimatedParagraph>
+  Once deployed, the improvements were immediate. Pages loaded faster, SEO
+  scores improved, and development felt smoother.
+</AnimatedParagraph>
 
 <AnimatedList>
   <AnimatedListItem>
@@ -74,7 +129,17 @@ import AnimatedWrapper from "../components/AnimatedWrapper";
   </AnimatedListItem>
 </AnimatedList>
 
+<AnimatedParagraph>
+  This migration wasn’t just a one-time upgrade—it laid the groundwork for rapid
+  iteration in the future.
+</AnimatedParagraph>
+
 <AnimatedHeading level={2}>Lessons Learned</AnimatedHeading>
+
+<AnimatedParagraph>
+  No migration is completely smooth. Here are the key insights I took away from
+  the process:
+</AnimatedParagraph>
 
 <AnimatedList>
   <AnimatedListItem>
@@ -88,6 +153,11 @@ import AnimatedWrapper from "../components/AnimatedWrapper";
   </AnimatedListItem>
 </AnimatedList>
 
+<AnimatedParagraph>
+  These lessons will save me hours on the next major upgrade—and hopefully help
+  anyone attempting a similar move.
+</AnimatedParagraph>
+
 <AnimatedHeading level={2}>Tools & Technologies</AnimatedHeading>
 
 <AnimatedList>
@@ -100,3 +170,12 @@ import AnimatedWrapper from "../components/AnimatedWrapper";
   This migration demonstrates how to modernize a production React app without
   losing functionality or user experience!
 </AnimatedWrapper>
+
+<AnimatedParagraph>
+  If you’d like to see how everything fits together under the hood, check out
+  the{" "}
+  <a href="https://github.com/your-username/portfolio-nextjs" target="_blank">
+    full source code on GitHub
+  </a>
+  and follow my work for more deep dives into modern web development.
+</AnimatedParagraph>
