@@ -15,6 +15,7 @@ export default async function BlogPost({ params }: BlogPageProps) {
   return (
     <div className={styles.page}>
       <Nav />
+      {/* mark BlogPostClient as client component */}
       <BlogPostClient frontMatter={frontMatter} mdxSource={mdxSource} />
     </div>
   );
