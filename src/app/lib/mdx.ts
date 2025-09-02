@@ -28,7 +28,7 @@ export const getAllPosts = () => {
     .readdirSync(POSTS_PATH)
     .filter((name) => name.endsWith(".mdx"));
   return fileNames.map((fileName) => {
-    const slug = fileName.replace(".mdx", "");
+    const slug = fileName.replace(".mdx", "").toLowerCase();
     const fullPath = path.join(POSTS_PATH, fileName);
     const source = fs.readFileSync(fullPath, "utf8");
     const { data } = matter(source);
