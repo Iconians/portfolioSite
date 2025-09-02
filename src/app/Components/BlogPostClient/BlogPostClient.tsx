@@ -1,14 +1,23 @@
 "use client";
 import { motion } from "framer-motion";
 import { MDXRemote } from "next-mdx-remote";
-import styles from "../../Blogs/blogPage.module.css";
+import styles from "@/app/Blogs/blogPage.module.css";
+// import styles from "../Blogs/blogPage.module.css";
 import AnimatedHeading from "../Animations/AnimateHeading";
 import AnimatedList, { AnimatedListItem } from "../Animations/AnimatedList";
 import AnimatedWrapper from "../Animations/AnimatedWrapper";
+import { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
+
+interface FrontMatter {
+  title: string;
+  description?: string;
+  date?: string;
+  tags?: string[];
+}
 
 interface BlogPostClientProps {
-  frontMatter: any;
-  mdxSource: any;
+  frontMatter: FrontMatter;
+  mdxSource: MDXRemoteSerializeResult;
 }
 
 export default function BlogPostClient({

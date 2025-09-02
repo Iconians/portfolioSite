@@ -18,7 +18,7 @@ export const getPostBySlug = async (slug: string) => {
   const mdxSource = await serialize(content, { scope: data });
 
   return {
-    frontMatter: data,
+    frontMatter: data as FrontMatter,
     mdxSource,
   };
 };
