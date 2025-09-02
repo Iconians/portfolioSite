@@ -1,0 +1,10 @@
+.blog-article a {
+  color: #0070f3;
+  text-decoration: none;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.blog-article a:hover {
+  color: #1c54b2;
+  transform: translateY(-2px);
+}

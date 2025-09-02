@@ -1,8 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import { MDXRemote } from "next-mdx-remote";
-import styles from "@/app/Blogs/blogPage.module.css";
-// import styles from "../Blogs/blogPage.module.css";
+import styles from "./blogPostClient.module.css";
+
 import AnimatedHeading from "../Animations/AnimateHeading";
 import AnimatedList, { AnimatedListItem } from "../Animations/AnimatedList";
 import AnimatedWrapper from "../Animations/AnimatedWrapper";
