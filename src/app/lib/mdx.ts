@@ -23,7 +23,7 @@ export const getPostBySlug = async (slug: string) => {
   };
 };
 
-export const getAllPosts = () => {
+export const getAllPosts = async () => {
   const fileNames = fs
     .readdirSync(POSTS_PATH)
     .filter((name) => name.endsWith(".mdx"));

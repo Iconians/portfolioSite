@@ -5,7 +5,7 @@ import BlogCard from "@/app/Components/BlogCard.tsx/BlogCard";
 import Nav from "@/app/Components/Nav/Nav";
 
 export default async function BlogIndex() {
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
   console.log("Posts loaded:", posts);
   return (
     <div>
