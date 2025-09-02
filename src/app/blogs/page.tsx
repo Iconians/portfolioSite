@@ -12,7 +12,7 @@ export default async function BlogIndex() {
       <Nav />
       <div className={styles.blogGrid}>
         {posts.map((post) => (
-          <Link key={post.slug} href={`/Blogs/${post.slug}`}>
+          <Link key={post.slug} href={`/blogs/${post.slug}`}>
             <BlogCard
               title={post.frontMatter.title}
               description={post.frontMatter.description}

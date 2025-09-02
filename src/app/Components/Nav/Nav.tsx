@@ -15,7 +15,7 @@ export const Nav = () => {
           <Link className="about-Btn" href="/About">
             About
           </Link>
-          <Link href="/Blogs">Blog</Link>
+          <Link href="/blogs">Blog</Link>
           {/* <Link className="schedule-Btn" to="/schedule">
             Schedule
           </Link> */}
