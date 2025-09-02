@@ -30,7 +30,7 @@ export default function AnimatedList({ children }: animatedLists) {
 export function AnimatedListItem({ children }: animatedLists) {
   return (
     <motion.li
-      style={{ listStyle: "none" }}
+      // style={{ listStyle: "none" }}
       variants={{
         hidden: { opacity: 0, x: -10 },
         visible: { opacity: 1, x: 0 },

@@ -15,7 +15,7 @@ export default async function BlogPost({ params }: BlogPageProps) {
   const { frontMatter, mdxSource } = await getPostBySlug(params.slug);
 
   return (
-    <div className={styles.page}>
+    <div className={styles.slugPage}>
       <Nav />
       {/* mark BlogPostClient as client component */}
       <ClientWrapper>

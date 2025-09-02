@@ -8,12 +8,12 @@ type AnimatedParagraphsProps = {
   delay?: number;
 };
 
-export const AnimatedParagraph = ({
+export default function AnimatedParagraph({
   children,
   delay,
-}: AnimatedParagraphsProps) => {
+}: AnimatedParagraphsProps) {
   return (
-    <motion.p
+    <motion.div
       initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -23,6 +23,8 @@ export const AnimatedParagraph = ({
         delay,
       }}
       className={styles.animationP}
-    ></motion.p>
+    >
+      {children}
+    </motion.div>
   );
-};
+}

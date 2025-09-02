@@ -6,7 +6,7 @@ import AnimatedHeading from "@/app/Components/Animations/AnimateHeading";
 import AnimatedList, {
   AnimatedListItem,
 } from "@/app/Components/Animations/AnimatedList";
-import { AnimatedParagraph } from "@/app/Components/Animations/AnimatedParagraghs";
+import AnimatedParagraph from "@/app/Components/Animations/AnimatedParagraphs";
 import AnimatedWrapper from "@/app/Components/Animations/AnimatedWrapper";
 import { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
 

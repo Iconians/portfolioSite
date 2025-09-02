@@ -28,7 +28,7 @@ export default function AnimatedHeading({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      style={{ marginTop: "1.5em", marginBottom: "0.5em" }}
+      style={{ marginTop: "1.5em", marginBottom: "0.5em", textAlign: "center" }}
     >
       {children}
     </MotionTag>
