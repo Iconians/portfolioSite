@@ -1,4 +1,4 @@
-"use client";
+export const dynamic = "force-dynamic";
 import { getAllPosts, getPostBySlug } from "@/app/lib/mdx";
 import BlogPostClient from "@/app/Components/BlogPostClient/BlogPostClient";
 import styles from "../blogPage.module.css";
