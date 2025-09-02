@@ -2,10 +2,11 @@
 import { motion } from "framer-motion";
 import { MDXRemote } from "next-mdx-remote";
 import styles from "./blogPostClient.module.css";
-
-import AnimatedHeading from "../Animations/AnimateHeading";
-import AnimatedList, { AnimatedListItem } from "../Animations/AnimatedList";
-import AnimatedWrapper from "../Animations/AnimatedWrapper";
+import AnimatedHeading from "@/app/Components/Animations/AnimateHeading";
+import AnimatedList, {
+  AnimatedListItem,
+} from "@/app/Components/Animations/AnimatedList";
+import AnimatedWrapper from "@/app/Components/Animations/AnimatedWrapper";
 import { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
 
 interface FrontMatter {

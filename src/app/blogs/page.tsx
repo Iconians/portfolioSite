@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { getAllPosts } from "../lib/mdx";
+import { getAllPosts } from "@/app/lib/mdx";
 import styles from "./blogPage.module.css";
-import BlogCard from "../Components/BlogCard.tsx/BlogCard";
-import Nav from "../Components/Nav/Nav";
+import BlogCard from "@/app/Components/BlogCard.tsx/BlogCard";
+import Nav from "@/app/Components/Nav/Nav";
 
 export default async function BlogIndex() {
   const posts = getAllPosts();
-
+  console.log("Posts loaded:", posts);
   return (
     <div>
       <Nav />
