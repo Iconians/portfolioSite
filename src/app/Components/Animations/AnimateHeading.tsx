@@ -5,11 +5,13 @@ import { motion } from "framer-motion";
 interface AnimatedHeadingProps {
   level?: number;
   children: React.ReactNode;
+  className?: string;
 }
 
 export default function AnimatedHeading({
   level = 2,
   children,
+  className,
 }: AnimatedHeadingProps) {
   const motionTags = {
     h1: motion.h1,
@@ -24,6 +26,7 @@ export default function AnimatedHeading({
 
   return (
     <MotionTag
+      className={className}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}

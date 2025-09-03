@@ -5,11 +5,13 @@ import { listenerCount } from "process";
 
 type animatedLists = {
   children: React.ReactNode;
+  className?: string;
 };
 
-export default function AnimatedList({ children }: animatedLists) {
+export default function AnimatedList({ children, className }: animatedLists) {
   return (
     <motion.ul
+      className={className}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
@@ -27,9 +29,10 @@ export default function AnimatedList({ children }: animatedLists) {
   );
 }
 
-export function AnimatedListItem({ children }: animatedLists) {
+export function AnimatedListItem({ children, className }: animatedLists) {
   return (
     <motion.li
+      className={className}
       // style={{ listStyle: "none" }}
       variants={{
         hidden: { opacity: 0, x: -10 },

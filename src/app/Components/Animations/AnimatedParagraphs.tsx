@@ -6,11 +6,13 @@ import styles from "./animations.module.css";
 type AnimatedParagraphsProps = {
   children: ReactNode;
   delay?: number;
+  className?: string;
 };
 
 export default function AnimatedParagraph({
   children,
   delay,
+  className,
 }: AnimatedParagraphsProps) {
   return (
     <motion.div
