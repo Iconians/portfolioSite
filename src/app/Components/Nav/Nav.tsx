@@ -1,21 +1,22 @@
 import Link from "next/link";
-import "./Nav.css";
+// import "./Nav.css";
+import styles from "./Nav.module.css";
 
 export const Nav = () => {
   return (
-    <div className="nav-wrapper">
-      <nav className="nav-bar">
-        <div className="brand">
+    <div className={styles.navWrapper}>
+      <nav className={styles.navBar}>
+        <div className={styles.brand}>
           <h2>Clayton Cripe</h2>
         </div>
-        <div className="ul-list">
-          <Link className="home-Btn" href="/">
+        <div className={styles.ulList}>
+          <Link className={styles.linkBtn} href="/">
             Home
           </Link>
-          <Link className="about-Btn" href="/About">
+          <Link className={styles.linkBtn} href="/About">
             About
           </Link>
-          <Link className="blog-btn" href="/blogs">
+          <Link className={styles.linkBtn} href="/blogs">
             Blog
           </Link>
           {/* <Link className="schedule-Btn" to="/schedule">

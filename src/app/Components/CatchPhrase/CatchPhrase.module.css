@@ -1,0 +1,40 @@
+.catchPhrase {
+  position: relative;
+  background-image: url(/mountainpic.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  height: 358px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  /* Typography */
+  color: antiquewhite;
+  font-size: 1.8rem;
+  font-weight: 600;
+  padding: 20px;
+
+  /* Rounded corners to match carousel */
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  overflow: hidden;
+}
+
+/* Overlay for better text readability */
+.catchPhrase::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4); /* darkens bg slightly */
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.catchPhrase h2 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  line-height: 1.4;
+}

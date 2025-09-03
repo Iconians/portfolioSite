@@ -15,18 +15,20 @@ export const AnimatedSection = ({
   delay = 0,
   staggerChildren,
 }: AnimatedSectionProps) => {
-  <motion.section
-    className={className}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true, amount: 0.2 }}
-    variants={{
-      hidden: { opacity: 0, y: 20 },
-      visible: staggerChildren
-        ? { opacity: 1, y: 0, transition: { staggerChildren, delay } }
-        : { opacity: 1, y: 0, transition: { delay, duration: 0.5 } },
-    }}
-  >
-    {children}
-  </motion.section>;
+  return (
+    <motion.section
+      className={className}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={{
+        hidden: { opacity: 0, y: 20 },
+        visible: staggerChildren
+          ? { opacity: 1, y: 0, transition: { staggerChildren, delay } }
+          : { opacity: 1, y: 0, transition: { delay, duration: 0.5 } },
+      }}
+    >
+      {children}
+    </motion.section>
+  );
 };

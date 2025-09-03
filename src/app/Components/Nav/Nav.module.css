@@ -1,0 +1,57 @@
+.navWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem 0;
+  /* background-color: var(--bg-color); */
+  color: var(--text-color);
+}
+
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 1200px;
+}
+
+.brand h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.ulList {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.linkBtn {
+  color: var(--text-color);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.linkBtn:hover {
+  color: darkcyan;
+  text-decoration: underline;
+}
+
+/* Dark mode / light mode support using media query */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #121212;
+    --text-color: #f5f5f5;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #111111;
+  }
+}
+
+/* mobile responsive */

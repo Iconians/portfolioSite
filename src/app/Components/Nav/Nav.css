@@ -13,14 +13,13 @@
 .ul-list ul li input {
   font-size: 16px;
   border: none;
-  background-color: white;
+  background-color: var(--bg-color);
   cursor: pointer;
 }
 
 .about-Btn, .schedule-Btn, .home-Btn, .blog-btn {
-  /* background-color: white; */
   margin: 20px;
-  color: white;
+  color: var(--text-color);
   border: none;
   font-size: 16px;
   cursor: pointer;
@@ -29,4 +28,4 @@
 .about-Btn:hover, .schedule-Btn:hover, .home-Btn:hover {
   color: darkcyan;
   text-decoration: underline;
-} 
+}  
