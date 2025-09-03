@@ -6,7 +6,7 @@ export const CatchPhrase = () => {
   return (
     <AnimatedSection className={styles.catchPhrase}>
       <AnimatedHeading level={2}>
-        I develop experiences that make people's lives simple
+        I develop experiences that make peoples lives simple
       </AnimatedHeading>
     </AnimatedSection>
   );
