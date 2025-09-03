@@ -20,7 +20,7 @@
   position: fixed;
   inset: 0;
   padding: 1rem;
-  visibility: hidden;
+  /* visibility: hidden; */
   opacity: 0;
   display: flex;
   justify-content: center;
@@ -31,10 +31,10 @@
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.isVisible {
+/* .isVisible {
   visibility: visible;
   opacity: 1;
-}
+} */
 
 .modalDialog {
   max-width: 800px;
