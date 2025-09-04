@@ -1,10 +1,42 @@
+.blogPage {
+  min-height: 100vh;   /* make sure page fills viewport height */
+  background: var(--site-bg-color); /* so it respects your theme */
+}
+
 .blogGrid {
   display: grid;
-  grid-template-columns:  repeat(auto-fill, minmax(280px, 1fr));
-  gap: "1.5rem";
-  padding: "2rem"
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;        /* no quotes */
+  padding: 2rem;      /* no quotes */
+  width: 100%;        /* make sure it stretches full width */
+  max-width: 1200px;  /* optional: center within a max container */
+  margin: 0 auto;     /* center it horizontally */
+  grid-template-columns: 1fr;
+  background: var(--site-bg-color);
 }
 
 .slugPage {
+  margin: auto;
   text-align: left;
+}
+
+/* tablet: 600px+ */
+@media (min-width: 600px) {
+  .blogGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* desktop: 900px+ */
+@media (min-width: 900px) {
+  .blogGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* large desktop: 1200px+ */
+@media (min-width: 1200px) {
+  .blogGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }

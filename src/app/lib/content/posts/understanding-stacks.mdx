@@ -1,0 +1,196 @@
+---
+title: "Understanding Stacks"
+date: "2024-07-04"
+tags: ["Programming", "Coding", "Data Structures", "Typescript"]
+---
+
+# Understanding Stacks
+
+<AnimatedParagraph>
+  Stacks are a fundamental data structure that operate on the Last In, First Out
+  (LIFO) principle. They are widely used in various applications, especially in
+  recursion and function call management. Let’s explore the key concepts,
+  operations, and an example implementation of a stack using a singly linked
+  list.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>What is a Stack?</AnimatedHeading>
+
+<AnimatedParagraph>
+  A stack is a linear data structure where elements are added and removed from
+  the top. This means the last element added is the first one to be removed,
+  similar to a stack of plates.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>LIFO Principle</AnimatedHeading>
+
+<AnimatedParagraph>
+  The LIFO (Last In, First Out) principle means that the last item added to the
+  stack is the first one to be removed. Imagine a stack of plates: you add new
+  plates on top, and when you need a plate, you take the one from the top.
+</AnimatedParagraph>
+
+<AnimatedParagraph>Example:</AnimatedParagraph>
+
+<AnimatedCode>{`Top (Head) → Plate4 Plate3 Plate2 Plate1`}</AnimatedCode>
+
+<AnimatedHeading level={2}>Operations on Stacks</AnimatedHeading>
+
+<AnimatedHeading level={3}>Push (Adding to the Stack)</AnimatedHeading>
+
+<AnimatedParagraph>
+  When you add an item to the stack, it goes on top. Here’s the process:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    Create a new node with the value to be added.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Point the new node’s previous pointer to the current head.
+  </AnimatedListItem>
+  <AnimatedListItem>Set the head to the new node.</AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Pop (Removing from the Stack)</AnimatedHeading>
+
+<AnimatedParagraph>
+  Removing an item from the stack happens at the top. Here’s the process:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    Check if the stack is empty. If it is, return undefined.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Store the current head in a temporary variable.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Update the head to point to the previous node.
+  </AnimatedListItem>
+  <AnimatedListItem>Return the value of the old head node.</AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Peek (Viewing the Top Item)</AnimatedHeading>
+
+<AnimatedParagraph>
+  Peeking allows you to see the value at the top of the stack without removing
+  it. Simply return the value of the head node.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>
+  Example Implementation in TypeScript
+</AnimatedHeading>
+
+<AnimatedCode>
+  {`type Node<T> = {
+    value: T;
+    prev?: Node<T> 
+}
+class Stack<T> {
+    public length: number;
+    private head?: Node<T>;
+    constructor() {
+        this.head = undefined;
+        this.length = 0;
+    }
+    push(item: T): void {
+        const node = { value: item } as Node<T>;
+        this.length++;
+        if (!this.head) {
+            this.head = node;
+            return;
+        }
+        node.prev = this.head;
+        this.head = node;
+    }
+    pop(): T | undefined {
+        this.length = Math.max(0, this.length - 1);
+        if (this.length === 0) {
+            const head = this.head;
+            this.head = undefined;
+            return head?.value;
+        }
+        const head = this.head as Node<T>;
+        this.head = head.prev;
+        return head.value;
+    }
+    peek(): T | undefined {
+        return this.head?.value;
+    }
+}`}
+</AnimatedCode>
+
+<AnimatedHeading level={3}>Push Operation</AnimatedHeading>
+
+<AnimatedParagraph>
+  When you call <code>push(item: T)</code>, the new item is added to the top of
+  the stack:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    A new node is created with the given value.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    The new node’s previous pointer is set to the current head.
+  </AnimatedListItem>
+  <AnimatedListItem>The head is updated to the new node.</AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Pop Operation</AnimatedHeading>
+
+<AnimatedParagraph>
+  When you call <code>pop()</code>, the item at the top of the stack is removed:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>If the stack is empty, return undefined.</AnimatedListItem>
+  <AnimatedListItem>
+    The current head node is stored temporarily.
+  </AnimatedListItem>
+  <AnimatedListItem>The head is updated to the previous node.</AnimatedListItem>
+  <AnimatedListItem>
+    The value of the old head node is returned.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Peek Operation</AnimatedHeading>
+
+<AnimatedParagraph>
+  When you call <code>peek()</code>, the value of the item at the top of the
+  stack is returned without removing it.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Complexity</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Push and Pop:</strong> Both operations are constant time, O(1),
+    because they involve only a few pointer updates, regardless of the stack’s
+    size.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Peek:</strong> This operation is also constant time, O(1), as it
+    simply returns the value of the head node.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Stacks in Recursion</AnimatedHeading>
+
+<AnimatedParagraph>
+  Stacks are heavily used in recursion. When a function calls itself, each call
+  is placed on the stack. Once a function completes, it is popped off the stack.
+  This is why the call stack in programming languages is called a “stack” — it
+  operates on the same LIFO principle.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Conclusion</AnimatedHeading>
+
+<AnimatedParagraph>
+  Stacks are an essential data structure for managing data in a LIFO manner.
+  Understanding their implementation and operations can help you efficiently
+  manage tasks that require the LIFO principle. By using a singly linked list,
+  stacks can provide efficient push and pop operations, making them suitable for
+  various applications in computer science and software development.
+</AnimatedParagraph>

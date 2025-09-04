@@ -1,0 +1,198 @@
+---
+title: "Understanding Queues: A Beginner’s Guide"
+date: "2024-07-02"
+tags: ["Data Structures", "Data Structure Algorithm", "Programming", "Coding"]
+---
+
+# Understanding Queues: A Beginner’s Guide
+
+<AnimatedParagraph>
+  Queues are one of the most common data structures, widely used in various
+  applications. They are a specific implementation of a linked list, designed to
+  follow the First In, First Out (FIFO) principle. Let’s explore the key
+  concepts, operations, and an example implementation of a queue using a singly
+  linked list.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>What is a Queue?</AnimatedHeading>
+
+<AnimatedParagraph>
+  A queue is a linear data structure that operates on the FIFO principle. This
+  means that the first element added to the queue will be the first one to be
+  removed. Think of a queue like a line at a checkout counter: the first person
+  in line is the first to be served.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Singly Linked List Implementation</AnimatedHeading>
+
+<AnimatedParagraph>
+  A queue can be implemented using a singly linked list where each node contains
+  a value and a reference (or pointer) to the next node in the sequence.
+</AnimatedParagraph>
+
+<AnimatedParagraph>Example:</AnimatedParagraph>
+
+<AnimatedCode>
+  {`Front (Head) → Node1 → Node2 → Node3 → … → Tail (Last)`}
+</AnimatedCode>
+
+<AnimatedHeading level={2}>Operations on Queues</AnimatedHeading>
+
+<AnimatedHeading level={3}>Enqueue (Adding to the Queue)</AnimatedHeading>
+
+<AnimatedParagraph>
+  When you add an item to the queue, it goes to the back (tail) of the queue.
+  Here’s the process:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    Create a new node with the value to be added.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    If the queue is empty, set both the head and the tail to the new node.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    If the queue is not empty, update the current tail’s next pointer to point
+    to the new node and then set the tail to the new node.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Dequeue (Removing from the Queue)</AnimatedHeading>
+
+<AnimatedParagraph>
+  Removing an item from the queue happens at the front (head). Here’s the
+  process:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    Check if the queue is empty. If it is, return undefined.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Store the current head in a temporary variable.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Update the head to the next node in the queue.
+  </AnimatedListItem>
+  <AnimatedListItem>Return the value of the old head node.</AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Peek (Viewing the Front Item)</AnimatedHeading>
+
+<AnimatedParagraph>
+  Peeking allows you to see the value at the front of the queue without removing
+  it. Simply return the value of the head node.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>
+  Example Implementation in TypeScript
+</AnimatedHeading>
+
+<AnimatedCode>
+  {`type Node<T> = {     
+  value: T;     
+  next?: Node<T>; 
+}
+class Queue<T> {
+    public length: number;
+    private head?: Node<T>;
+    private tail?: Node<T>;
+    constructor() {
+        this.head = this.tail = undefined;
+        this.length = 0;
+    }
+    enqueue(item: T): void {
+        const node = { value: item } as Node<T>;
+        this.length++;
+        if (!this.tail) {
+            this.tail = this.head = node;
+            return;
+        }
+        this.tail.next = node;
+        this.tail = node;
+    }
+    dequeue(): T | undefined {
+        if (!this.head) return undefined;
+        this.length--;
+        const head = this.head;
+        this.head = this.head.next;
+        return head.value;
+    }
+    peek(): T | undefined {
+        return this.head?.value;
+    }
+}`}
+</AnimatedCode>
+
+<AnimatedHeading level={3}>Enqueue Operation</AnimatedHeading>
+
+<AnimatedParagraph>
+  When you call <code>enqueue(item: T)</code>, the new item is added to the end
+  of the queue:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    A new node is created with the given value.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    If the queue is empty, both the head and tail are set to the new node.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    If not, the current tail’s next pointer is updated to the new node, and the
+    tail is then set to the new node.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Dequeue Operation</AnimatedHeading>
+
+<AnimatedParagraph>
+  When you call <code>dequeue()</code>, the item at the front of the queue is
+  removed:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>If the queue is empty, return undefined.</AnimatedListItem>
+  <AnimatedListItem>
+    The current head node is stored temporarily.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    The head is updated to the next node in the queue.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    The value of the old head node is returned.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Peek Operation</AnimatedHeading>
+
+<AnimatedParagraph>
+  When you call <code>peek()</code>, the value of the item at the front of the
+  queue is returned without removing it.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Complexity</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Enqueue and Dequeue:</strong> Both operations are constant time,
+    O(1), because they involve only a few pointer updates, regardless of the
+    queue’s size.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Peek:</strong> This operation is also constant time, O(1), as it
+    simply returns the value of the head node.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Conclusion</AnimatedHeading>
+
+<AnimatedParagraph>
+  Queues are an essential data structure for managing data in a sequential
+  manner. Understanding their implementation and operations can help you
+  efficiently manage tasks that require the FIFO principle. By using a singly
+  linked list, queues can provide efficient insertion and deletion operations,
+  making them suitable for various applications in computer science and software
+  development.
+</AnimatedParagraph>

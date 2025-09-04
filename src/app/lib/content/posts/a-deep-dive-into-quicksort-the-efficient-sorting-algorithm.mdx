@@ -1,0 +1,117 @@
+---
+title: "A Deep Dive into Quicksort: The Efficient Sorting Algorithm"
+date: "2024-09-05"
+tags: ["Algorithms", "Typescript", "Code", "JavaScript", "Sorting Algorithms"]
+---
+
+# A Deep Dive into Quicksort: The Efficient Sorting Algorithm
+
+<AnimatedParagraph>
+  Quicksort is a highly efficient divide-and-conquer sorting algorithm. It
+  splits a large array into smaller subarrays, sorts them, and combines them
+  back, performing the sort in place and minimizing memory usage.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>How Quicksort Works</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Pivot Selection:</strong> Choose a pivot element to divide the
+    array.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Partitioning:</strong> Move smaller elements left of the pivot and
+    larger elements right.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Recursion:</strong> Apply quicksort to the left and right subarrays
+    until single-element arrays remain.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>In-Place Sorting:</strong> Quicksort sorts without creating extra
+    arrays.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Key Pointers in Quicksort</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Pivot:</strong> Element around which the array is divided.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Index Pointer:</strong> Tracks where smaller elements should be
+    placed.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Walker Pointer:</strong> Scans the array for elements ≤ pivot to
+    swap with index pointer.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Time Complexity</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Best/Average Case:</strong> O(n log n) when pivot divides array
+    evenly.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Worst Case:</strong> O(n²) when pivot splits poorly (e.g., already
+    sorted array).
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>
+  Quicksort Implementation in TypeScript
+</AnimatedHeading>
+
+<AnimatedCode>
+{`// Partition function
+function partition(arr: number[], lo: number, hi: number): number {
+    const pivot = arr[hi];
+    let index = lo - 1;
+
+    for (let i = lo; i < hi; ++i) {
+        if (arr[i] <= pivot) {
+            index++;
+            const tmp = arr[i];
+            arr[i] = arr[index];
+            arr[index] = tmp;
+        }
+    }
+    index++;
+    arr[hi] = arr[index];
+    arr[index] = pivot;
+    return index;
+
+}
+
+// Quicksort function
+function qs(arr: number[], lo: number, hi: number): void {
+if (lo >= hi) return;
+const pivotIndex = partition(arr, lo, hi);
+qs(arr, lo, pivotIndex - 1);
+qs(arr, pivotIndex + 1, hi);
+}
+
+// Main export
+export default function quick_sort(arr: number[]): void {
+qs(arr, 0, arr.length - 1);
+}
+
+// Usage
+const arr = [3, 6, 8, 10, 1, 2, 1];
+quick_sort(arr);
+console.log(arr); // [1, 1, 2, 3, 6, 8, 10]`}
+
+</AnimatedCode>
+
+<AnimatedHeading level={2}>Conclusion</AnimatedHeading>
+
+<AnimatedParagraph>
+  Quicksort is an elegant, efficient, in-place sorting algorithm. Its
+  divide-and-conquer approach makes it fast and memory-efficient. Mastering
+  quicksort helps deepen understanding of recursion, partitioning, and algorithm
+  optimization.
+</AnimatedParagraph>

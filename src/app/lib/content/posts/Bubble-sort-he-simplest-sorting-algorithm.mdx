@@ -1,0 +1,121 @@
+---
+title: "Bubble Sort: The Simplest Sorting Algorithm"
+date: "2024-06-29"
+tags: ["Programming", "Coding", "Algorithms", "Typescript"]
+---
+
+# Bubble Sort: The Simplest Sorting Algorithm
+
+<AnimatedParagraph>
+  Bubble sort is one of the simplest sorting algorithms, known for its ease of
+  implementation and visualization. Imagine a dramatic scenario where a plane is
+  crashing, and the stewardess announces that the only way to save everyone is
+  by writing a sorting algorithm. Even under such pressure, you could quickly
+  write bubble sort — it’s that simple!
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Key Characteristics</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Simplicity:</strong> Bubble sort is incredibly straightforward,
+    often described as just three lines of code.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Visualization:</strong> Easy to visualize and understand, making it
+    a great educational tool.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>In-place Sorting:</strong> Sorts the array in place, requiring no
+    extra space beyond the input array.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Understanding the Algorithm</AnimatedHeading>
+
+<AnimatedParagraph>
+  Bubble sort works by repeatedly stepping through the list to be sorted,
+  comparing each pair of adjacent items and swapping them if they are in the
+  wrong order. This process continues until no more swaps are needed, indicating
+  that the list is sorted.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Time Complexity</AnimatedHeading>
+
+<AnimatedParagraph>
+  Despite its simplicity, bubble sort is not the most efficient algorithm. Its
+  average and worst-case time complexity is O(n²), where n is the number of
+  items being sorted. This quadratic time complexity makes it impractical for
+  large datasets, but it’s still useful for educational purposes and small
+  arrays.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>How Bubble Sort Works</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Initial Pass:</strong> Start at the beginning of the array. Compare
+    the first two elements. If the first element is greater than the second,
+    swap them. Move to the next pair and repeat until the end.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Largest Element Sorted:</strong> After the first pass, the largest
+    element “bubbles up” to its correct position at the end of the array.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Subsequent Passes:</strong> Repeat for remaining elements, ignoring
+    the last sorted element. Each pass positions the next largest element
+    correctly.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Completion:</strong> Continue until no more swaps are needed. The
+    array is now sorted.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Example Implementation</AnimatedHeading>
+
+<AnimatedCode>
+  {`function bubbleSort(arr: number[]): void {
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < arr.length - 1 - i; j++) {
+      if (arr[j] > arr[j + 1]) {
+        const tmp = arr[j];
+        arr[j] = arr[j + 1];
+        arr[j + 1] = tmp;
+      }
+    }
+  }
+}`}
+</AnimatedCode>
+
+<AnimatedHeading level={2}>Explanation of the Code</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Outer Loop:</strong> Ensures enough passes to sort the entire array.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Inner Loop:</strong> Performs comparisons and swaps on the unsorted
+    portion of the array.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Comparison and Swap:</strong> If the current element is greater than
+    the next, swap them.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Optimizing the Range:</strong> The <code>- i</code> adjustment
+    prevents already sorted elements from being compared again.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Conclusion</AnimatedHeading>
+
+<AnimatedParagraph>
+  Bubble sort is a fundamental algorithm that illustrates the basic principles
+  of sorting. While not suitable for large datasets due to its O(n²) complexity,
+  its simplicity and ease of understanding make it a valuable educational tool.
+  Whether you’re a beginner learning sorting algorithms or need a quick, simple
+  sort for a small dataset, bubble sort is an essential part of any programmer’s
+  toolkit.
+</AnimatedParagraph>

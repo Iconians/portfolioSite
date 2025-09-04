@@ -8,8 +8,11 @@ export default async function BlogIndex() {
   const posts = await getAllPosts();
   console.log("Posts loaded:", posts);
   return (
-    <div>
+    <div className={styles.blogPage}>
       <Nav />
+      <div>
+        <h2>Here are some of my Articles</h2>
+      </div>
       <div className={styles.blogGrid}>
         {posts.map((post) => (
           <Link key={post.slug} href={`/blogs/${post.slug}`}>

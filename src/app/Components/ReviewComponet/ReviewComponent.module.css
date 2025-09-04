@@ -8,10 +8,11 @@
 } */
 .reviewWrapper {
   padding: 40px 20px; /* extra padding so the gradient surrounds the card */
-  background: var(--card-bg);
+  background: var(--review-card-bg);
   color: var(--text-primary);
   border-radius: 20px;
   transition: background 0.3s ease, color 0.3s ease;
+  margin: 35px 0 35px 0;
 }
 
 .reviewTitle h2 {

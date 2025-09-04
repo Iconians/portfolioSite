@@ -8,6 +8,7 @@ import AnimatedList, {
 } from "@/app/Components/Animations/AnimatedList";
 import AnimatedParagraph from "@/app/Components/Animations/AnimatedParagraphs";
 import AnimatedWrapper from "@/app/Components/Animations/AnimatedWrapper";
+import { AnimatedCode } from "../Animations/AnimatedCode";
 import { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
 
 interface FrontMatter {
@@ -41,6 +42,7 @@ export default function BlogPostClient({
           AnimatedListItem,
           AnimatedWrapper,
           AnimatedParagraph,
+          AnimatedCode,
         }}
       />
     </motion.article>
