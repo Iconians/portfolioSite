@@ -3,7 +3,7 @@ import fs from "fs";
 import matter from "gray-matter";
 import { serialize } from "next-mdx-remote/serialize";
 
-interface FrontMatter {
+export interface FrontMatter {
   title: string;
   description: string;
   date: string;
