@@ -34,10 +34,27 @@ export const AnimatedCode: React.FC<AnimatedCodeProps> = ({
         customStyle={{
           margin: 0,
           padding: "1rem",
-          fontSize: "14px",
+          fontSize: "clamp(12px, 2.5vw, 14px)", // Responsive font size
           lineHeight: "1.5em",
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-word",
+          overflowX: "hidden",
+          maxWidth: "100%",
+          width: "100%",
+          boxSizing: "border-box",
         }}
-        wrapLines={false}
+        wrapLines={true}
+        wrapLongLines={true}
+        codeTagProps={{
+          style: {
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
+            fontSize: "inherit",
+            maxWidth: "100%",
+            width: "100%",
+          } as React.CSSProperties,
+        }}
       >
         {children}
       </SyntaxHighlighter>

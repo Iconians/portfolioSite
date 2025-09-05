@@ -134,3 +134,40 @@
     justify-content: center;
   }
 }
+
+@media (max-width: 400px) {
+  .aboutPage {
+    padding: 1rem; /* reduce page padding */
+  }
+
+  .header h1 {
+    font-size: 2rem; /* scale heading */
+  }
+
+  .name {
+    font-size: 1.5rem;
+  }
+
+  .bio {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .flexWrapper {
+    gap: 1.2rem; /* tighter spacing */
+  }
+
+  .skillsList {
+    gap: 0.3rem;
+    font-size: 0.85rem;
+  }
+
+  .skillsList li {
+    padding: 0.3rem 0.6rem;
+  }
+
+  .contactIcons {
+    gap: 0.7rem;
+    flex-wrap: wrap; /* avoid squishing */
+  }
+}
