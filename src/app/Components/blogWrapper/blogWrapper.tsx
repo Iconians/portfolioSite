@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import styles from "@/app/blogs/blogPage.module.css";
 import BlogCard from "../BlogCard.tsx/BlogCard";
 import { FrontMatter } from "@/app/lib/mdx";
@@ -29,12 +30,13 @@ export default function BlogGrid({ posts }: { posts: Post[] }) {
       variants={container}
     >
       {posts.map((post) => (
-        <BlogCard
-          key={post.slug}
-          title={post.frontMatter.title}
-          description={post.frontMatter.description}
-          date={post.frontMatter.date}
-        />
+        <Link key={post.slug} href={`/blogs/${post.slug}`}>
+          <BlogCard
+            title={post.frontMatter.title}
+            description={post.frontMatter.description}
+            date={post.frontMatter.date}
+          />
+        </Link>
       ))}
     </motion.div>
   );
