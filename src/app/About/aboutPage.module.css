@@ -135,10 +135,15 @@
   }
 }
 
-@media (max-width: 400px) {
+/* small mobile screens */
+@media (max-width: 429px) {
   .aboutPage {
-    padding: 1rem; /* reduce page padding */
+    padding: 0;
+    width: 100%;
   }
+}
+
+@media (max-width: 400px) {
 
   .header h1 {
     font-size: 2rem; /* scale heading */
@@ -168,6 +173,19 @@
 
   .contactIcons {
     gap: 0.7rem;
-    flex-wrap: wrap; /* avoid squishing */
+    flex-direction: column;
+    width: fit-content;
+    margin: 3rem auto;
+  }
+}
+
+@media (max-width: 355px) {
+  .aboutPage {
+    padding: 0;
+    width: 100%;
+  }
+
+  .profileImage {
+    width: 280px;
   }
 }
