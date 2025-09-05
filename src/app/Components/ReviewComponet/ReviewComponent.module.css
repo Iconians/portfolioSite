@@ -161,6 +161,12 @@
   }
 }
 
+@media (max-width: 425px) {
+  .reviewWrapper {
+    display: none;
+  }
+}
+
 
 /* .reviewCard {
   width: 50%;

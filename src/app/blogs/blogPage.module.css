@@ -68,8 +68,8 @@
   }
 }
 
-/* small screens */
-@media (max-width: 400px) {
+/* mobile screens */
+@media (max-width: 600px) {
   .blogGrid {
     padding: 1rem;
     gap: 1rem;
@@ -120,7 +120,7 @@
 }
 
 /* tablets */
-@media (min-width: 600px) {
+@media (min-width: 601px) {
   .blogGrid {
     grid-template-columns: repeat(2, 1fr);
   }
