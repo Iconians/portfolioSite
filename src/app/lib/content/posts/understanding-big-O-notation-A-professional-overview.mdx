@@ -1,0 +1,178 @@
+---
+title: "Understanding Big O Notation: A Professional Overview"
+date: "2024-06-27"
+tags: ["Programming", "JavaScript", "Coding"]
+---
+
+# Understanding Big O Notation: A Professional Overview
+
+<AnimatedParagraph>
+  Big O notation is a mathematical concept used to describe the performance or
+  complexity of an algorithm. Specifically, it provides a high-level
+  understanding of the time and memory requirements relative to the input size.
+  When evaluating algorithms, it is crucial to consider the worst-case scenario,
+  which is often what Big O notation represents.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Key Concepts in Big O Notation</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Time Complexity:</strong> Measures the amount of time an algorithm
+    takes to complete as a function of the input size.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Space Complexity:</strong> Measures the amount of memory an
+    algorithm uses as a function of the input size.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedParagraph>
+  A common method for analyzing an algorithm’s complexity is to look at the
+  number of loops it contains and how these loops interact.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>
+  Analyzing Algorithms with Big O Notation
+</AnimatedHeading>
+
+<AnimatedParagraph>
+  Let’s explore some examples to understand how to determine the Big O notation
+  for various algorithms.
+</AnimatedParagraph>
+
+<AnimatedHeading level={3}>Example 1: O(N)</AnimatedHeading>
+
+<AnimatedCode>
+  {`const sumCharCodes = (n) => {
+    let sum = 0;
+    for (let i = 0; i < n.length; i++) {
+      sum += n.charCodeAt(i);
+    }
+    return sum;
+  };
+  console.log(sumCharCodes("513085468161651651681351156"));`}
+</AnimatedCode>
+
+<AnimatedParagraph>
+  In this example, the algorithm iterates over each character in the string{" "}
+  <code>n</code> once. Therefore, the time complexity is O(N), where N is the
+  length of the string.
+</AnimatedParagraph>
+
+<AnimatedHeading level={3}>Example 2: O(2N) or O(N)</AnimatedHeading>
+
+<AnimatedCode>
+  {`const sumCharCodes2 = (n) => {
+    let sum = 0;
+    for (let i = 0; i < n.length; i++) sum += n.charCodeAt(i);
+    for (let i = 0; i < n.length; i++) sum += n.charCodeAt(i);
+    return sum;
+  };
+  console.log(sumCharCodes2("513085468161651651681351156"));`}
+</AnimatedCode>
+
+<AnimatedParagraph>
+  Here, the algorithm contains two separate loops, each iterating over the
+  string <code>n</code>. Even though there are two loops, they run sequentially,
+  resulting in a time complexity of O(2N), which simplifies to O(N).
+</AnimatedParagraph>
+
+<AnimatedHeading level={3}>Example 3: O(N)</AnimatedHeading>
+
+<AnimatedCode>
+  {`const sumCharCodes3 = (n) => {
+    let sum = 0;
+    for (let i = 0; i < n.length; i++) {
+      const charCode = n.charCodeAt(i);
+      if (charCode === 69) return sum;
+      sum += n.charCodeAt(i);
+    }
+    return sum;
+  };
+  console.log(sumCharCodes3("jsknjkwnjknewknlklsamdlkmEe kelklmsklmlksa"));`}
+</AnimatedCode>
+
+<AnimatedParagraph>
+  The algorithm may not always iterate through the entire string due to the
+  early return condition. However, in the worst-case scenario, it will iterate
+  through all characters, giving O(N) time complexity.
+</AnimatedParagraph>
+
+<AnimatedHeading level={3}>Example 4: O(N²)</AnimatedHeading>
+
+<AnimatedCode>
+  {`const sumCharCodes4 = (n) => {
+    let sum = 0;
+    for (let i = 0; i < n.length; i++) {
+      for (let j = 0; j < n.length; j++) sum += n.charCodeAt(i);
+    }
+    return sum;
+  };
+  console.log(sumCharCodes4("jsknjkwnjknewknlklsamdlkmEe kelklmsklmlksa"));`}
+</AnimatedCode>
+
+<AnimatedParagraph>
+  Two nested loops over the string <code>n</code> result in O(N²) time
+  complexity.
+</AnimatedParagraph>
+
+<AnimatedHeading level={3}>Example 5: O(N³)</AnimatedHeading>
+
+<AnimatedCode>
+  {`const sumCharCodes5 = (n) => {
+    let sum = 0;
+    for (let i = 0; i < n.length; i++) {
+      const charCode = n.charCodeAt(i);
+      for (let j = 0; j < n.length; j++) {
+        for (let k = 0; k < n.length; k++) sum += charCode;
+      }
+    }
+    return sum;
+  };
+  console.log(sumCharCodes5("jsknjkwnjknewknlklsamdlkmEe kelklmsklmlksa"));`}
+</AnimatedCode>
+
+<AnimatedParagraph>
+  Three nested loops give O(N³) time complexity.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Common Big O Notations</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    O(1): Constant time. Performance unaffected by input size.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    O(N): Linear time. Grows linearly with input size.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    O(N²): Quadratic time. Proportional to the square of input size.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    O(N³): Cubic time. Proportional to the cube of input size.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    O(log N): Logarithmic time. Performance grows logarithmically.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    O(N log N): Linearithmic time. Often seen in sorting algorithms like
+    quicksort.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Practical Examples</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>O(N log N): Quicksort algorithm</AnimatedListItem>
+  <AnimatedListItem>O(log N): Binary search trees</AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Conclusion</AnimatedHeading>
+
+<AnimatedParagraph>
+  Understanding Big O notation is crucial for evaluating the efficiency of
+  algorithms. By analyzing the loops and their interactions, we can determine
+  time and space complexities, which help in making informed decisions about
+  algorithm performance, especially in worst-case scenarios.
+</AnimatedParagraph>

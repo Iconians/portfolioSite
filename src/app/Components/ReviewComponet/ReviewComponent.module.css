@@ -1,17 +1,56 @@
-.reviewWrapper {
+
+
+/* .reviewWrapper {
   padding: 20px;
   background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
   color: #fff;
   border-radius: 20px;
+} */
+.reviewWrapper {
+  padding: 40px 20px; /* extra padding so the gradient surrounds the card */
+  background: var(--review-card-bg);
+  color: var(--text-primary);
+  border-radius: 20px;
+  transition: background 0.3s ease, color 0.3s ease;
+  margin: 35px 0 35px 0;
 }
 
 .reviewTitle h2 {
   text-align: center;
   font-size: 2rem;
   margin-bottom: 20px;
+  color: var(--heading-color);
 }
 
+/* .reviewTitle h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+} */
+
 .reviewCardWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  height: 300px;
+  background: var(--card-inner-bg);
+}
+
+.carouselLeftBtn, .carouselRightBtn {
+  font-size: 30px;
+  color: var(--accent-color);
+  transition: transform 0.2s ease;
+  position: relative;
+  z-index: 2;
+  width: 80px;
+}
+
+/* .reviewCardWrapper {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -21,7 +60,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   height: 300px;
-}
+} */
 
 .mainCarouselWrapper {
   position: relative;
@@ -31,14 +70,14 @@
   width: 100%;
 }
 
-.carouselLeftBtn, .carouselRightBtn {
+/* .carouselLeftBtn, .carouselRightBtn {
   font-size: 30px;
   color: #ffd700;
   transition: transform 0.2s ease;
   position: relative;
   z-index: 2;
   width: 80px;
-}
+} */
 
 .carouselLeftBtn:hover, .carouselRightBtn:hover {
   transform: scale(1.2);
@@ -83,9 +122,14 @@
 }
 
 .stars {
-  color: #ffd700;
+  color: var(--accent-color);
   font-size: 1.2rem;
 }
+
+/* .stars {
+  color: #ffd700;
+  font-size: 1.2rem;
+} */
 
 .cardReview p {
   font-size: 1rem;
@@ -114,6 +158,12 @@
 
   .cardReview p {
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .reviewWrapper {
+    display: none;
   }
 }
 

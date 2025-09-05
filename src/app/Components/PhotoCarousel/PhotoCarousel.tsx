@@ -5,9 +5,10 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import "./PhotoCarousel.css";
 import { portfolioItems } from "@/app/utils/PorfolioItems";
 import Image from "next/image";
+import styles from "./PhotoCarousel.module.css";
+import { motion } from "framer-motion";
 
 export const PhotoCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,9 +32,14 @@ export const PhotoCarousel = () => {
   }, []);
 
   return (
-    <div className="carouselWrapper">
-      <div className="mainCarouselWrapper">
-        <button onClick={prevSlide} className="carouselLeftBtn">
+    <motion.div
+      className={styles.carouselWrapper}
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
+      <div className={styles.mainCarouselWrapper}>
+        <button onClick={prevSlide} className={styles.carouselLeftBtn}>
           {<FontAwesomeIcon icon={faChevronLeft} />}
         </button>
         {portfolioItems.map((image, index) => (
@@ -43,15 +49,15 @@ export const PhotoCarousel = () => {
             src={image.img}
             alt={image.caption}
             key={image.id}
-            className={`carouselImgs ${
-              currentIndex === index ? "selected" : ""
+            className={`${styles.carouselImgs} ${
+              currentIndex === index ? styles.selected : ""
             }`}
           />
         ))}
-        <button onClick={nextSlide} className="carouselRightBtn">
+        <button onClick={nextSlide} className={styles.carouselRightBtn}>
           {<FontAwesomeIcon icon={faChevronRight} />}
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 };

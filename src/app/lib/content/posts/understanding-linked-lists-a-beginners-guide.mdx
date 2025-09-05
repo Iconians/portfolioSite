@@ -1,0 +1,149 @@
+---
+title: "Understanding Linked Lists: A Beginner’s Guide"
+date: "2024-07-02"
+tags: ["Data Structures", "Programming", "Coding"]
+---
+
+# Understanding Linked Lists: A Beginner’s Guide
+
+<AnimatedParagraph>
+  Linked lists are a fundamental data structure that many beginners encounter
+  when diving into computer science. They organize data in such a way that
+  allows efficient insertion and deletion operations. Let’s break down the key
+  concepts of linked lists, both singly and doubly linked, and understand their
+  operations and complexities.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>What is a Linked List?</AnimatedHeading>
+
+<AnimatedParagraph>
+  A linked list is a sequence of nodes where each node points to the next node
+  in the sequence. Think of it as a chain where each link points to the next
+  one. This structure allows us to insert and delete nodes efficiently.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Singly Linked List</AnimatedHeading>
+
+<AnimatedParagraph>
+  In a singly linked list, each node contains data and a reference (or pointer)
+  to the next node. You can only move forward through the list; once you pass a
+  node, you cannot go back to it or choose a different starting point without
+  starting over from the head of the list.
+</AnimatedParagraph>
+
+<AnimatedParagraph>Example:</AnimatedParagraph>
+
+<AnimatedCode>{`Node1 → Node2 → Node3 → Node4`}</AnimatedCode>
+
+<AnimatedParagraph>
+  Here, each node points to the next node in the sequence. If you are at Node1,
+  you can move to Node2 but not directly to Node3 or back to Node1 once you pass
+  it.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Doubly Linked List</AnimatedHeading>
+
+<AnimatedParagraph>
+  A doubly linked list extends the singly linked list by adding a reference to
+  the previous node. This allows movement in both directions, forward and
+  backward.
+</AnimatedParagraph>
+
+<AnimatedParagraph>Example:</AnimatedParagraph>
+
+<AnimatedCode>{`Node1 ↔ Node2 ↔ Node3 ↔ Node4`}</AnimatedCode>
+
+<AnimatedParagraph>
+  In this structure, each node points to both the next and the previous node.
+  This bidirectional movement makes some operations more efficient.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Memory Allocation</AnimatedHeading>
+
+<AnimatedParagraph>
+  Linked lists use dynamic memory allocation (heap memory) rather than stack
+  memory, which can be more expensive in terms of performance. However, this
+  allows linked lists to be flexible in size, unlike arrays that have a fixed
+  size.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Operations on Linked Lists</AnimatedHeading>
+
+<AnimatedHeading level={3}>Insertion</AnimatedHeading>
+
+<AnimatedParagraph>
+  When inserting a new node into a linked list, you need to carefully update the
+  pointers to maintain the structure of the list. Here’s how it works:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>Identify where to insert the node.</AnimatedListItem>
+  <AnimatedListItem>
+    Update the previous node’s next pointer to point to the new node.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Set the new node’s next pointer to the node that was previously next in the
+    sequence.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    In a doubly linked list, also update the new node’s previous pointer and the
+    next node’s previous pointer.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Deletion</AnimatedHeading>
+
+<AnimatedParagraph>
+  Deleting a node involves updating pointers to bypass the node being removed.
+  Here’s the step-by-step process:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>Find the node to be deleted.</AnimatedListItem>
+  <AnimatedListItem>
+    Update the previous node’s next pointer to point to the node after the one
+    being deleted.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Update the next node’s previous pointer (in a doubly linked list) to point
+    to the node before the one being deleted.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Set the pointers of the node being deleted to null to remove it from the
+    list.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Order of Operations:</strong> The sequence of these steps is
+    crucial. If you break the next pointer before updating the previous node’s
+    pointer, you could lose access to the subsequent nodes.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Complexity</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Insertion and Deletion:</strong> These operations are constant time,
+  O(1), because you only need to update a few pointers, regardless of the list’s
+  size.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  <strong>Traversal:</strong> Traversing a linked list to find a node or visit
+  each node is linear time, O(n), because you may need to visit each node in the
+  list.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  While insertion and deletion are efficient, traversing a linked list can be
+  costly in terms of time complexity. For large lists, this can be a significant
+  downside.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Conclusion</AnimatedHeading>
+
+<AnimatedParagraph>
+  Linked lists provide a flexible and efficient way to manage data, especially
+  when frequent insertions and deletions are required. Understanding their
+  structure and operations can help you leverage their benefits while being
+  mindful of traversal costs.
+</AnimatedParagraph>

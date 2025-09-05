@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { portfolioItems } from "../utils/PorfolioItems";
 
 type AppContextProps = {
   children?: React.ReactNode;
@@ -17,11 +16,11 @@ type portfolioItem = {
   id: number;
 };
 
-type modalOpen = (event: React.MouseEvent<HTMLDivElement>) => void;
+type modalOpen = (item: portfolioItem) => void;
 
 type AppContext = {
   openModal: boolean;
-  modalData: portfolioItem[] | [];
+  modalData: portfolioItem | null;
   modalOpen: modalOpen;
   modalClose: () => void;
   openSchedule: boolean;
@@ -34,22 +33,14 @@ const AppContext = createContext({} as AppContext);
 
 export const AppProvider = ({ children }: AppContextProps) => {
   const [openModal, setOpenModal] = useState(false);
-  const [modalData, setModalData] = useState<portfolioItem[]>([]);
+  const [modalData, setModalData] = useState<portfolioItem | null>(null);
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openAbout, setAbout] = useState(false);
   const [openContact, setContact] = useState(false);
 
-  const modalOpen = (event: React.MouseEvent<HTMLElement>) => {
-    const target = event.currentTarget as HTMLElement;
-    const id = target.getAttribute("id");
-
-    // if (name === null) {
-    const selectedItem = portfolioItems.filter(
-      (item) => item.id === parseInt(id || "")
-    );
-    setModalData(selectedItem);
+  const modalOpen = (item: portfolioItem) => {
+    setModalData(item);
     setOpenModal(true);
-    // }
   };
 
   const openFullPageModal = (name: string) => {
@@ -66,6 +57,7 @@ export const AppProvider = ({ children }: AppContextProps) => {
 
   const modalClose = () => {
     setOpenModal(false);
+    setModalData(null);
     setOpenSchedule(false);
     setAbout(false);
     setContact(false);

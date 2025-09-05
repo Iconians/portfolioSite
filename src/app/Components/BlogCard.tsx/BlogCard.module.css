@@ -1,0 +1,68 @@
+.blogCard {
+  padding: 1rem;
+  border: 1px solid var(--blog-card-border);
+  border-radius: 8px;
+  cursor: pointer;
+  background: var(--blog-card-bg);
+  box-shadow: var(--card-shadow);
+  color: var(--text-primary);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease, color 0.3s ease;
+}
+
+.blogCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+}
+
+/* Title */
+.h3 {
+  color: var(--heading-color);
+  transition: color 0.3s;
+  margin: 0 0 0.5rem 0;
+}
+
+.blogCard:hover .h3 {
+  color: var(--heading-color);
+}
+
+/* Description */
+.p {
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+/* Date */
+.small {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+
+
+/* .blogCard {
+  padding: "1rem";
+  border: "1px solid #eaeaea";
+  border-radius: "8px";
+  cursor: "pointer";
+  background: "#fff";
+  box-shadow: "0 2px 6px rgba(0,0,0,0.05)";
+}
+
+.h3 {
+  color: #0070f3;
+  transition: color 0.3s;
+  margin: 0, 0, 0.5rem, 0;
+}
+
+.blog-card:hover h3 {
+  color: #1c54b2;
+}
+
+.p {
+  color: #333;
+  margin: 0;
+}
+
+.small {
+  color: #666;
+} */

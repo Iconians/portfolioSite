@@ -1,4 +1,6 @@
-.nav-bar {
+
+
+/* .nav-bar {
   display: flex;
   justify-content: space-between;
 }
@@ -13,14 +15,13 @@
 .ul-list ul li input {
   font-size: 16px;
   border: none;
-  background-color: white;
+  background-color: var(--bg-color);
   cursor: pointer;
 }
 
-.about-Btn, .schedule-Btn, .home-Btn {
-  /* background-color: white; */
+.about-Btn, .schedule-Btn, .home-Btn, .blog-btn {
   margin: 20px;
-  color: white;
+  color: var(--text-color);
   border: none;
   font-size: 16px;
   cursor: pointer;
@@ -29,4 +30,4 @@
 .about-Btn:hover, .schedule-Btn:hover, .home-Btn:hover {
   color: darkcyan;
   text-decoration: underline;
-} 
+}   */

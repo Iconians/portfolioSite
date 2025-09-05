@@ -1,0 +1,164 @@
+.blogPage {
+  min-height: 100vh;   /* full viewport height */
+  background: var(--site-bg-color);
+}
+
+.blogGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  /* padding: 2rem; */
+  width: 100%;
+  max-width: 1200px;  /* keeps it readable on big monitors */
+  margin: 0 auto;     /* centers grid */
+  background: var(--site-bg-color);
+}
+
+.slugPage {
+  margin: auto;
+  text-align: left;
+}
+
+.slugPage pre {
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.slugPage code {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.9rem;
+}
+
+/* Default (light mode) */
+.slugPage pre {
+  max-width: 100%;
+  width: 100%;              /* force pre to fill container */
+  overflow-x: auto;         /* enable horizontal scroll if still too wide */
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  background: #f5f5f5;   /* light gray background */
+  color: #222;
+  white-space: pre-wrap;    /* allow wrapping */
+  word-wrap: break-word;    /* break long words if needed */           /* dark text */
+}
+
+.slugPage code {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.9rem;
+  background: transparent; /* let <pre> handle background */
+  color: inherit;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .slugPage pre {
+    background: #1e1e1e;   /* VSCode-like dark gray */
+    color: #e4e4e4;        /* lighter text for contrast */
+  }
+
+  .slugPage code {
+    color: #f8f8f2;        /* brighter inline code text */
+  }
+}
+
+@media (max-width: 355px) {
+  .blogPage  h2, .blogGrid {
+    width: 250px;
+    margin: auto;
+    text-align: center;
+  }
+}
+
+/* small mobile screens */
+@media (max-width: 429px) {
+  .blogPage {
+    padding: 0;
+    width: 100%;
+  }
+  
+  .blogGrid {
+    /* padding: 0.5rem; */
+    gap: 0.75rem;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* mobile screens */
+@media (max-width: 600px) {
+  .blogPage {
+    padding: 0;
+    width: 100%;
+  }
+  
+  .blogGrid {
+    /* padding: 1rem; */
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .slugPage {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .slugPage h1, 
+  .slugPage h2, 
+  .slugPage h3 {
+    word-break: break-word;
+  }
+
+  .slugPage h1 {
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 455px) {
+  .slugPage pre code {
+    width: 320px !important;
+  }
+}
+
+/* adjust slug h1 on small-medium screens */
+@media (max-width: 644px) {
+  .slugPage h1 {
+    font-size: 1.75rem;
+    line-height: 1.3;
+    word-break: break-word;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .slugPage pre code {
+    width: 400px;
+    margin: auto !important;
+  }
+}
+
+/* tablets */
+@media (min-width: 601px) {
+  .blogGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* desktops */
+@media (min-width: 900px) {
+  .blogGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* large desktops */
+@media (min-width: 1300px) {
+  .blogGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

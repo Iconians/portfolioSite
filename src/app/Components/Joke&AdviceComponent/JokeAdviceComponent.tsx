@@ -1,9 +1,9 @@
 "use client";
-
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import ProductService from "@/app/fetches/adviceFetch";
 import { jokeFetch } from "@/app/fetches/jokeFetch";
-import "./JokeAdviceComponent.css";
+import styles from "./JokeAdviceComponent.module.css";
 
 type jokeArr = {
   category: string;
@@ -34,61 +34,136 @@ type adviceType = {
   response: { status: number; ok: true };
 };
 
-const advice = new ProductService();
+// const advice = new ProductService();
+const adviceService = new ProductService();
+
 export const JokeAdviceComponent = () => {
-  const [joke, setJoke] = useState<jokeArr>([]);
-  const [pieceAdvice, setPieceAdvice] = useState<adviceArr>([]);
-  useEffect(() => {
-    jokeFetch().then((res) => setJoke([res]));
-  }, []);
+  const [joke, setJoke] = useState<jokeArr | null>(null);
+  const [pieceAdvice, setPieceAdvice] = useState<adviceArr | null>(null);
+  const [loadingJoke, setLoadingJoke] = useState(false);
+  const [loadingAdvice, setLoadingAdvice] = useState(false);
+
+  const fetchJoke = async () => {
+    setLoadingJoke(true);
+    const res = await jokeFetch();
+    setJoke([res]);
+    setLoadingJoke(false);
+  };
+
+  const fetchAdvice = async () => {
+    setLoadingAdvice(true);
+    const res = await adviceService.fetchAdvice();
+    const adviceData = (res as adviceType).advice;
+    const response = (res as adviceType).response;
+    if (res && response.ok) setPieceAdvice([adviceData]);
+    setLoadingAdvice(false);
+  };
 
   useEffect(() => {
-    advice.fetchAdvice().then((res) => {
-      const advice = (res as adviceType).advice;
-      const response = (res as adviceType).response;
-      if (res && response.ok) {
-        setPieceAdvice([advice]);
-      }
-    });
+    fetchJoke();
+    fetchAdvice();
   }, []);
+
+  const fadeVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+  };
 
   return (
-    <div className="joke-advice-wrapper">
-      <div className="joke-container">
-        <div className="h2-wrapper">
-          <h2>Here&apos;s a Programing Joke for your Day 😃</h2>
+    <div className={styles.wrapper}>
+      {/* Joke Section */}
+      <motion.div
+        className={styles.container}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.6 }}
+      >
+        <div className={styles.h2Wrapper}>
+          <h2>Here&apos;s a Programming Joke for your Day 😃</h2>
         </div>
-        {joke.length ? (
-          <>
-            {joke.map((joke) =>
-              joke.type === "single" ? (
-                <div className="joke-wrapper" key={joke.id}>
-                  <div className="joke-div">{joke.joke}</div>
-                </div>
-              ) : (
-                <div className="joke-wrapper" key={joke.id}>
-                  <div className="setup">{joke.setup}</div>
-                  <div className="delivery">{joke.delivery}</div>
-                </div>
-              )
-            )}
-          </>
-        ) : null}
-      </div>
-      <div className="advice-container">
-        <div className="h2-wrapper">
+        <AnimatePresence mode="wait">
+          {loadingJoke ? (
+            <motion.div
+              key="loading-joke"
+              className={styles.loading}
+              variants={fadeVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              Loading joke...
+            </motion.div>
+          ) : joke ? (
+            <motion.div
+              key={joke[0].id}
+              variants={fadeVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              {joke.map((j) =>
+                j.type === "single" ? (
+                  <div className={styles.jokeWrapper} key={j.id}>
+                    <div className={styles.jokeDiv}>{j.joke}</div>
+                  </div>
+                ) : (
+                  <div className={styles.jokeWrapper} key={j.id}>
+                    <div className={styles.setup}>{j.setup}</div>
+                    <div className={styles.delivery}>{j.delivery}</div>
+                  </div>
+                )
+              )}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+        <button className={styles.fetchButton} onClick={fetchJoke}>
+          Get another joke
+        </button>
+      </motion.div>
+
+      {/* Advice Section */}
+      <motion.div
+        className={styles.container}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <div className={styles.h2Wrapper}>
           <h2>Here&apos;s a piece of advice for the day 😎</h2>
         </div>
-        {pieceAdvice.length ? (
-          <>
-            {pieceAdvice.map((advice) => (
-              <div className="advice-wrapper" key={advice.id}>
-                <div>{advice.advice}</div>
-              </div>
-            ))}
-          </>
-        ) : null}
-      </div>
+        <AnimatePresence mode="wait">
+          {loadingAdvice ? (
+            <motion.div
+              key="loading-advice"
+              className={styles.loading}
+              variants={fadeVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              Loading advice...
+            </motion.div>
+          ) : pieceAdvice ? (
+            <motion.div
+              key={pieceAdvice[0].id}
+              variants={fadeVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              {pieceAdvice.map((a) => (
+                <div className={styles.adviceWrapper} key={a.id}>
+                  <div>{a.advice}</div>
+                </div>
+              ))}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+        <button className={styles.fetchButton} onClick={fetchAdvice}>
+          Get another advice
+        </button>
+      </motion.div>
     </div>
   );
 };

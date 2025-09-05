@@ -1,0 +1,101 @@
+---
+title: "Understanding Binary Search: A Practical Guide"
+date: "2024-06-28"
+tags: ["Programming", "Coding", "Algorithms", "Typescript"]
+---
+
+# Understanding Binary Search: A Practical Guide
+
+<AnimatedParagraph>
+  When dealing with search algorithms, the order of the data set plays a crucial
+  role in determining which algorithm to use. For example, some search
+  algorithms require the data to be sorted in order to function correctly. One
+  such algorithm is <strong>binary search</strong>, which is highly efficient
+  but only works on sorted arrays.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Binary Search: A Halving Approach</AnimatedHeading>
+
+<AnimatedParagraph>
+  Binary search is an algorithm that finds the position of a target value within
+  a sorted array. It works by repeatedly dividing in half the portion of the
+  array that could contain the target value, until you’ve narrowed down the
+  possible locations to just one.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  If the array is sorted, you can confidently eliminate half of the remaining
+  elements at each step. If the target value is not in the current half, it must
+  be in the other half. This process of halving the array gives binary search
+  its efficiency.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  The Big O notation for binary search is <strong>O(log N)</strong>, meaning the
+  time it takes to find the target value grows logarithmically with the size of
+  the array. In some cases, if you need to scan part of the array linearly after
+  halving, the complexity can become <strong>O(N log N)</strong>.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Example of Binary Search</AnimatedHeading>
+
+<AnimatedParagraph>
+  Here’s a simple implementation in TypeScript:
+</AnimatedParagraph>
+
+<AnimatedCode>
+  {`function binarySearch(arr: number[], needle: number): boolean {
+  let lo = 0;
+  let hi = arr.length;
+  do {
+    const m = Math.floor(lo + (hi - lo) / 2);
+    const v = arr[m];
+    if (v === needle) {
+      return true;
+    } else if (v > needle) {
+      hi = m;
+    } else {
+      lo = m + 1;
+    }
+  } while (lo < hi);
+  return false;
+}`}
+</AnimatedCode>
+
+<AnimatedHeading level={2}>Explanation of the Code</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Initialization:</strong> We start by initializing two pointers, <code>lo</code> and <code>hi</code>, representing the lower and upper bounds of the search range. Initially, <code>lo</code> is 0 and <code>hi</code> is the array length.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Halving the Array:</strong> Inside the loop, we calculate the middle index <code>m</code> by averaging <code>lo</code> and <code>hi</code>, then compare the value at <code>arr[m]</code> with the target <code>needle</code>.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Comparison:</strong>
+    <ul>
+      <li>If <code>v === needle</code>, return <code>true</code>.</li>
+      <li>If <code>v > needle</code>, adjust <code>hi = m</code> to search the lower half.</li>
+      <li>If <code>v < needle</code>, adjust <code>lo = m + 1</code> to search the upper half.</li>
+    </ul>
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Loop Condition:</strong> Continue until <code>lo &lt; hi</code>. If the loop exits without finding the target, return <code>false</code>.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Practical Implications</AnimatedHeading>
+
+<AnimatedParagraph>
+  Binary search is a powerful tool for quickly finding elements in a sorted
+  array. Its logarithmic time complexity makes it much faster than a linear
+  search, especially for large datasets. However, it can only be used on sorted
+  arrays. If your data is not sorted, you must sort it first, adding to overall
+  complexity.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  By understanding and using binary search, you can greatly improve the
+  efficiency of your search operations, making your algorithms faster and more
+  effective.
+</AnimatedParagraph>

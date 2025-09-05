@@ -1,0 +1,125 @@
+---
+title: "Optimizing the Two Crystal Balls Problem"
+date: "2024-06-28"
+tags: ["Algorithms", "Programming", "Coding", "Typescript"]
+---
+
+# Optimizing the Two Crystal Balls Problem
+
+<AnimatedParagraph>
+  Imagine you are in a hundred-story building with two crystal balls. You need
+  to determine the exact floor at which the crystal balls will break when
+  dropped, and you want to find the most efficient way to do this.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>
+  Inefficiencies of Linear and Binary Search
+</AnimatedHeading>
+
+<AnimatedParagraph>
+  To understand the optimal solution, let’s first consider why simple linear and
+  binary search methods fall short:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Linear Search:</strong> Drop a ball from each floor sequentially
+    until it breaks. Time complexity is O(N), which is inefficient for large
+    buildings (e.g., up to 100 drops for 100 floors).
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Binary Search:</strong> Halves the search space efficiently for one
+    ball, but if the first ball breaks, you must revert to a linear search from
+    the last safe floor, leading to worst-case O(N).
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>
+  A Better Approach: Jump and Walk Strategy
+</AnimatedHeading>
+
+<AnimatedParagraph>
+  Given the limitations of linear and binary search, we need a strategy that
+  minimizes the number of drops. The key is to make larger initial jumps and
+  then perform a linear search within a smaller range.
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Jump by the Square Root of N:</strong> Jump by √N floors instead of
+    a fixed number. For a 100-story building, jump by 10 floors at a time.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>When a Ball Breaks:</strong> The breaking point is within the last
+    jump range. E.g., if the first ball breaks at floor 30, perform a linear
+    search from 21 to 29.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Linear Search within the Jump Range:</strong> After the first ball
+    breaks, walk back to the last safe floor and perform a linear search within
+    that range. This reduces the max number of drops compared to a full linear
+    search.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Example Implementation</AnimatedHeading>
+
+<AnimatedParagraph>
+  Here’s a step-by-step illustration of how this strategy works in a 100-story
+  building using JavaScript:
+</AnimatedParagraph>
+
+<AnimatedCode>
+{`function twoCrystalBalls(breaks: boolean[]): number {
+  const jmpAmount = Math.floor(Math.sqrt(breaks.length));
+  let i = jmpAmount;
+
+for (; i < breaks.length; i += jmpAmount) {
+if (breaks[i]) break;
+}
+i -= jmpAmount;
+for (let j = 0; j < jmpAmount && i < breaks.length; j++, i++) {
+if (breaks[i]) return i;
+}
+return -1;
+}`}
+
+</AnimatedCode>
+
+<AnimatedHeading level={2}>Explanation of the Code</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Initialization:</strong> Calculate jump amount as √N (
+    <code>Math.floor(Math.sqrt(breaks.length))</code>), e.g., 10 floors for
+    100-story building.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>First Phase — Jumping:</strong> Start at the first jump point and
+    jump by the jump amount until the first true value in <code>breaks</code>{" "}
+    array (ball breaks) is found.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Adjusting the Jump:</strong> Step back to the last safe floor (
+    <code>i -= jmpAmount</code>) to define the linear search range.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Second Phase — Linear Search:</strong> Perform a linear search
+    within the last jump range. When a true value is found, return its index as
+    the breaking floor.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Return Statement:</strong> If no breaking floor is found, return -1.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>
+  Benefits of the Jump and Walk Strategy
+</AnimatedHeading>
+
+<AnimatedParagraph>
+  This method significantly reduces the number of drops required. Worst-case
+  scenario involves √N jumps plus √N linear searches, giving a time complexity
+  of O(√N). It avoids inefficiencies of linear and binary search and is
+  particularly useful when tests are costly or time-consuming.
+</AnimatedParagraph>

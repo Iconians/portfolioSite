@@ -1,0 +1,103 @@
+---
+title: "Understanding Memoization: Optimizing Recursive Functions"
+date: "2024-09-05"
+tags: ["JavaScript", "Memorization", "Recursion", "Algorithms", "Function"]
+---
+
+# Understanding Memoization: Optimizing Recursive Functions
+
+<AnimatedParagraph>
+  Memoization is a powerful technique used to improve the efficiency of
+  recursive functions. By storing the results of expensive function calls and
+  reusing them when the same inputs occur again, memoization avoids redundant
+  calculations, thus speeding up execution.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>
+  The Problem: Redundant Calculations in Recursion
+</AnimatedHeading>
+
+<AnimatedParagraph>
+  Recursive functions are often inefficient because they repeatedly solve the
+  same subproblems. For example, a naive Fibonacci implementation recalculates
+  the same values multiple times:
+</AnimatedParagraph>
+
+<AnimatedCode>
+  {`const fibonacci = (n) => {
+  if (n === 0) return 0;
+  if (n === 1) return 1;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+};`}
+</AnimatedCode>
+
+<AnimatedHeading level={2}>
+  Memoization: Solving Redundancy with Caching
+</AnimatedHeading>
+
+<AnimatedParagraph>
+  Memoization stores results of previous calls in a cache (or "memo") to avoid
+  redundant calculations. Here’s how it works:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>Create a cache to store computed results.</AnimatedListItem>
+  <AnimatedListItem>
+    Check the cache before recursion; return the cached value if available.
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Store the result in the cache after computing it.
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Memoized Fibonacci Function</AnimatedHeading>
+
+<AnimatedCode>
+{`const fibonacci = (n, memo = {}) => {
+  if (n === 0) return 0;
+  if (n === 1) return 1;
+
+if (memo[n]) return memo[n];
+
+memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo);
+return memo[n];
+};
+
+console.log(fibonacci(0)); // 0
+console.log(fibonacci(1)); // 1
+console.log(fibonacci(6)); // 8
+console.log(fibonacci(10)); // 55
+console.log(fibonacci(50)); // 12586269025`}
+
+</AnimatedCode>
+
+<AnimatedHeading level={2}>Performance Improvement</AnimatedHeading>
+
+<AnimatedParagraph>
+  Without memoization, Fibonacci recursion has O(2ⁿ) time complexity.
+  Memoization reduces it to O(n) by ensuring each number is calculated only
+  once. Space complexity is O(n) due to storing results in the memo object.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Why Memoization Matters</AnimatedHeading>
+
+<AnimatedParagraph>
+  Memoization is critical for problems with overlapping subproblems, including:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>Dynamic Programming</AnimatedListItem>
+  <AnimatedListItem>Graph Traversals with overlapping paths</AnimatedListItem>
+  <AnimatedListItem>
+    Optimization problems with reusable sub-solutions
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Conclusion</AnimatedHeading>
+
+<AnimatedParagraph>
+  Memoization transforms inefficient recursive functions into performant ones by
+  caching results. For Fibonacci and similar recursive problems, it reduces time
+  complexity from exponential to linear, making algorithms practical for larger
+  inputs.
+</AnimatedParagraph>
