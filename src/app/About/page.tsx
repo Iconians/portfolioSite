@@ -40,25 +40,36 @@ export default function aboutPage() {
 
             <AnimatedParagraph className={styles.bio} delay={0.5}>
               Over the years I’ve explored nearly every major operating system —
-              Windows 95 through 11, and now macOS — and I’ve built experience
-              from hardware fundamentals all the way up to building intuitive,
-              high-performance applications. My work spans frontend frameworks
-              like <strong>React and Next.js</strong>, backend development with{" "}
-              <strong>Node.js, Go, and Python</strong>, and database design with{" "}
-              <strong>PostgreSQL and SQLC</strong>.
+              from Windows 95 through 11, to macOS, which I now use as my
+              primary development environment. My path has taken me from
+              hardware fundamentals to building intuitive, high-performance
+              applications for clients.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={0.7}>
-              I also write about data structures, algorithms, and
-              problem-solving to strengthen my CS fundamentals, with articles
-              covering topics like queues, stacks, sorting algorithms, and Big-O
-              analysis. This balance of theory and practice helps me craft
-              solutions that are not only functional but efficient and scalable.
+              In late 2021, I enrolled in the Devslopes Academy full-stack
+              program. While studying, I began freelancing in 2022 to gain
+              real-world experience, replacing early school projects in my
+              portfolio with professional client work and reviews. I graduated
+              in 2024, but along the way I also pursued independent projects to
+              deepen my backend knowledge (Node.js, Go, Python, PostgreSQL,
+              SQLC) and strengthen my CS fundamentals through writing articles
+              on data structures, algorithms, and problem-solving.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={0.9}>
+              My portfolio itself reflects that growth: it started as a static
+              HTML/CSS/JavaScript site in 2022, evolved into a React +
+              TypeScript app in 2023, and most recently became a Next.js 15
+              project with animations woven throughout the design. From
+              motion-driven blog cards to animated sections and code blocks, I
+              aim to create experiences that are not only functional but also
+              engaging and dynamic.
+            </AnimatedParagraph>
+
+            <AnimatedParagraph className={styles.bio} delay={1.1}>
               Whether you’re looking for a polished website, a performant
-              backend system, or just want to discuss ideas, I’d love to
+              backend system, or just want to chat about ideas, I’d love to
               connect. You can explore my work here or reach me on{" "}
               <a
                 href="https://linkedin.com/in/claytoncripe"
@@ -67,7 +78,7 @@ export default function aboutPage() {
               >
                 LinkedIn
               </a>
-              !
+              .
             </AnimatedParagraph>
 
             <h3>Skills/ Technologies I know</h3>
