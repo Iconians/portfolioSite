@@ -70,7 +70,7 @@
 
 @media (max-width: 355px) {
   .blogPage  h2, .blogGrid {
-    width: 250px;
+    /* width: 250px; */
     margin: auto;
     text-align: center;
   }
