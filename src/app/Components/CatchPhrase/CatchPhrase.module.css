@@ -39,6 +39,16 @@
   line-height: 1.4;
 }
 
+@media (max-width: 465px) {
+  body {
+    padding: 0;
+  }
+
+  .catchPhrase {
+    margin: 20px;
+  }
+}
+
 @media (max-width: 385px) {
   .catchPhrase {
     display: none;
