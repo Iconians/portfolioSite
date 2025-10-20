@@ -9,15 +9,6 @@ export const portfolioItems = [
     id: 5,
   },
   {
-    img: "/drAlderSite.png",
-    caption: "Alder Family Chiropractic",
-    desc: "I helped a chiropractor with his website and made it more modern and updated",
-    category: "WordPress",
-    url: "https://alderfamilychiropractic.com/",
-    key: 1,
-    id: 4,
-  },
-  {
     img: "/triviaApp.png",
     caption: "Volcano Trivia App",
     desc: "This is a trivia app that I made for my capstone project at Devslopes which showcases my skills in Vue, Typescript, tailwindcss, and more. since I have a always enjoyed learning about volcanoes and other natural wonders I decided to make a trivia app about them.",

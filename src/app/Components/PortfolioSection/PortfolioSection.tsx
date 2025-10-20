@@ -40,6 +40,7 @@ const PortfolioSection = () => {
             key={item.key}
             variants={cardVariants}
             whileHover={{ scale: 1.03 }}
+            onClick={() => modalOpen(item)}
           >
             <div className={styles.imgWrapper}>
               <Image
@@ -52,7 +53,6 @@ const PortfolioSection = () => {
             </div>
             <motion.div
               className={styles.cardPopupBox}
-              onClick={() => modalOpen(item)}
               whileHover={{ y: -10, opacity: 1 }}
             >
               <div className={styles.category}>{item.category}</div>
