@@ -17,6 +17,7 @@
     "gray-matter": "^4.0.3",
     "next": "15.5.2",
     "next-mdx-remote": "^5.0.0",
+    "prismjs": "^1.30.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-slideshow-image": "^4.3.2",

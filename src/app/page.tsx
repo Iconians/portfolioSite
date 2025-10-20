@@ -31,9 +31,9 @@ export default function Home() {
         <PortfolioSection />
       </AnimatedSection>
 
-      <AnimatedSection>
-        <Modal />
-      </AnimatedSection>
+      {/* <AnimatedSection> */}
+      <Modal />
+      {/* </AnimatedSection> */}
 
       <AnimatedSection>
         <ReviewComponent />
