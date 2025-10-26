@@ -71,6 +71,17 @@
 
 @media (max-width: 383px) {
   .wrapper {
-    display: none;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 1rem;
+  }
+  
+  .jokeWrapper,
+  .adviceWrapper {
+    font-size: 1rem;
   }
 }

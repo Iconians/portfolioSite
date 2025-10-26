@@ -4,7 +4,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  height: 358px;
+  min-height: clamp(200px, 40vw, 358px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,9 +12,9 @@
 
   /* Typography */
   color: antiquewhite;
-  font-size: 1.8rem;
+  font-size: clamp(1rem, 4vw, 1.8rem);
   font-weight: 600;
-  padding: 20px;
+  padding: clamp(10px, 3vw, 20px);
 
   /* Rounded corners to match carousel */
   border-bottom-left-radius: 20px;
@@ -39,18 +39,16 @@
   line-height: 1.4;
 }
 
-@media (max-width: 465px) {
-  body {
-    padding: 0;
-  }
-
+@media (max-width: 768px) {
   .catchPhrase {
-    margin: 20px;
+    min-height: clamp(150px, 50vw, 358px);
+    padding: clamp(10px, 4vw, 20px);
   }
 }
 
-@media (max-width: 385px) {
+@media (max-width: 480px) {
   .catchPhrase {
-    display: none;
+    min-height: clamp(120px, 60vw, 250px);
+    font-size: clamp(0.9rem, 5vw, 1.5rem);
   }
 }

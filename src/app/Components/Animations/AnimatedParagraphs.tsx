@@ -14,15 +14,19 @@ export default function AnimatedParagraph({
   delay,
   className,
 }: AnimatedParagraphsProps) {
+  // Optimize for mobile
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: isMobile ? 8 : 12 }}
+      animate={{ opacity: 1, y: 0 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{
-        duration: 0.5,
+        duration: isMobile ? 0.3 : 0.5,
         ease: "easeOut",
-        delay,
+        delay: isMobile ? (delay || 0) * 0.5 : delay,
       }}
       className={styles.animationP}
     >

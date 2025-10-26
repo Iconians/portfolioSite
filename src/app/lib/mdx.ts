@@ -34,7 +34,7 @@ export const getPostBySlug = async (slug: string) => {
   const fullPath = path.join(POSTS_PATH, targetFile);
   const source = fs.readFileSync(fullPath, "utf8");
   const { content, data } = matter(source);
-  const mdxSource = await serialize(content, { scope: data });
+  const mdxSource = await serialize(content);
 
   return {
     frontMatter: data as FrontMatter,

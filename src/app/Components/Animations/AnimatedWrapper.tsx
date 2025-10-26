@@ -15,8 +15,9 @@ export default function AnimatedWrapper({
     <motion.div
       className={className}
       initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.4 }}
     >
       {children}

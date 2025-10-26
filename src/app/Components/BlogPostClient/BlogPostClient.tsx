@@ -9,7 +9,7 @@ import AnimatedList, {
 import AnimatedParagraph from "@/app/Components/Animations/AnimatedParagraphs";
 import AnimatedWrapper from "@/app/Components/Animations/AnimatedWrapper";
 import { AnimatedCode } from "../Animations/AnimatedCode";
-import { MDXRemoteSerializeResult } from "next-mdx-remote/rsc";
+import { MDXRemoteSerializeResult } from "next-mdx-remote";
 
 interface FrontMatter {
   title: string;

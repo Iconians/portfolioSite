@@ -1,5 +1,13 @@
 .blogArticle {
   max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  line-height: 1.6;
+}
+
+.blogArticle p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
 }
 
 .blogArticle a {
@@ -11,4 +19,33 @@
 .blogArticle a:hover {
   color: #1c54b2;
   transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .blogArticle {
+    padding: 1rem;
+    max-width: 100%;
+  }
+  
+  .blogArticle p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .blogArticle {
+    padding: clamp(0.5rem, 3vw, 0.75rem);
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .blogArticle p {
+    font-size: clamp(0.9rem, 4vw, 1rem);
+    max-width: 100%;
+    word-wrap: break-word;
+  }
+  
+  .blogArticle * {
+    max-width: 100%;
+  }
 }

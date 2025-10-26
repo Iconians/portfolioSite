@@ -24,13 +24,23 @@ export default function AnimatedHeading({
   const tag = `h${level}` as keyof typeof motionTags;
   const MotionTag = motionTags[tag] || motion.h2;
 
+  // Optimize for mobile
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
   return (
     <MotionTag
       className={className}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{
+        opacity: 0,
+        y: typeof window !== "undefined" && window.innerWidth < 768 ? 10 : 20,
+      }}
+      animate={{ opacity: 1, y: 0 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{
+        duration:
+          typeof window !== "undefined" && window.innerWidth < 768 ? 0.25 : 0.4,
+      }}
       style={{ marginTop: "1.5em", marginBottom: "0.5em", textAlign: "center" }}
     >
       {children}
