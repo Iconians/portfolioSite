@@ -73,7 +73,12 @@
 }
 
 @media (max-width: 465px) {
-  .carouselWrapper  {
-    display: none;
-  } 
+  .mainCarouselWrapper {
+    height: 200px;
+  }
+  
+  .carouselLeftBtn,
+  .carouselRightBtn {
+    font-size: 28px;
+  }
 }

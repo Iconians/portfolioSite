@@ -7,7 +7,10 @@ export function AnimatedContainer({ children }: { children: React.ReactNode }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
+      transition={{
+        duration:
+          typeof window !== "undefined" && window.innerWidth < 768 ? 0.3 : 0.6,
+      }}
     >
       {children}
     </motion.div>

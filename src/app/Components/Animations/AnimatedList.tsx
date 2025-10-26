@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { listenerCount } from "process";
 
 type animatedLists = {
   children: React.ReactNode;
@@ -13,8 +12,9 @@ export default function AnimatedList({ children, className }: animatedLists) {
     <motion.ul
       className={className}
       initial="hidden"
+      animate="visible"
       whileInView="visible"
-      viewport={{ once: true }}
+      viewport={{ once: true, amount: 0.1 }}
       variants={{
         hidden: {},
         visible: {
