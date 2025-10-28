@@ -1,10 +1,17 @@
 "use client";
 import { portfolioItems } from "@/app/utils/PorfolioItems";
 import { useAppContext } from "@/app/Providers/app.Context";
-import "./PortfolioSection.css";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import styles from "./PortfolioSection.module.css";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/Components/ui/card";
+import { Badge } from "@/app/Components/ui/badge";
+import { Button } from "@/app/Components/ui/button";
+import { ExternalLink, Github } from "lucide-react";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -26,38 +33,77 @@ const cardVariants = {
 const PortfolioSection = () => {
   const { modalOpen } = useAppContext();
   return (
-    <section className={styles.wrapper}>
-      <h2 className={styles.heading}>PORTFOLIO</h2>
+    <section id="projects" className="py-16 scroll-mt-20">
+      <h2 className="text-3xl md:text-4xl font-bold mb-4">Projects</h2>
+      <p className="text-muted-foreground mb-12 text-lg">
+        Professional client work and personal projects showcasing full-stack
+        development
+      </p>
       <motion.div
-        className={styles.portfolioWrapper}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {portfolioItems.map((item) => (
           <motion.div
-            className={styles.portfolioCard}
             key={item.key}
             variants={cardVariants}
-            whileHover={{ scale: 1.03 }}
-            onClick={() => modalOpen(item)}
+            whileHover={{ y: -5 }}
           >
-            <div className={styles.imgWrapper}>
-              <Image
-                width={500}
-                height={500}
-                src={item.img}
-                alt={item.caption}
-                className={styles.image}
-              />
-            </div>
-            <motion.div
-              className={styles.cardPopupBox}
-              whileHover={{ y: -10, opacity: 1 }}
+            <Card
+              className="overflow-hidden group cursor-pointer h-full"
+              onClick={() => modalOpen(item)}
             >
-              <div className={styles.category}>{item.category}</div>
-              <h3 className={styles.caption}>{item.caption}</h3>
-            </motion.div>
+              <div className="relative aspect-video overflow-hidden bg-muted">
+                <Image
+                  width={600}
+                  height={400}
+                  src={item.img}
+                  alt={item.caption}
+                  className="object-cover w-full h-full transition-transform group-hover:scale-105"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="text-xl">{item.caption}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4 leading-relaxed text-sm">
+                  {item.desc}
+                </p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <Badge variant="secondary">{item.category}</Badge>
+                </div>
+                <div className="flex gap-2">
+                  {item.github && item.github !== "#" && (
+                    <Button variant="outline" size="sm" asChild>
+                      <a
+                        href={item.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Github className="h-4 w-4 mr-2" />
+                        Code
+                      </a>
+                    </Button>
+                  )}
+                  {item.url && item.url !== "#" && (
+                    <Button variant="outline" size="sm" asChild>
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Demo
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
         ))}
       </motion.div>

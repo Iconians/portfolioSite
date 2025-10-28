@@ -1,61 +1,37 @@
-import "react-slideshow-image/dist/styles.css";
 import "./globals.css";
-import styles from "./homePage.module.css";
-import { PhotoCarousel } from "./Components/PhotoCarousel/PhotoCarousel";
-import Nav from "./Components/Nav/Nav";
+import { Hero } from "./Components/Hero/Hero";
+import { Navigation } from "./Components/Nav/Navigation";
 import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
 import PortfolioSection from "./Components/PortfolioSection/PortfolioSection";
 import Modal from "./Components/Modal/Modal";
 import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
-import { AnimatedContainer } from "./Components/Animations/AnimatedContainer";
-import AnimatedHeading from "./Components/Animations/AnimateHeading";
 import { AnimatedSection } from "./Components/Animations/AnimatedSection";
-import { NavClient } from "./Components/Nav/NavClient";
-import { CatchPhrase } from "./Components/CatchPhrase/CatchPhrase";
 
 export default function Home() {
   return (
-    <AnimatedContainer>
-      <header className={styles.header}>
-        <NavClient />
-        <AnimatedHeading level={1}>Welcome</AnimatedHeading>
-        <PhotoCarousel />
-        <CatchPhrase />
-      </header>
+    <div className="min-h-screen">
+      <Hero />
+      <Navigation />
 
-      <AnimatedSection>
-        <JokeAdviceComponent />
-      </AnimatedSection>
+      <main className="container mx-auto px-4 py-16 max-w-7xl">
+        <section id="personality" className="scroll-mt-20 py-12">
+          <AnimatedSection>
+            <JokeAdviceComponent />
+          </AnimatedSection>
+        </section>
 
-      <AnimatedSection>
-        <PortfolioSection />
-      </AnimatedSection>
+        <AnimatedSection>
+          <PortfolioSection />
+        </AnimatedSection>
 
-      {/* <AnimatedSection> */}
-      <Modal />
-      {/* </AnimatedSection> */}
+        <Modal />
 
-      <AnimatedSection>
-        <ReviewComponent />
-      </AnimatedSection>
-    </AnimatedContainer>
-
-    // <div className="App">
-    //   <header className="">
-    //     <Nav />
-    //     <div>
-    //       <h1>Welcome</h1>
-    //     </div>
-    //     <PhotoCarousel />
-    //     <div className="catch-phrase">
-    //       <h2>I develop experiences that make peoples lives simple</h2>
-    //     </div>
-    //   </header>
-    //   <JokeAdviceComponent />
-    //   <PortfolioSection />
-    //   <Modal />
-    //   <ArticlesComponent />
-    //   <ReviewComponent />
-    // </div>
+        <section id="reviews" className="scroll-mt-20">
+          <AnimatedSection>
+            <ReviewComponent />
+          </AnimatedSection>
+        </section>
+      </main>
+    </div>
   );
 }

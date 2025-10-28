@@ -1,192 +1,39 @@
-"use client";
-import styles from "./ReviewComponent.module.css";
-import { useState } from "react";
 import { review } from "@/app/utils/reviews";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { motion, AnimatePresence } from "framer-motion";
+import { Card } from "@/app/Components/ui/card";
+import { Quote } from "lucide-react";
 
 export const ReviewComponent = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
-
-  const nextSlide = () => {
-    setCurrentIndex((currentIndex + 1) % review.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((currentIndex - 1 + review.length) % review.length);
-  };
-
-  const slideVariants = {
-    hidden: (direction: number) => ({
-      opacity: 0,
-      x: direction > 0 ? 100 : -100,
-    }),
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { type: "spring" as const, stiffness: 80, damping: 20 },
-    },
-    exit: (direction: number) => ({
-      opacity: 0,
-      x: direction > 0 ? -100 : 100,
-      transition: { duration: 0.2 },
-    }),
-  };
-
-  const handleNext = () => {
-    setDirection(1);
-    nextSlide();
-  };
-
-  const handlePrev = () => {
-    setDirection(-1);
-    prevSlide();
-  };
-
   return (
-    <div className={styles.reviewWrapper}>
-      <div className={styles.reviewTitle}>
-        <h2>Client Reviews</h2>
+    <section id="reviews" className="py-20">
+      <div className="mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">
+          Client Reviews
+        </h2>
+        <p className="text-muted-foreground text-lg">
+          What clients say about working with me
+        </p>
       </div>
-      <div className={styles.reviewCardWrapper}>
-        <div className={styles.mainCarouselWrapper}>
-          <button onClick={handlePrev} className={styles.carouselLeftBtn}>
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </button>
 
-          <div className={styles.carouselReviewsWrapper}>
-            <AnimatePresence custom={direction} mode="wait">
-              <motion.div
-                key={review[currentIndex].id}
-                className={styles.carouselReview}
-                custom={direction}
-                variants={slideVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-              >
-                <div className={styles.cardHeader}>
-                  <div>
-                    <h3>{review[currentIndex].title}</h3>
-                    <p className={styles.stars}>
-                      {"★".repeat(review[currentIndex].stars)}
-                      {"☆".repeat(5 - review[currentIndex].stars)}
-                    </p>
-                  </div>
-                </div>
-                <div className={styles.cardReview}>
-                  <p>{review[currentIndex].p}</p>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          <button onClick={handleNext} className={styles.carouselRightBtn}>
-            <FontAwesomeIcon icon={faChevronRight} />
-          </button>
-        </div>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {review.map((item, index) => (
+          <Card
+            key={item.id}
+            className="p-6 bg-card/50 backdrop-blur border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5"
+          >
+            <Quote className="w-8 h-8 text-primary/40 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+            <p className="text-foreground/90 mb-4 leading-relaxed text-sm">
+              {item.p}
+            </p>
+            <div className="flex items-center gap-3 pt-4 border-t border-border/50">
+              <div className="text-yellow-400 text-lg">
+                {"★".repeat(item.stars)}
+                {"☆".repeat(5 - item.stars)}
+              </div>
+            </div>
+          </Card>
+        ))}
       </div>
-    </div>
-    // <div className={styles.reviewWrapper}>
-    //   <div className={styles.reviewTitle}>
-    //     <h2>Client Reviews</h2>
-    //   </div>
-    //   <div className={styles.reviewCardWrapper}>
-    //     <div className={styles.mainCarouselWrapper}>
-    //       <button onClick={prevSlide} className={styles.carouselLeftBtn}>
-    //         <FontAwesomeIcon icon={faChevronLeft} />
-    //       </button>
-    //       <div className={styles.carouselReviewsWrapper}>
-    //         {review.map((item, index) => (
-    //           <div
-    //             className={`${styles.carouselReview} ${
-    //               currentIndex === index ? styles.selected : ""
-    //             }`}
-    //             key={item.id}
-    //           >
-    //             <div className={styles.cardHeader}>
-    //               {/* <img src={""} alt="Profile" className={styles.avatar} /> */}
-    //               <div>
-    //                 <h3>{item.title}</h3>
-    //                 <p className={styles.stars}>
-    //                   {"★".repeat(item.stars)}
-    //                   {"☆".repeat(5 - item.stars)}
-    //                 </p>
-    //               </div>
-    //             </div>
-    //             <div className={styles.cardReview}>
-    //               <p>{item.p}</p>
-    //             </div>
-    //           </div>
-    //         ))}
-    //       </div>
-    //       <button onClick={nextSlide} className={styles.carouselRightBtn}>
-    //         <FontAwesomeIcon icon={faChevronRight} />
-    //       </button>
-    //     </div>
-    //   </div>
-    // </div>
+    </section>
   );
 };
-
-// import styles from "./ReviewComponent.module.css";
-// import { useEffect, useState } from "react";
-// import { review } from "../../utils/reviews";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import {
-//   faChevronLeft,
-//   faChevronRight,
-// } from "@fortawesome/free-solid-svg-icons";
-
-// export const ReviewComponent = () => {
-//   const [currentIndex, setCurrentIndex] = useState(0);
-
-//   const nextSlide = () => {
-//     setCurrentIndex((currentIndex + 1) % review.length);
-//   };
-
-//   const prevSlide = () => {
-//     setCurrentIndex((currentIndex - 1 + review.length) % review.length);
-//   };
-
-//   return (
-//     <div className={styles.reviewWrapper}>
-//       <div className={styles.reviewTitle}>
-//         <h2>Reviews </h2>
-//       </div>
-//       <div className={styles.reviewCardWrapper}>
-//         <div className={styles.mainCarouselWrapper}>
-//           <button onClick={prevSlide} className={styles.carouselLeftBtn}>
-//             {<FontAwesomeIcon icon={faChevronLeft} />}
-//           </button>
-//           <div className={styles.carouselReviewsWrapper}>
-//             {review.map((review, index) => (
-//               <div
-//                 className={`${styles.carouselReview} ${
-//                   currentIndex === index ? styles.selected : ""
-//                 }`}
-//                 key={review.id}
-//               >
-//                 <div className={styles.cardTitle}>
-//                   <h3>{review.title}</h3>
-//                   <p>{review.stars}</p>
-//                 </div>
-//                 <div className={styles.cardReview}>
-//                   <p>{review.p}</p>
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//           <button onClick={nextSlide} className={styles.carouselRightBtn}>
-//             {<FontAwesomeIcon icon={faChevronRight} />}
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };

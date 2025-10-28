@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "@radix-ui/themes/styles.css";
 
 
 @custom-variant dark (&:is(.dark *));
@@ -75,6 +74,23 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --background: oklch(0.15 0.01 240);
+    --foreground: oklch(0.95 0.01 240);
+    --card: oklch(0.18 0.01 240);
+    --card-foreground: oklch(0.95 0.01 240);
+    --primary: oklch(0.7 0.15 180);
+    --primary-foreground: oklch(0.15 0.01 240);
+    --secondary: oklch(0.25 0.02 240);
+    --secondary-foreground: oklch(0.95 0.01 240);
+    --muted: oklch(0.25 0.02 240);
+    --muted-foreground: oklch(0.65 0.01 240);
+    --accent: oklch(0.25 0.02 240);
+    --accent-foreground: oklch(0.95 0.01 240);
+    --destructive: oklch(0.55 0.22 25);
+    --destructive-foreground: oklch(0.95 0.01 240);
+    --border: oklch(0.25 0.02 240);
+    
+    /* Legacy variables for backward compatibility */
     --bg-color: #111111;
     --text-color: #ffffff;
     --site-bg-color: #242424;
