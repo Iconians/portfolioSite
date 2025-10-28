@@ -7,3 +7,4 @@
 5. add better description to projects and tags
 6. add featured articles section
 7. fix and update about and blogs page
+8. fix dark/light theme, make it default to users preferences and remove button
