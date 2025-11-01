@@ -1,6 +1,5 @@
 "use client";
 import { portfolioItems } from "@/app/utils/PorfolioItems";
-import { useAppContext } from "@/app/Providers/app.Context";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -31,7 +30,6 @@ const cardVariants = {
 };
 
 const PortfolioSection = () => {
-  const { modalOpen } = useAppContext();
   return (
     <section id="projects" className="py-16 scroll-mt-20">
       <h2 className="text-3xl md:text-4xl font-bold mb-4">Projects</h2>
@@ -52,8 +50,7 @@ const PortfolioSection = () => {
             whileHover={{ y: -5 }}
           >
             <Card
-              className="overflow-hidden group cursor-pointer h-full"
-              onClick={() => modalOpen(item)}
+              className="overflow-hidden group h-full"
             >
               <div className="relative aspect-video overflow-hidden bg-muted">
                 <Image
@@ -72,7 +69,11 @@ const PortfolioSection = () => {
                   {item.desc}
                 </p>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  <Badge variant="secondary">{item.category}</Badge>
+                  {item.category.map((cat, index) => (
+                    <Badge key={index} variant="secondary">
+                      {cat}
+                    </Badge>
+                  ))}
                 </div>
                 <div className="flex gap-2">
                   {item.github && item.github !== "#" && (
@@ -81,7 +82,6 @@ const PortfolioSection = () => {
                         href={item.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
                       >
                         <Github className="h-4 w-4 mr-2" />
                         Code
@@ -94,7 +94,6 @@ const PortfolioSection = () => {
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Demo

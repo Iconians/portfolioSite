@@ -26,8 +26,9 @@ export const AnimatedSection = ({
     <motion.section
       className={className}
       initial="hidden"
+      animate="visible"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.1 }}
       variants={{
         hidden: { opacity: 0, y: isMobile ? 10 : 20 },
         visible: optimizedStagger

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export function TerminalLoader() {
   const [lines, setLines] = useState<string[]>([]);
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
 
   const terminalSequence = [
     { text: "$ initializing portfolio...", delay: 0 },
@@ -16,17 +17,37 @@ export function TerminalLoader() {
   ];
 
   useEffect(() => {
-    terminalSequence.forEach((line, index) => {
-      setTimeout(() => {
-        setLines((prev) => [...prev, line.text]);
+    // Clear any existing timeouts
+    timeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+    timeoutsRef.current = [];
+    
+    // Reset lines when component mounts
+    setLines([]);
+    
+    terminalSequence.forEach((line) => {
+      const timeout = setTimeout(() => {
+        setLines((prev) => {
+          // Prevent duplicates by checking if line already exists
+          if (prev.includes(line.text)) {
+            return prev;
+          }
+          return [...prev, line.text];
+        });
       }, line.delay);
+      timeoutsRef.current.push(timeout);
     });
+
+    // Cleanup function to clear all timeouts
+    return () => {
+      timeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+      timeoutsRef.current = [];
+    };
   }, []);
 
   return (
-    <div className="relative aspect-square max-w-md mx-auto">
+    <div className="relative aspect-square max-w-md mx-auto max-[380px]:aspect-auto max-[380px]:min-h-[400px]">
       <div className="absolute inset-0 bg-primary/20 rounded-2xl blur-3xl"></div>
-      <div className="relative bg-card border border-border rounded-2xl p-6 shadow-2xl h-full overflow-hidden">
+      <div className="relative bg-card border border-border rounded-2xl p-6 shadow-2xl h-full max-[380px]:h-auto max-[380px]:min-h-[400px] max-[380px]:overflow-y-auto overflow-hidden">
         {/* Terminal Header */}
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border">
           <div className="flex gap-1.5">
@@ -50,7 +71,7 @@ export function TerminalLoader() {
                   : line.startsWith("$")
                   ? "text-primary"
                   : line.startsWith(">")
-                  ? "text-accent"
+                  ? "text-primary font-semibold"
                   : "text-foreground"
               } animate-in fade-in slide-in-from-left-2 duration-300`}
             >

@@ -1,4 +1,4 @@
-import { Nav } from "../Components/Nav/Nav";
+import { Navigation } from "../Components/Nav/Navigation";
 import { skillsArr } from "../utils/skills";
 import Image from "next/image";
 import { AnimatedSection } from "../Components/Animations/AnimatedSection";
@@ -11,7 +11,7 @@ import AnimatedList, {
 export default function aboutPage() {
   return (
     <div className={styles.aboutPage}>
-      <Nav />
+      <Navigation />
 
       <AnimatedSection className={styles.header}>
         <h1>About Me</h1>
@@ -81,7 +81,9 @@ export default function aboutPage() {
               .
             </AnimatedParagraph>
 
-            <h3>Skills/ Technologies I know</h3>
+            <AnimatedParagraph className={styles.bio} delay={1.3}>
+              <h3>Skills/ Technologies I know</h3>
+            </AnimatedParagraph>
             <AnimatedList className={styles.skillsList}>
               {skillsArr.map((skill, index) => (
                 <AnimatedListItem key={index}>{skill}</AnimatedListItem>
