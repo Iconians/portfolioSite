@@ -52,7 +52,7 @@ export function Navigation() {
           <>
             {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 bg-black/80 z-40 max-[468px]:block min-[469px]:hidden"
+              className="fixed inset-0 bg-black dark:bg-black z-40 max-[468px]:block min-[469px]:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -67,8 +67,26 @@ export function Navigation() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex flex-col gap-6 p-6 pt-20">
+              <div className="flex items-center justify-between p-6 border-b border-border bg-background">
+                <h2 className="text-lg font-semibold">Menu</h2>
+                <span
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                  aria-label="Close menu"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      setIsMobileMenuOpen(false);
+                    }
+                  }}
+                >
+                  <X className="h-6 w-6" />
+                </span>
+              </div>
+              <div className="flex flex-col gap-6 p-6 bg-background">
                 {pages.map(({ href, label }) => (
                   <Link
                     key={href}
