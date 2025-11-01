@@ -15,7 +15,7 @@ export const ReviewComponent = () => {
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {review.map((item, index) => (
+        {review.map((item) => (
           <Card
             key={item.id}
             className="p-6 bg-card/50 backdrop-blur border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5"

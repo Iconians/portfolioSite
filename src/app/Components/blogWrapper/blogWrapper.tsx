@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import styles from "@/app/blogs/blogPage.module.css";
 import BlogCard from "../BlogCard.tsx/BlogCard";
 import { FrontMatter } from "@/app/lib/mdx";
 

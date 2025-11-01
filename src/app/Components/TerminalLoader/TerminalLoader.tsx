@@ -2,19 +2,19 @@
 
 import { useEffect, useState, useRef } from "react";
 
+const TERMINAL_SEQUENCE = [
+  { text: "$ initializing portfolio...", delay: 0 },
+  { text: "Loading developer profile...", delay: 800 },
+  { text: "✓ Skills: React, Next.js, TypeScript, Node.js", delay: 1400 },
+  { text: "✓ Passion: Building intuitive web experiences", delay: 2000 },
+  { text: "✓ Background: MS-DOS kid turned full-stack dev", delay: 2600 },
+  { text: "$ npm run create-awesome-things", delay: 3200 },
+  { text: "> Ready to build something amazing! 🚀", delay: 3800 },
+];
+
 export function TerminalLoader() {
   const [lines, setLines] = useState<string[]>([]);
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
-
-  const terminalSequence = [
-    { text: "$ initializing portfolio...", delay: 0 },
-    { text: "Loading developer profile...", delay: 800 },
-    { text: "✓ Skills: React, Next.js, TypeScript, Node.js", delay: 1400 },
-    { text: "✓ Passion: Building intuitive web experiences", delay: 2000 },
-    { text: "✓ Background: MS-DOS kid turned full-stack dev", delay: 2600 },
-    { text: "$ npm run create-awesome-things", delay: 3200 },
-    { text: "> Ready to build something amazing! 🚀", delay: 3800 },
-  ];
 
   useEffect(() => {
     // Clear any existing timeouts
@@ -24,7 +24,7 @@ export function TerminalLoader() {
     // Reset lines when component mounts
     setLines([]);
     
-    terminalSequence.forEach((line) => {
+    TERMINAL_SEQUENCE.forEach((line) => {
       const timeout = setTimeout(() => {
         setLines((prev) => {
           // Prevent duplicates by checking if line already exists
@@ -78,7 +78,7 @@ export function TerminalLoader() {
               {line}
             </div>
           ))}
-          {lines.length > 0 && lines.length < terminalSequence.length && (
+          {lines.length > 0 && lines.length < TERMINAL_SEQUENCE.length && (
             <div className="inline-block w-2 h-4 bg-primary animate-pulse"></div>
           )}
         </div>

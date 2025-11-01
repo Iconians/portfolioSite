@@ -14,10 +14,10 @@ export function Hero() {
             Full-Stack Web Developer
           </p>
           <p className="text-lg text-muted-foreground leading-relaxed mb-6 text-pretty">
-            I'm a passionate full-stack web developer with a strong foundation
+            I&apos;m a passionate full-stack web developer with a strong foundation
             in both modern web technologies and core computer science concepts.
             My journey began as a kid tinkering with MS-DOS just to load a Chip
-            'n Dale game — and that spark of curiosity has never left.
+            &apos;n Dale game — and that spark of curiosity has never left.
           </p>
           <p className="text-lg text-muted-foreground leading-relaxed mb-8 text-pretty">
             I build intuitive, high-performance applications and write about

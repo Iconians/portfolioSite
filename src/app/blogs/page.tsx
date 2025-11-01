@@ -1,6 +1,4 @@
-import Link from "next/link";
 import { getAllPosts } from "@/app/lib/mdx";
-import BlogCard from "@/app/Components/BlogCard.tsx/BlogCard";
 import { Navigation } from "@/app/Components/Nav/Navigation";
 import BlogGrid from "../Components/blogWrapper/blogWrapper";
 
