@@ -49,9 +49,7 @@ const PortfolioSection = () => {
             variants={cardVariants}
             whileHover={{ y: -5 }}
           >
-            <Card
-              className="overflow-hidden group h-full"
-            >
+            <Card className="overflow-hidden group h-full">
               <div className="relative aspect-video overflow-hidden bg-muted">
                 <Image
                   width={600}
@@ -96,7 +94,7 @@ const PortfolioSection = () => {
                         rel="noopener noreferrer"
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
-                        Demo
+                        website
                       </a>
                     </Button>
                   )}

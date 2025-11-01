@@ -17,9 +17,9 @@ export default async function BlogPost({ params }: BlogPageProps) {
     const { frontMatter, mdxSource } = await getPostBySlug(resolvedParams.slug);
 
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen w-full bg-background">
         <Navigation />
-        <main className="container mx-auto px-4 py-16 max-w-7xl">
+        <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
           <ClientWrapper>
             <BlogPostClient frontMatter={frontMatter} mdxSource={mdxSource} />
           </ClientWrapper>
@@ -32,9 +32,9 @@ export default async function BlogPost({ params }: BlogPageProps) {
       error
     );
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen w-full bg-background">
         <Navigation />
-        <main className="container mx-auto px-4 py-16 max-w-7xl">
+        <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
           <div className="p-8 text-center">
             <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
             <p className="text-muted-foreground mb-6">

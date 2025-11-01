@@ -95,9 +95,12 @@ export default function aboutPage() {
 
       <AnimatedSection className={styles.contactIcons} delay={0.4}>
         <a href="mailto:claytoncripe@gmail.com">
-          <img
+          <Image
             src="https://img.shields.io/badge/Gmail-333333?style=for-the-badge&logo=gmail&logoColor=red"
             alt="Gmail"
+            width={100}
+            height={28}
+            unoptimized
           />
         </a>
         <a href="https://github.com/Iconians" target="_blank">
@@ -110,9 +113,12 @@ export default function aboutPage() {
           />
         </a>
         <a href="https://www.linkedin.com/in/claytoncripe">
-          <img
+          <Image
             src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"
             alt="LinkedIn"
+            width={100}
+            height={28}
+            unoptimized
           />
         </a>
       </AnimatedSection>

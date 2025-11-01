@@ -3,9 +3,9 @@ import { Hero } from "./Components/Hero/Hero";
 import { Navigation } from "./Components/Nav/Navigation";
 import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
 import PortfolioSection from "./Components/PortfolioSection/PortfolioSection";
-import Modal from "./Components/Modal/Modal";
 import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
 import { AnimatedSection } from "./Components/Animations/AnimatedSection";
+import FeaturedArticles from "./Components/FeaturedArticles/FeaturedArticles";
 
 export default function Home() {
   return (
@@ -24,7 +24,9 @@ export default function Home() {
           <PortfolioSection />
         </AnimatedSection>
 
-        <Modal />
+        <AnimatedSection>
+          <FeaturedArticles />
+        </AnimatedSection>
 
         <section id="reviews" className="scroll-mt-20">
           <AnimatedSection>
