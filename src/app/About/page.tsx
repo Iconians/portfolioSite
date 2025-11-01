@@ -1,4 +1,4 @@
-import { Nav } from "../Components/Nav/Nav";
+import { Navigation } from "../Components/Nav/Navigation";
 import { skillsArr } from "../utils/skills";
 import Image from "next/image";
 import { AnimatedSection } from "../Components/Animations/AnimatedSection";
@@ -11,7 +11,7 @@ import AnimatedList, {
 export default function aboutPage() {
   return (
     <div className={styles.aboutPage}>
-      <Nav />
+      <Navigation />
 
       <AnimatedSection className={styles.header}>
         <h1>About Me</h1>
@@ -81,7 +81,9 @@ export default function aboutPage() {
               .
             </AnimatedParagraph>
 
-            <h3>Skills/ Technologies I know</h3>
+            <AnimatedParagraph className={styles.bio} delay={1.3}>
+              <h3>Skills/ Technologies I know</h3>
+            </AnimatedParagraph>
             <AnimatedList className={styles.skillsList}>
               {skillsArr.map((skill, index) => (
                 <AnimatedListItem key={index}>{skill}</AnimatedListItem>
@@ -93,9 +95,12 @@ export default function aboutPage() {
 
       <AnimatedSection className={styles.contactIcons} delay={0.4}>
         <a href="mailto:claytoncripe@gmail.com">
-          <img
+          <Image
             src="https://img.shields.io/badge/Gmail-333333?style=for-the-badge&logo=gmail&logoColor=red"
             alt="Gmail"
+            width={100}
+            height={28}
+            unoptimized
           />
         </a>
         <a href="https://github.com/Iconians" target="_blank">
@@ -108,9 +113,12 @@ export default function aboutPage() {
           />
         </a>
         <a href="https://www.linkedin.com/in/claytoncripe">
-          <img
+          <Image
             src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"
             alt="LinkedIn"
+            width={100}
+            height={28}
+            unoptimized
           />
         </a>
       </AnimatedSection>

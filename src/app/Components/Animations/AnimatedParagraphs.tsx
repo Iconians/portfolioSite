@@ -28,7 +28,7 @@ export default function AnimatedParagraph({
         ease: "easeOut",
         delay: isMobile ? (delay || 0) * 0.5 : delay,
       }}
-      className={styles.animationP}
+      className={className ? `${styles.animationP} ${className}` : styles.animationP}
     >
       {children}
     </motion.div>

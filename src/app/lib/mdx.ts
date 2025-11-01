@@ -7,6 +7,7 @@ export interface FrontMatter {
   title: string;
   description: string;
   date: string;
+  featured?: boolean;
 }
 
 const POSTS_PATH = path.join(process.cwd(), "src/app/lib/content/posts");

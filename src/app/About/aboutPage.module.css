@@ -8,12 +8,18 @@
   }
 }
 
+.dark :root {
+  --skill-bg: #222222;
+}
+
 .aboutPage {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
   font-family: "Inter", sans-serif;
   color: var(--text-color);
+  background-color: var(--site-bg-color);
+  min-height: 100vh;
 }
 
 .header {
@@ -24,6 +30,7 @@
 .header h1 {
   font-size: 3rem;
   font-weight: 700;
+  color: var(--heading-color);
 }
 
 .content {

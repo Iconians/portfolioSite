@@ -1,7 +1,12 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import styles from "./BlogCard.module.css";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/Components/ui/card";
 
 interface BlogCardProps {
   title: string;
@@ -17,21 +22,27 @@ const item = {
 export default function BlogCard({ title, description, date }: BlogCardProps) {
   return (
     <motion.div
-      className={styles.blogCard}
       variants={item}
-      whileHover={{ scale: 1.03, y: -2 }}
-      whileTap={{ scale: 0.97 }}
+      whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
-      // className={styles.blogCard}
-      // whileHover={{ scale: 1.03, y: -2 }}
-      // whileTap={{ scale: 0.97 }}
-      // initial={{ opacity: 0, y: 10 }}
-      // animate={{ opacity: 1, y: 0 }}
-      // transition={{ duration: 0.3 }}
     >
-      <h3 className={styles.h3}>{title}</h3>
-      {description && <p className={styles.p}>{description}</p>}
-      {date && <small className={styles.small}>{date}</small>}
+      <Card className="group hover:border-primary transition-all hover:shadow-lg h-full cursor-pointer">
+        <CardHeader>
+          <CardTitle className="text-xl group-hover:text-primary transition-colors">
+            {title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {description && (
+            <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+              {description}
+            </p>
+          )}
+          {date && (
+            <small className="text-muted-foreground text-xs">{date}</small>
+          )}
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }

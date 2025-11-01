@@ -24,9 +24,6 @@ export default function AnimatedHeading({
   const tag = `h${level}` as keyof typeof motionTags;
   const MotionTag = motionTags[tag] || motion.h2;
 
-  // Optimize for mobile
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-
   return (
     <MotionTag
       className={className}

@@ -1,8 +1,7 @@
 export const dynamic = "force-dynamic";
 import { getAllPosts, getPostBySlug } from "@/app/lib/mdx";
 import BlogPostClient from "@/app/Components/BlogPostClient/BlogPostClient";
-import styles from "../blogPage.module.css";
-import Nav from "@/app/Components/Nav/Nav";
+import { Navigation } from "@/app/Components/Nav/Navigation";
 import ClientWrapper from "@/app/Components/ClientWrapper/ClientWrapper";
 import Link from "next/link";
 
@@ -18,12 +17,13 @@ export default async function BlogPost({ params }: BlogPageProps) {
     const { frontMatter, mdxSource } = await getPostBySlug(resolvedParams.slug);
 
     return (
-      <div className={styles.slugPage}>
-        <Nav />
-        {/* mark BlogPostClient as client component */}
-        <ClientWrapper>
-          <BlogPostClient frontMatter={frontMatter} mdxSource={mdxSource} />
-        </ClientWrapper>
+      <div className="min-h-screen w-full bg-background">
+        <Navigation />
+        <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
+          <ClientWrapper>
+            <BlogPostClient frontMatter={frontMatter} mdxSource={mdxSource} />
+          </ClientWrapper>
+        </main>
       </div>
     );
   } catch (error) {
@@ -32,18 +32,19 @@ export default async function BlogPost({ params }: BlogPageProps) {
       error
     );
     return (
-      <div className={styles.slugPage}>
-        <Nav />
-        <div style={{ padding: "2rem", textAlign: "center" }}>
-          <h1>Post Not Found</h1>
-          <p>The blog post you&apos;re looking for doesn&apos;t exist.</p>
-          <Link
-            href="/blogs"
-            style={{ color: "#0070f3", textDecoration: "none" }}
-          >
-            ← Back to Blog
-          </Link>
-        </div>
+      <div className="min-h-screen w-full bg-background">
+        <Navigation />
+        <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
+          <div className="p-8 text-center">
+            <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
+            <p className="text-muted-foreground mb-6">
+              The blog post you&apos;re looking for doesn&apos;t exist.
+            </p>
+            <Link href="/blogs" className="text-primary hover:underline">
+              ← Back to Blog
+            </Link>
+          </div>
+        </main>
       </div>
     );
   }

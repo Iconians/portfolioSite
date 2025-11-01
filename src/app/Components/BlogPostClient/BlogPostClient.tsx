@@ -24,7 +24,8 @@ interface BlogPostClientProps {
 }
 
 export default function BlogPostClient({
-  frontMatter,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  frontMatter: _frontMatter,
   mdxSource,
 }: BlogPostClientProps) {
   return (
