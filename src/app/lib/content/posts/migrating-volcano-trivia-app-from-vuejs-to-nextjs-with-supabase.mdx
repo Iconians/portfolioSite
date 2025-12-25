@@ -1,0 +1,756 @@
+---
+title: "Migrating Volcano Trivia App: From Vue.js to Next.js with Supabase"
+date: "2025-01-15"
+tags: ["Next.js", "React", "Vue.js", "Migration", "Supabase", "TypeScript"]
+featured: true
+---
+
+# Migrating Volcano Trivia App: From Vue.js to Next.js with Supabase
+
+<AnimatedParagraph>
+  The Volcano Trivia App is an engaging quiz application that tests users'
+  knowledge of volcanology. Originally built with Vue.js, the application was
+  recently migrated to Next.js 16 with React 19, maintaining Supabase as the
+  backend platform. This article documents the migration process, architectural
+  decisions, challenges faced, and the benefits realized from this modernization
+  effort.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Why Migrate?</AnimatedHeading>
+
+<AnimatedHeading level={3}>From Vue.js to Next.js</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Vue.js Limitations:</strong>
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    Client-side rendering only, leading to slower initial page loads
+  </AnimatedListItem>
+  <AnimatedListItem>Limited SEO capabilities</AnimatedListItem>
+  <AnimatedListItem>Manual routing setup and configuration</AnimatedListItem>
+  <AnimatedListItem>
+    Separate build tooling and configuration overhead
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedParagraph>
+  <strong>Next.js Benefits:</strong>
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    Server-side rendering (SSR) and static site generation (SSG) for better
+    performance
+  </AnimatedListItem>
+  <AnimatedListItem>Built-in routing with the App Router</AnimatedListItem>
+  <AnimatedListItem>Automatic code splitting and optimization</AnimatedListItem>
+  <AnimatedListItem>Better TypeScript integration</AnimatedListItem>
+  <AnimatedListItem>
+    Improved developer experience with hot reloading and error handling
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Why Stay with Supabase?</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Supabase Advantages:</strong>
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    PostgreSQL database with robust SQL capabilities
+  </AnimatedListItem>
+  <AnimatedListItem>Built-in authentication and authorization</AnimatedListItem>
+  <AnimatedListItem>Real-time subscriptions when needed</AnimatedListItem>
+  <AnimatedListItem>RESTful API automatically generated</AnimatedListItem>
+  <AnimatedListItem>Excellent TypeScript support</AnimatedListItem>
+  <AnimatedListItem>Row-level security policies</AnimatedListItem>
+  <AnimatedListItem>
+    Familiar SQL interface for database management
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Architecture Overview</AnimatedHeading>
+
+<AnimatedHeading level={3}>Original Stack (Vue.js + Supabase)</AnimatedHeading>
+
+<AnimatedCode>
+  {`┌─────────────┐
+│   Vue.js    │  ← Client-side framework
+│  Frontend   │
+└──────┬──────┘
+       │ REST API
+       ↓
+┌─────────────┐
+│  Supabase   │  ← PostgreSQL database
+│  Backend    │     + Authentication
+└─────────────┘`}
+</AnimatedCode>
+
+<AnimatedHeading level={3}>New Stack (Next.js + Supabase)</AnimatedHeading>
+
+<AnimatedCode>
+  {`┌─────────────────┐
+│   Next.js 16    │  ← React framework with SSR
+│   React 19      │     + App Router
+└────────┬────────┘
+         │
+         │ Supabase Client
+         ↓
+┌─────────────────┐
+│    Supabase     │  ← PostgreSQL database
+│   (PostgreSQL)  │     + Authentication
+│  + Server API   │     + Row Level Security
+└─────────────────┘`}
+</AnimatedCode>
+
+<AnimatedHeading level={2}>
+  Frontend Migration: Vue.js to Next.js
+</AnimatedHeading>
+
+<AnimatedHeading level={3}>Component Structure Transformation</AnimatedHeading>
+
+<AnimatedHeading level={4}>Vue.js Component Pattern</AnimatedHeading>
+
+<AnimatedCode>
+{`<template>
+  <div class="start-component">
+    <h1>{{ title }}</h1>
+    <button @click="handleClick">Start Game</button>
+  </div>
+</template>
+
+<script setup>
+  import {ref} from 'vue' const title = ref('Volcano Quiz') function
+  handleClick(){" "}
+  {
+    // Handle click
+  }
+</script>
+
+`}
+
+</AnimatedCode>
+
+<AnimatedHeading level={4}>Next.js/React Component Pattern</AnimatedHeading>
+
+<AnimatedCode>
+{`'use client'
+
+import { useState } from 'react'
+
+export default function StartComponent() {
+  const [title] = useState('Volcano Quiz')
+
+const handleClick = () => {
+// Handle click
+}
+
+return (
+
+<div className="start-component">
+  <h1>{title}</h1>
+  <button onClick={handleClick}>Start Game</button>
+</div>
+) }`}
+
+</AnimatedCode>
+
+<AnimatedHeading level={3}>Key Changes</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>File-based Routing:</strong> Next.js uses the <code>app/</code>{" "}
+    directory structure for routing
+    <ul>
+      <li>
+        <code>app/page.tsx</code> → Home page (<code>/</code>)
+      </li>
+      <li>
+        <code>app/game/page.tsx</code> → Game page (<code>/game</code>)
+      </li>
+      <li>
+        <code>app/profile/page.tsx</code> → Profile page (<code>/profile</code>)
+      </li>
+    </ul>
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Client Components:</strong> Components that use hooks or browser
+    APIs must be marked with <code>'use client'</code>
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Server Components:</strong> By default, components are server
+    components, enabling SSR
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Styling:</strong> Continued using Tailwind CSS, but with Next.js's
+    built-in CSS support
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>State Management Migration</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Vue.js (Composition API):</strong>
+</AnimatedParagraph>
+
+<AnimatedCode>
+{`import { ref, reactive } from 'vue'
+
+const count = ref(0)
+const state = reactive({ name: 'User' })`}
+
+</AnimatedCode>
+
+<AnimatedParagraph>
+  <strong>React (Hooks):</strong>
+</AnimatedParagraph>
+
+<AnimatedCode>
+{`import { useState, useEffect } from 'react'
+
+const [count, setCount] = useState(0)
+const [state, setState] = useState({ name: 'User' })`}
+
+</AnimatedCode>
+
+<AnimatedHeading level={3}>Example: Game Page Migration</AnimatedHeading>
+
+<AnimatedParagraph>
+  The game page (<code>app/game/page.tsx</code>) demonstrates the complexity of
+  the migration:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>Real-time question fetching from Supabase</AnimatedListItem>
+  <AnimatedListItem>Answer validation and scoring</AnimatedListItem>
+  <AnimatedListItem>
+    Audio feedback for correct/incorrect answers
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Game state management (win/lose conditions)
+  </AnimatedListItem>
+  <AnimatedListItem>Score posting to backend</AnimatedListItem>
+</AnimatedList>
+
+<AnimatedParagraph>
+  <strong>React Patterns Used:</strong>
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <code>useState</code> for local component state
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <code>useEffect</code> for side effects and initialization
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <code>useRef</code> for audio element references
+  </AnimatedListItem>
+  <AnimatedListItem>
+    Custom hooks (<code>useGameUtils</code>) for shared game logic
+  </AnimatedListItem>
+  <AnimatedListItem>Server Actions for secure score posting</AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Backend Integration: Supabase</AnimatedHeading>
+
+<AnimatedHeading level={3}>Database Schema</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Supabase (PostgreSQL):</strong>
+</AnimatedParagraph>
+
+<AnimatedCode>
+{`CREATE TABLE questions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  question TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE answers (
+id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+question_foreign_key UUID REFERENCES questions(id),
+answers TEXT[],
+correct_answer TEXT NOT NULL,
+created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE profile (
+id BIGSERIAL PRIMARY KEY,
+user_id UUID REFERENCES auth.users(id),
+display_name TEXT,
+score JSONB,
+created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE high_score (
+id BIGSERIAL PRIMARY KEY,
+user_name TEXT NOT NULL,
+score INTEGER NOT NULL,
+created_at TIMESTAMP DEFAULT NOW()
+);`}
+
+</AnimatedCode>
+
+<AnimatedHeading level={3}>Query Migration</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Vue.js with Supabase:</strong>
+</AnimatedParagraph>
+
+<AnimatedCode>
+  {`// Vue.js component
+const { data, error } = await supabase
+  .from('questions')
+  .select('*')
+  .limit(5)`}
+</AnimatedCode>
+
+<AnimatedParagraph>
+  <strong>Next.js with Supabase:</strong>
+</AnimatedParagraph>
+
+<AnimatedCode>
+{`// lib/supabase-queries.ts
+export function useRandomQuestions(count: number = 100) {
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [loading, setLoading] = useState(true)
+
+useEffect(() => {
+async function fetchQuestions() {
+const { data, error } = await supabase
+.from('questions')
+.select('\*')
+
+      if (error) throw error
+      const shuffled = [...(data || [])].sort(() => Math.random() - 0.5)
+      setQuestions(shuffled.slice(0, count))
+      setLoading(false)
+    }
+    fetchQuestions()
+
+}, [count])
+
+return { questions, loading }
+}
+
+// React component
+const { questions, loading } = useRandomQuestions(5)`}
+
+</AnimatedCode>
+
+<AnimatedHeading level={3}>Server Actions for Mutations</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Next.js Server Actions:</strong>
+</AnimatedParagraph>
+
+<AnimatedCode>
+{`// app/actions/scores.ts
+'use server'
+
+import { supabaseServer } from '@/lib/supabase-server'
+
+export async function updateUserScoreAction(
+  userId: string,
+  correctAnswers: number,
+  wrongAnswers: number
+): Promise<ScoreActionResult> {
+  // Server-side logic with Supabase
+  const { data, error } = await supabaseServer
+    .from('profile')
+    .update({ score: newScores })
+    .eq('user_id', userId)
+    .select()
+    .single()
+
+if (error) {
+return { success: false, error: error.message }
+}
+
+return { success: true, data }
+}`}
+
+</AnimatedCode>
+
+<AnimatedHeading level={2}>Modern React 19 Features</AnimatedHeading>
+
+<AnimatedHeading level={3}>React 19 Hooks Integration</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>
+      <code>useActionState</code>:
+    </strong>{" "}
+    Modern form state management
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>
+      <code>useFormStatus</code>:
+    </strong>{" "}
+    Provides submission status
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>
+      <code>useOptimistic</code>:
+    </strong>{" "}
+    Immediate UI updates
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>
+      <code>useTransition</code>:
+    </strong>{" "}
+    Smooth state transitions
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedCode>
+  {`const [state, formAction] = useActionState(signInAction, null)
+const { pending } = useFormStatus()
+const [optimisticName, updateOptimisticName] = useOptimistic(
+  displayName,
+  (current, newName) => newName
+)
+const [isPending, startTransition] = useTransition()`}
+</AnimatedCode>
+
+<AnimatedHeading level={2}>Key Challenges and Solutions</AnimatedHeading>
+
+<AnimatedHeading level={3}>
+  Challenge 1: Server-Side Data Fetching
+</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Problem:</strong> Vue.js components needed manual refresh to see
+  updated data.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  <strong>Solution:</strong> Next.js Server Components enable server-side data
+  fetching:
+</AnimatedParagraph>
+
+<AnimatedCode>
+  {`// app/high-scores/page.tsx
+export default async function HighScoresPage() {
+  const highScores = await getHighScores()
+  return <HighScoresClient highScores={highScores} />
+}`}
+</AnimatedCode>
+
+<AnimatedHeading level={3}>Challenge 2: Type Safety</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Problem:</strong> Supabase queries needed proper TypeScript typing.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  <strong>Solution:</strong> Created shared type definitions and typed Supabase
+  responses:
+</AnimatedParagraph>
+
+<AnimatedCode>
+{`// types/game.ts
+export type { Question, Answer, Profile, HighScore } from '@/lib/supabase-queries'
+
+// lib/supabase-queries.ts
+export interface Question {
+id: string
+question: string
+created_at?: string
+}`}
+
+</AnimatedCode>
+
+<AnimatedHeading level={3}>Challenge 3: Authentication</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Problem:</strong> Client-side authentication needed proper session
+  management.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  <strong>Solution:</strong> Implemented Supabase Auth with Server Actions and
+  proper session handling:
+</AnimatedParagraph>
+
+<AnimatedCode>
+  {`// lib/auth.ts
+export function useCurrentUser() {
+  const { user, loading } = useSupabase()
+  return user ? { userId: user.id } : null
+}`}
+</AnimatedCode>
+
+<AnimatedHeading level={3}>
+  Challenge 4: Complex State Management
+</AnimatedHeading>
+
+<AnimatedParagraph>
+  <strong>Problem:</strong> Game state management was complex with multiple
+  interdependent states.
+</AnimatedParagraph>
+
+<AnimatedParagraph>
+  <strong>Solution:</strong> Created custom hooks to encapsulate game logic:
+</AnimatedParagraph>
+
+<AnimatedCode>
+  {`// lib/gameUtils.ts
+export function useGameUtils() {
+  const postScore = async (correctAnswers: number, wrongAnswers: number) => {
+    // Encapsulated logic using Server Actions
+  }
+  
+  return { postScore, updateHighScore, sortQuestions }
+}`}
+</AnimatedCode>
+
+<AnimatedHeading level={2}>Benefits Realized</AnimatedHeading>
+
+<AnimatedHeading level={3}>Performance Improvements</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Faster Initial Load:</strong> Next.js SSR reduces time to first
+    contentful paint
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Better SEO:</strong> Server-rendered pages are fully crawlable
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Automatic Code Splitting:</strong> Only necessary code is loaded per
+    route
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Server-Side Rendering:</strong> Reduced client-side JavaScript
+    bundle size
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Developer Experience</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Type Safety:</strong> End-to-end TypeScript from frontend to backend
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Hot Reloading:</strong> Instant feedback during development
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Built-in Routing:</strong> File-based routing eliminates route
+    configuration
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Server Actions:</strong> Simplified server-side mutations without
+    API routes
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={3}>Code Quality</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Reduced Boilerplate:</strong> Server Components eliminate
+    client-side data fetching code
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Better Organization:</strong> File-based routing is more intuitive
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Reusable Logic:</strong> Custom hooks promote code reuse
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Error Handling:</strong> Better error boundaries and handling with
+    Server Actions
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Project Structure</AnimatedHeading>
+
+<AnimatedCode>
+  {`volcanoTriviaAppRm/
+├── app/                    # Next.js App Router
+│   ├── page.tsx           # Home page
+│   ├── game/
+│   │   └── page.tsx       # Game page
+│   ├── profile/
+│   │   └── page.tsx       # Profile page
+│   ├── actions/           # Server Actions
+│   │   ├── auth.ts
+│   │   ├── profile.ts
+│   │   └── scores.ts
+│   └── layout.tsx         # Root layout
+├── components/            # React components
+│   ├── StartComponent.tsx
+│   ├── MainQuestionSection.tsx
+│   └── ...
+├── lib/                   # Utility functions
+│   ├── auth.ts           # Authentication helpers
+│   ├── gameUtils.ts      # Game logic hooks
+│   ├── supabase.ts       # Supabase client
+│   ├── supabase-server.ts # Supabase server client
+│   ├── supabase-queries.ts # Query hooks
+│   └── supabase-mutations.ts # Mutation helpers
+├── types/                 # TypeScript types
+│   └── game.ts           # Shared game types
+└── scripts/              # Utility scripts
+    └── generateJWTKeys.mjs`}
+</AnimatedCode>
+
+<AnimatedHeading level={2}>Migration Checklist</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>Set up Next.js project with TypeScript</AnimatedListItem>
+  <AnimatedListItem>
+    Migrate Vue components to React components
+  </AnimatedListItem>
+  <AnimatedListItem>Implement file-based routing</AnimatedListItem>
+  <AnimatedListItem>Set up Supabase backend integration</AnimatedListItem>
+  <AnimatedListItem>Create Server Actions for mutations</AnimatedListItem>
+  <AnimatedListItem>
+    Migrate authentication logic to Supabase Auth
+  </AnimatedListItem>
+  <AnimatedListItem>Update state management to React hooks</AnimatedListItem>
+  <AnimatedListItem>
+    Implement Server Components for data fetching
+  </AnimatedListItem>
+  <AnimatedListItem>Add TypeScript strict types</AnimatedListItem>
+  <AnimatedListItem>Test all functionality</AnimatedListItem>
+  <AnimatedListItem>Deploy to production</AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Lessons Learned</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Plan the Migration:</strong> Break down the migration into smaller,
+    manageable steps
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Type Safety Matters:</strong> Leverage TypeScript for catching
+    errors early
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Server Components are Powerful:</strong> Use Server Components for
+    initial data fetching
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Server Actions Simplify Backend:</strong> No need for API routes for
+    simple mutations
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Custom Hooks Help:</strong> Encapsulate complex logic in reusable
+    hooks
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Test Incrementally:</strong> Test each migrated feature before
+    moving to the next
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Maintain Supabase:</strong> Keep using Supabase for its excellent
+    developer experience and features
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Future Improvements</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Real-time Features:</strong> Add Supabase real-time subscriptions
+    for live updates
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Optimistic Updates:</strong> Implement optimistic UI updates for
+    better UX
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Error Boundaries:</strong> Add React error boundaries for better
+    error handling
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Performance Monitoring:</strong> Add analytics and performance
+    monitoring
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Testing:</strong> Add unit and integration tests
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Accessibility:</strong> Improve accessibility features
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>PWA Features:</strong> Add Progressive Web App capabilities
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedHeading level={2}>Conclusion</AnimatedHeading>
+
+<AnimatedParagraph>
+  The migration from Vue.js to Next.js while maintaining Supabase as the backend
+  has resulted in a more modern, performant, and maintainable application. The
+  new stack provides:
+</AnimatedParagraph>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <strong>Better Performance:</strong> SSR and optimized React rendering
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Type Safety:</strong> End-to-end TypeScript support
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Simplified Backend:</strong> Server Actions eliminate API route
+    boilerplate
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Better DX:</strong> Improved developer experience with Next.js and
+    React 19
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <strong>Proven Backend:</strong> Supabase provides a robust, scalable
+    database and auth solution
+  </AnimatedListItem>
+</AnimatedList>
+
+<AnimatedParagraph>
+  While the migration required significant effort, the benefits in terms of
+  performance, developer experience, and code quality make it a worthwhile
+  investment. The application is now better positioned for future growth and
+  feature additions.
+</AnimatedParagraph>
+
+<AnimatedHeading level={2}>Resources</AnimatedHeading>
+
+<AnimatedList>
+  <AnimatedListItem>
+    <a href="https://nextjs.org/docs" target="_blank" rel="noopener noreferrer">
+      Next.js Documentation
+    </a>
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
+      React 19 Documentation
+    </a>
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <a
+      href="https://supabase.com/docs"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Supabase Documentation
+    </a>
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <a
+      href="https://www.typescriptlang.org/docs"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      TypeScript Documentation
+    </a>
+  </AnimatedListItem>
+</AnimatedList>
