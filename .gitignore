@@ -41,3 +41,19 @@ yarn-error.log*
 next-env.d.ts
 .cursor
 bun.lock
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+logs/
+*.log
+
+# Uploads
+public/uploads/
+
+# Prisma
+node_modules/.prisma/
+
+/src/generated/prisma

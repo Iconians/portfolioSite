@@ -22,7 +22,8 @@
   --accent-color: #ffd700;
   --review-card-bg: #fefefe;
   --blog-card-bg: #ffffff;
-  --blog-card-border: #eaeaea; 
+  --blog-card-border: #eaeaea;
+  --skill-bg: #f3f3f3; 
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -105,6 +106,7 @@
     --accent-color: #ffd700;
     --blog-card-bg: linear-gradient(135deg, #1e1e1e, #3a3a3a);
     --blog-card-border: #444;
+    --skill-bg: #222222;
   }
 }
 
@@ -212,6 +214,7 @@ button:hover {
   --accent-color: #ffd700;
   --blog-card-bg: linear-gradient(135deg, #1e1e1e, #3a3a3a);
   --blog-card-border: #444;
+  --skill-bg: #222222;
 }
 
 .dark button {

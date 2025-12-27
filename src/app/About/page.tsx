@@ -1,12 +1,45 @@
-import { Navigation } from "../Components/Nav/Navigation";
+"use client";
 import { skillsArr } from "../utils/skills";
 import Image from "next/image";
-import { AnimatedSection } from "../Components/Animations/AnimatedSection";
+import dynamic from "next/dynamic";
 import styles from "./aboutPage.module.css";
-import AnimatedParagraph from "../Components/Animations/AnimatedParagraphs";
-import AnimatedList, {
-  AnimatedListItem,
-} from "../Components/Animations/AnimatedList";
+
+// Dynamically import Navigation (uses framer-motion) to prevent SSR issues
+const Navigation = dynamic(
+  () => import("../Components/Nav/Navigation").then((mod) => mod.Navigation),
+  { ssr: false }
+);
+
+// Dynamically import animated components to prevent SSR issues during static generation
+const AnimatedSection = dynamic(
+  () =>
+    import("../Components/Animations/AnimatedSection").then(
+      (mod) => mod.AnimatedSection
+    ),
+  { ssr: false }
+);
+
+const AnimatedParagraph = dynamic(
+  () =>
+    import("../Components/Animations/AnimatedParagraphs").then(
+      (mod) => mod.default
+    ),
+  { ssr: false }
+);
+
+const AnimatedList = dynamic(
+  () =>
+    import("../Components/Animations/AnimatedList").then((mod) => mod.default),
+  { ssr: false }
+);
+
+const AnimatedListItem = dynamic(
+  () =>
+    import("../Components/Animations/AnimatedList").then(
+      (mod) => mod.AnimatedListItem
+    ),
+  { ssr: false }
+);
 
 export default function aboutPage() {
   return (

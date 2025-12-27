@@ -1,53 +1,55 @@
-export const dynamic = "force-dynamic";
 import { getAllPosts, getPostBySlug } from "@/app/lib/mdx";
-import BlogPostClient from "@/app/Components/BlogPostClient/BlogPostClient";
+import dynamicImport from "next/dynamic";
 import { Navigation } from "@/app/Components/Nav/Navigation";
 import ClientWrapper from "@/app/Components/ClientWrapper/ClientWrapper";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+
+// Dynamically import BlogPostClient to prevent any hook evaluation during static generation
+// Note: Can't use ssr: false in Server Components, but dynamic import still helps
+const BlogPostClient = dynamicImport(
+  () =>
+    import("@/app/Components/BlogPostClient/BlogPostClient").then(
+      (mod) => mod.default
+    ),
+  {
+    loading: () => (
+      <article className="min-h-[400px] flex items-center justify-center">
+        <div>Loading blog post...</div>
+      </article>
+    ),
+  }
+);
 
 interface BlogPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
+// Disable static generation for blog posts - they're client-heavy with animations
+// This prevents framer-motion evaluation during build
+export const dynamic = "force-dynamic";
 export const dynamicParams = true;
 
 export default async function BlogPost({ params }: BlogPageProps) {
-  const resolvedParams = await params;
-  try {
-    const { frontMatter, mdxSource } = await getPostBySlug(resolvedParams.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
-    return (
-      <div className="min-h-screen w-full bg-background">
-        <Navigation />
-        <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
-          <ClientWrapper>
-            <BlogPostClient frontMatter={frontMatter} mdxSource={mdxSource} />
-          </ClientWrapper>
-        </main>
-      </div>
-    );
-  } catch (error) {
-    console.error(
-      `Error loading blog post with slug "${resolvedParams.slug}":`,
-      error
-    );
-    return (
-      <div className="min-h-screen w-full bg-background">
-        <Navigation />
-        <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
-          <div className="p-8 text-center">
-            <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
-            <p className="text-muted-foreground mb-6">
-              The blog post you&apos;re looking for doesn&apos;t exist.
-            </p>
-            <Link href="/blogs" className="text-primary hover:underline">
-              ← Back to Blog
-            </Link>
-          </div>
-        </main>
-      </div>
-    );
+  if (!post) {
+    notFound();
   }
+
+  const { frontMatter, mdxSource } = post;
+
+  return (
+    <div className="min-h-screen w-full bg-background">
+      <Navigation />
+      <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
+        <ClientWrapper>
+          <BlogPostClient frontMatter={frontMatter} mdxSource={mdxSource} />
+        </ClientWrapper>
+      </main>
+    </div>
+  );
 }
 
 export async function generateStaticParams() {

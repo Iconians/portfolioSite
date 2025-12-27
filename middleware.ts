@@ -1,0 +1,33 @@
+import { auth } from "@/lib/auth";
+import { NextResponse } from "next/server";
+import { checkRateLimit } from "@/lib/rateLimit";
+
+export default auth((req) => {
+  const { pathname } = req.nextUrl;
+
+  // Protect admin routes
+  if (pathname.startsWith("/admin")) {
+    if (!req.auth) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    // Rate limit admin routes
+    const { success } = checkRateLimit(
+      req.auth.user?.id || "anonymous",
+      10,
+      10000
+    );
+    if (!success) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded" },
+        { status: 429 }
+      );
+    }
+  }
+
+  return NextResponse.next();
+});
+
+export const config = {
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
+};

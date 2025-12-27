@@ -2,6 +2,10 @@ import { getAllPosts } from "@/app/lib/mdx";
 import { Navigation } from "@/app/Components/Nav/Navigation";
 import BlogGrid from "../Components/blogWrapper/blogWrapper";
 
+// Disable static generation for blogs page - uses animated components (BlogCard, Navigation)
+// This prevents framer-motion evaluation during build
+export const dynamic = "force-dynamic";
+
 export default async function BlogIndex() {
   const posts = await getAllPosts();
   return (

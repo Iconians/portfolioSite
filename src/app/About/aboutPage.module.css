@@ -1,16 +1,4 @@
-:root {
-  --skill-bg: #f3f3f3;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --skill-bg: #222222;
-  }
-}
-
-.dark :root {
-  --skill-bg: #222222;
-}
+/* CSS custom properties moved to globals.css - CSS Modules doesn't support :root */
 
 .aboutPage {
   padding: 2rem;

@@ -45,25 +45,68 @@ export const JokeAdviceComponent = () => {
   const [loadingJoke, setLoadingJoke] = useState(false);
   const [loadingAdvice, setLoadingAdvice] = useState(false);
 
-  const fetchJoke = async () => {
+  const fetchJoke = async (signal?: AbortSignal) => {
     setLoadingJoke(true);
-    const res = await jokeFetch();
-    setJoke([res]);
-    setLoadingJoke(false);
+    try {
+      const res = await jokeFetch(signal);
+      if (!signal?.aborted) {
+        setJoke([res]);
+      }
+    } catch (error) {
+      if (
+        !signal?.aborted &&
+        error instanceof Error &&
+        error.name !== "AbortError"
+      ) {
+        console.error("Failed to fetch joke:", error);
+      }
+    } finally {
+      if (!signal?.aborted) {
+        setLoadingJoke(false);
+      }
+    }
   };
 
-  const fetchAdvice = async () => {
+  const fetchAdvice = async (signal?: AbortSignal) => {
     setLoadingAdvice(true);
-    const res = await adviceService.fetchAdvice();
-    const adviceData = (res as adviceType).advice;
-    const response = (res as adviceType).response;
-    if (res && response.ok) setPieceAdvice([adviceData]);
-    setLoadingAdvice(false);
+    try {
+      const res = await adviceService.fetchAdvice(signal);
+      const adviceData = (res as adviceType).advice;
+      const response = (res as adviceType).response;
+      if (!signal?.aborted && res && response.ok) {
+        setPieceAdvice([adviceData]);
+      }
+    } catch (error) {
+      if (
+        !signal?.aborted &&
+        error instanceof Error &&
+        error.name !== "AbortError"
+      ) {
+        // Silently handle errors - don't show to user, just log
+        console.warn("Failed to fetch advice:", error.message);
+        // Optionally set a fallback message or leave empty
+        // The UI will just show the loading state until user clicks refresh
+      }
+    } finally {
+      if (!signal?.aborted) {
+        setLoadingAdvice(false);
+      }
+    }
   };
 
   useEffect(() => {
-    fetchJoke();
-    fetchAdvice();
+    const abortController = new AbortController();
+    const { signal } = abortController;
+
+    const loadData = async () => {
+      await Promise.all([fetchJoke(signal), fetchAdvice(signal)]);
+    };
+
+    loadData();
+
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
   const fadeVariants = {
@@ -134,7 +177,7 @@ export const JokeAdviceComponent = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={fetchJoke}
+              onClick={() => fetchJoke()}
               className="mt-4 w-full"
               disabled={loadingJoke}
             >
@@ -196,7 +239,7 @@ export const JokeAdviceComponent = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={fetchAdvice}
+              onClick={() => fetchAdvice()}
               className="mt-4 w-full"
               disabled={loadingAdvice}
             >
