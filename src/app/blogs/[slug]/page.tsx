@@ -1,56 +1,91 @@
-export const dynamic = "force-dynamic";
-import { getAllPosts, getPostBySlug } from "@/app/lib/mdx";
-import BlogPostClient from "@/app/Components/BlogPostClient/BlogPostClient";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { Navigation } from "@/app/Components/Nav/Navigation";
 import ClientWrapper from "@/app/Components/ClientWrapper/ClientWrapper";
-import Link from "next/link";
+import BlogPostClient from "@/app/Components/BlogPostClient/BlogPostClient";
+import type { MDXRemoteSerializeResult } from "next-mdx-remote";
+import type { FrontMatter } from "@/app/lib/mdx";
 
-interface BlogPageProps {
-  params: { slug: string };
-}
+export default function BlogPost() {
+  const params = useParams();
+  const slug = params?.slug as string;
+  const [post, setPost] = useState<{
+    frontMatter: FrontMatter;
+    mdxSource: MDXRemoteSerializeResult;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export const dynamicParams = true;
+  useEffect(() => {
+    if (!slug) return;
 
-export default async function BlogPost({ params }: BlogPageProps) {
-  const resolvedParams = await params;
-  try {
-    const { frontMatter, mdxSource } = await getPostBySlug(resolvedParams.slug);
+    const fetchPost = async () => {
+      try {
+        const response = await fetch(`/api/articles/${slug}`);
+        if (!response.ok) {
+          if (response.status === 404) {
+            setError("Article not found");
+          } else {
+            setError("Failed to load article");
+          }
+          return;
+        }
+        const data = await response.json();
+        setPost(data.article);
+      } catch (err) {
+        console.error("Failed to load article:", err);
+        setError("Failed to load article");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
+    fetchPost();
+  }, [slug]);
+
+  if (isLoading) {
     return (
       <div className="min-h-screen w-full bg-background">
         <Navigation />
         <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
-          <ClientWrapper>
-            <BlogPostClient frontMatter={frontMatter} mdxSource={mdxSource} />
-          </ClientWrapper>
+          <div className="text-center py-8">Loading article...</div>
         </main>
       </div>
     );
-  } catch (error) {
-    console.error(
-      `Error loading blog post with slug "${resolvedParams.slug}":`,
-      error
-    );
+  }
+
+  if (error || !post) {
     return (
       <div className="min-h-screen w-full bg-background">
         <Navigation />
         <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
-          <div className="p-8 text-center">
-            <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
-            <p className="text-muted-foreground mb-6">
-              The blog post you&apos;re looking for doesn&apos;t exist.
+          <div className="text-center py-8">
+            <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
+            <p className="text-muted-foreground mb-4">
+              {error || "The article you're looking for doesn't exist."}
             </p>
-            <Link href="/blogs" className="text-primary hover:underline">
+            <a href="/blogs" className="text-primary hover:underline">
               ← Back to Blog
-            </Link>
+            </a>
           </div>
         </main>
       </div>
     );
   }
-}
 
-export async function generateStaticParams() {
-  const posts = await getAllPosts();
-  return posts.map((post) => ({ slug: post.slug })) as { slug: string }[];
+  return (
+    <div className="min-h-screen w-full bg-background">
+      <Navigation />
+      <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
+        <ClientWrapper>
+          <BlogPostClient
+            frontMatter={post.frontMatter}
+            mdxSource={post.mdxSource}
+          />
+        </ClientWrapper>
+      </main>
+    </div>
+  );
 }

@@ -1,7 +1,5 @@
-import { motion } from "framer-motion";
+"use client";
 import React from "react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { okaidia } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 interface AnimatedCodeProps {
   children: string;
@@ -9,55 +7,38 @@ interface AnimatedCodeProps {
   delay?: number; // milliseconds before animation starts
 }
 
+// During static generation, render a simple code block without animation
+// The animated version will be rendered on the client via dynamic import in BlogPostClient
 export const AnimatedCode: React.FC<AnimatedCodeProps> = ({
   children,
   language = "javascript",
   delay = 0,
 }) => {
+  // Render a plain code block during SSR/static generation
+  // This avoids any issues with framer-motion or react-syntax-highlighter
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.6,
-        delay: delay / 1000,
-        ease: "easeOut",
-      }}
+    <div
       style={{
         borderRadius: "0.5rem",
         overflow: "hidden",
+        padding: "1rem",
+        backgroundColor: "#272822",
+        color: "#f8f8f2",
+        margin: 0,
+        fontSize: "clamp(12px, 2.5vw, 14px)",
+        lineHeight: "1.5em",
       }}
     >
-      <SyntaxHighlighter
-        language={language}
-        style={okaidia}
-        customStyle={{
+      <pre
+        style={{
           margin: 0,
-          padding: "1rem",
-          fontSize: "clamp(12px, 2.5vw, 14px)", // Responsive font size
-          lineHeight: "1.5em",
           whiteSpace: "pre-wrap",
           wordBreak: "break-word",
-          overflowX: "hidden",
-          maxWidth: "100%",
-          width: "100%",
-          boxSizing: "border-box",
-        }}
-        wrapLines={true}
-        wrapLongLines={true}
-        codeTagProps={{
-          style: {
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-            overflowWrap: "break-word",
-            fontSize: "inherit",
-            maxWidth: "100%",
-            width: "100%",
-          } as React.CSSProperties,
+          fontFamily: "monospace",
         }}
       >
         {children}
-      </SyntaxHighlighter>
-    </motion.div>
+      </pre>
+    </div>
   );
 };

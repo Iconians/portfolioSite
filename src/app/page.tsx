@@ -1,11 +1,14 @@
 import "./globals.css";
 import { Hero } from "./Components/Hero/Hero";
 import { Navigation } from "./Components/Nav/Navigation";
-import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
 import PortfolioSection from "./Components/PortfolioSection/PortfolioSection";
-import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
-import { AnimatedSection } from "./Components/Animations/AnimatedSection";
 import FeaturedArticles from "./Components/FeaturedArticles/FeaturedArticles";
+import { AnimatedSection } from "./Components/Animations/AnimatedSection";
+import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
+import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
+
+// Enable static generation with revalidation for better performance as
+export const revalidate = 3600; // Revalidate every hour
 
 export default function Home() {
   return (

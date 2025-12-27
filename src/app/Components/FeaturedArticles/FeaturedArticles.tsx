@@ -1,15 +1,82 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getAllPosts } from "@/app/lib/mdx";
 import BlogCard from "../BlogCard.tsx/BlogCard";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import type { FrontMatter } from "@/app/lib/mdx";
 
-export default async function FeaturedArticles() {
-  const allPosts = await getAllPosts();
-  // Filter posts where featured is true, limit to 3
-  const featuredPosts = allPosts
-    .filter((post) => post.frontMatter.featured === true)
-    .slice(0, 3);
+interface Post {
+  slug: string;
+  frontMatter: FrontMatter;
+}
+
+export default function FeaturedArticles() {
+  const [featuredPosts, setFeaturedPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await fetch("/api/articles");
+        if (!response.ok) {
+          throw new Error("Failed to fetch articles");
+        }
+        const data = await response.json();
+        const articles = data.articles || [];
+
+        // Convert articles to posts format and filter featured
+        const posts: Post[] = articles
+          .filter((article: { featured: boolean }) => article.featured === true)
+          .slice(0, 3)
+          .map(
+            (article: {
+              slug: string;
+              title: string;
+              description?: string;
+              date: Date;
+            }) => ({
+              slug: article.slug,
+              frontMatter: {
+                title: article.title,
+                description: article.description || "",
+                date:
+                  article.date instanceof Date
+                    ? article.date.toISOString().split("T")[0]
+                    : article.date,
+                featured: true,
+              } as FrontMatter,
+            })
+          );
+
+        setFeaturedPosts(posts);
+      } catch (error) {
+        console.error("Failed to load featured articles:", error);
+        setFeaturedPosts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section className="py-16">
+        <div className="mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Featured Articles
+          </h2>
+          <p className="text-muted-foreground text-lg">
+            Latest articles on algorithms, data structures, and web development
+          </p>
+        </div>
+        <div className="text-center py-8">Loading articles...</div>
+      </section>
+    );
+  }
 
   if (featuredPosts.length === 0) {
     return null;

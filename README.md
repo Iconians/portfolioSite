@@ -37,14 +37,17 @@ Visit my portfolio here: [Portfolio Site](https://www.clytoncripe.com)
 - **Language:** TypeScript (since the original React build)  
 - **Styling:** CSS Modules + Tailwind CSS  
 - **Animations:** Framer Motion (`AnimatedParagraph`, `AnimatedList`, `AnimatedCode`, `AnimatedSection`, `AnimatedHeading`, etc.)  
+- **Backend:** PostgreSQL with Prisma ORM
+- **Authentication:** Auth.js (NextAuth v5) with custom authorization
+- **Package Manager:** Bun
 - **Deployment:** Vercel  
 
 ### Skills / Technologies
 
 - **Frontend:** HTML, CSS, JavaScript, TypeScript, React, React Router, Next.js, Vue, Tailwind, Styled Components  
-- **Backend:** Node.js, Express, Go, Python, PostgreSQL, SQLC  
-- **Testing / Dev Tools:** Vitest, Jest, Bash, GitHub, GitLab, Trello, Zod, Linux  
-- **Other:** Supabase, WordPress, Unbounce  
+- **Backend:** Node.js, Express, Go, Python, PostgreSQL, SQLC, Prisma ORM  
+- **Testing / Dev Tools:** Bun test runner, Bash, GitHub, GitLab, Trello, Zod, Linux  
+- **Other:** Auth.js, WordPress, Unbounce  
 
 ### Project Goals
 
@@ -63,18 +66,41 @@ Visit my portfolio here: [Portfolio Site](https://www.clytoncripe.com)
 
 ### Running Locally
 
+**Prerequisites:**
+- Bun installed
+- PostgreSQL database running
+- Environment variables configured (see `.env.example`)
+
+**Setup:**
 ```bash
 git clone https://github.com/Iconians/portfolioSite.git
-cd portfolio
-npm install
-npm run dev
+cd portfolioSite
+bun install
+
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your DATABASE_URL, AUTH_SECRET, etc.
+
+# Generate Prisma client
+bun run db:generate
+
+# Run database migrations
+bun run db:migrate
+
+# Migrate existing content to database
+bun run migrate:content
+
+# Start development server
+bun run dev
+```
+
 Then open http://localhost:3000 in your browser.
 
 Build for Production
 bash
 Copy code
-npm run build
-npm start
+bun run build
+bun start
 ```
 
 Recent Updates

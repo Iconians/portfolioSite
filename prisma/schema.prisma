@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   @default("admin")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  articles  Article[]
+  reviews   Review[]
+  portfolio Portfolio[]
+
+  @@map("users")
+}
+
+model Article {
+  id            String    @id @default(uuid())
+  title         String
+  slug          String    @unique
+  content       String    @db.Text
+  description   String?   @db.Text
+  date          DateTime
+  tags          String[]
+  featured      Boolean   @default(false)
+  status        String    @default("draft") // draft | published | archived
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  publishedAt   DateTime? @map("published_at")
+  createdBy     String    @map("created_by")
+  createdByUser User      @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([slug], name: "articles_slug_idx")
+  @@index([featured, status], name: "articles_featured_idx")
+  @@index([date(sort: Desc), status], name: "articles_date_idx")
+  @@index([status], name: "articles_status_idx")
+  @@map("articles")
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  title         String
+  content       String   @db.Text
+  stars         Int // 1-5
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  createdBy     String   @map("created_by")
+  createdByUser User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model Portfolio {
+  id            String   @id @default(uuid())
+  img           String
+  caption       String
+  description   String   @db.Text
+  category      String[]
+  url           String?
+  github        String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  createdBy     String   @map("created_by")
+  createdByUser User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@map("portfolio")
+}
+
+model AuditLog {
+  id           String   @id @default(uuid())
+  userId       String?  @map("user_id")
+  action       String
+  resourceType String   @map("resource_type")
+  resourceId   String?  @map("resource_id")
+  metadata     Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("audit_log")
+}
