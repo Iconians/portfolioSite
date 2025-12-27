@@ -35,25 +35,6 @@ function getDatabaseAdapter() {
     );
   }
 
-  // Validate URL format
-  try {
-    const url = new URL(connectionString);
-    if (url.hostname === "localhost" || url.hostname === "127.0.0.1") {
-      throw new Error(
-        `DATABASE_URL hostname is ${url.hostname}. Please configure a production database.`
-      );
-    }
-  } catch (e) {
-    if (e instanceof Error && e.message.includes("hostname")) {
-      throw e; // Re-throw our validation error
-    }
-    throw new Error(
-      `Invalid DATABASE_URL format: ${
-        e instanceof Error ? e.message : String(e)
-      }`
-    );
-  }
-
   // Don't validate format strictly - let the Pool constructor handle it
   // This allows various connection string formats (Neon, Supabase, etc.)
   // The actual connection attempt will fail if the format is truly invalid
