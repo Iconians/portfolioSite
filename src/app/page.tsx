@@ -1,33 +1,14 @@
 import "./globals.css";
 import { Hero } from "./Components/Hero/Hero";
 import { Navigation } from "./Components/Nav/Navigation";
-import dynamicImport from "next/dynamic";
 import PortfolioSection from "./Components/PortfolioSection/PortfolioSection";
 import FeaturedArticles from "./Components/FeaturedArticles/FeaturedArticles";
+import { AnimatedSection } from "./Components/Animations/AnimatedSection";
+import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
+import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
 
-// Disable static generation for home page - it uses many animated components
-// This prevents framer-motion evaluation during build
-export const dynamic = "force-dynamic";
-
-// Dynamically import components that use framer-motion
-// Note: Can't use ssr: false in Server Components, but dynamic import still helps isolate
-const AnimatedSection = dynamicImport(() =>
-  import("./Components/Animations/AnimatedSection").then(
-    (mod) => mod.AnimatedSection
-  )
-);
-
-const JokeAdviceComponent = dynamicImport(() =>
-  import("./Components/Joke&AdviceComponent/JokeAdviceComponent").then(
-    (mod) => mod.JokeAdviceComponent
-  )
-);
-
-const ReviewComponent = dynamicImport(() =>
-  import("./Components/ReviewComponet/ReviewComponent").then(
-    (mod) => mod.ReviewComponent
-  )
-);
+// Enable static generation with revalidation for better performance
+export const revalidate = 3600; // Revalidate every hour
 
 export default function Home() {
   return (

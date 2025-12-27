@@ -1,52 +1,89 @@
-import { getAllPosts, getPostBySlug } from "@/app/lib/mdx";
-import dynamicImport from "next/dynamic";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { Navigation } from "@/app/Components/Nav/Navigation";
 import ClientWrapper from "@/app/Components/ClientWrapper/ClientWrapper";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import BlogPostClient from "@/app/Components/BlogPostClient/BlogPostClient";
+import type { MDXRemoteSerializeResult } from "next-mdx-remote";
+import type { FrontMatter } from "@/app/lib/mdx";
 
-// Dynamically import BlogPostClient to prevent any hook evaluation during static generation
-// Note: Can't use ssr: false in Server Components, but dynamic import still helps
-const BlogPostClient = dynamicImport(
-  () =>
-    import("@/app/Components/BlogPostClient/BlogPostClient").then(
-      (mod) => mod.default
-    ),
-  {
-    loading: () => (
-      <article className="min-h-[400px] flex items-center justify-center">
-        <div>Loading blog post...</div>
-      </article>
-    ),
+export default function BlogPost() {
+  const params = useParams();
+  const slug = params?.slug as string;
+  const [post, setPost] = useState<{
+    frontMatter: FrontMatter;
+    mdxSource: MDXRemoteSerializeResult;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!slug) return;
+
+    const fetchPost = async () => {
+      try {
+        const response = await fetch(`/api/articles/${slug}`);
+        if (!response.ok) {
+          if (response.status === 404) {
+            setError("Article not found");
+          } else {
+            setError("Failed to load article");
+          }
+          return;
+        }
+        const data = await response.json();
+        setPost(data.article);
+      } catch (err) {
+        console.error("Failed to load article:", err);
+        setError("Failed to load article");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [slug]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen w-full bg-background">
+        <Navigation />
+        <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
+          <div className="text-center py-8">Loading article...</div>
+        </main>
+      </div>
+    );
   }
-);
 
-interface BlogPageProps {
-  params: Promise<{ slug: string }>;
-}
-
-// Disable static generation for blog posts - they're client-heavy with animations
-// This prevents framer-motion evaluation during build
-// Also prevents database access during build time
-export const dynamic = "force-dynamic";
-export const dynamicParams = true;
-
-export default async function BlogPost({ params }: BlogPageProps) {
-  const { slug } = await params;
-  const post = await getPostBySlug(slug);
-
-  if (!post) {
-    notFound();
+  if (error || !post) {
+    return (
+      <div className="min-h-screen w-full bg-background">
+        <Navigation />
+        <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
+          <div className="text-center py-8">
+            <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
+            <p className="text-muted-foreground mb-4">
+              {error || "The article you're looking for doesn't exist."}
+            </p>
+            <a href="/blogs" className="text-primary hover:underline">
+              ← Back to Blog
+            </a>
+          </div>
+        </main>
+      </div>
+    );
   }
-
-  const { frontMatter, mdxSource } = post;
 
   return (
     <div className="min-h-screen w-full bg-background">
       <Navigation />
       <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
         <ClientWrapper>
-          <BlogPostClient frontMatter={frontMatter} mdxSource={mdxSource} />
+          <BlogPostClient
+            frontMatter={post.frontMatter}
+            mdxSource={post.mdxSource}
+          />
         </ClientWrapper>
       </main>
     </div>
