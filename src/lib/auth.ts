@@ -3,11 +3,16 @@ import Credentials from "next-auth/providers/credentials";
 import { db } from "@/lib/db/client";
 import { compare } from "bcryptjs";
 
-// Get AUTH_SECRET - only validate at runtime, not during build
+// Get AUTH_SECRET - validate at runtime
 const authSecret = process.env.AUTH_SECRET;
 
+// Validate AUTH_SECRET at runtime (not during build)
+if (!authSecret && process.env.NODE_ENV === "production") {
+  console.error("AUTH_SECRET is required in production");
+}
+
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  secret: authSecret || "fallback-secret-for-build", // Use fallback during build
+  secret: authSecret || "fallback-secret-for-build-only", // Use fallback during build only
   trustHost: true, // Required for Vercel deployments
   providers: [
     Credentials({
