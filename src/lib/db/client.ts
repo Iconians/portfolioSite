@@ -22,7 +22,6 @@ function getDatabaseAdapter() {
 
   // Validate that connection string is not empty after trimming
   if (!connectionString || connectionString.length === 0) {
-    console.error("[DB] ERROR: DATABASE_URL is empty or whitespace only");
     throw new Error("DATABASE_URL environment variable is empty or invalid");
   }
 
@@ -31,53 +30,15 @@ function getDatabaseAdapter() {
     connectionString.includes("localhost") ||
     connectionString.includes("127.0.0.1")
   ) {
-    console.error(
-      "[DB] ERROR: DATABASE_URL appears to point to localhost. This will not work in production."
-    );
-    console.error(
-      "[DB] Connection string (masked):",
-      connectionString.replace(/:[^:@]+@/, ":****@").substring(0, 100)
-    );
     throw new Error(
       "DATABASE_URL points to localhost. Please configure a production database URL."
     );
   }
 
-  // Log connection string info for debugging (without exposing sensitive data)
-  // Always log in production to help diagnose connection issues
-  const connectionInfo = connectionString
-    .replace(/:[^:@]+@/, ":****@") // Mask password
-    .substring(0, 150); // Show more of the connection string
-  console.log(`[DB] Initializing database connection...`);
-  console.log(`[DB] Connection string (masked): ${connectionInfo}...`);
-  console.log(`[DB] Connection string length: ${connectionString.length}`);
-  console.log(
-    `[DB] Starts with postgresql://: ${connectionString.startsWith(
-      "postgresql://"
-    )}`
-  );
-  console.log(`[DB] Contains -pooler: ${connectionString.includes("-pooler")}`);
-  console.log(`[DB] Contains sslmode: ${connectionString.includes("sslmode")}`);
-  console.log(`[DB] Contains neon: ${connectionString.includes("neon")}`);
-
-  // Extract hostname for debugging (masked)
+  // Validate URL format
   try {
     const url = new URL(connectionString);
-    const hostname = url.hostname.replace(/[^.-]+\./g, "***.").substring(0, 50);
-    console.log(`[DB] Hostname pattern: ${hostname}...`);
-    console.log(`[DB] Has hostname: ${!!url.hostname}`);
-    console.log(`[DB] Has pathname: ${!!url.pathname}`);
-    console.log(
-      `[DB] Full URL structure valid: ${
-        !!url.hostname && url.pathname ? "yes" : "no"
-      }`
-    );
-
-    // Critical check: ensure hostname is not localhost
     if (url.hostname === "localhost" || url.hostname === "127.0.0.1") {
-      console.error(
-        `[DB] CRITICAL: Parsed hostname is ${url.hostname}. This indicates DATABASE_URL is misconfigured.`
-      );
       throw new Error(
         `DATABASE_URL hostname is ${url.hostname}. Please configure a production database.`
       );
@@ -86,14 +47,6 @@ function getDatabaseAdapter() {
     if (e instanceof Error && e.message.includes("hostname")) {
       throw e; // Re-throw our validation error
     }
-    console.error(
-      `[DB] Could not parse connection string as URL:`,
-      e instanceof Error ? e.message : String(e)
-    );
-    // If URL parsing fails, the connection string is definitely malformed
-    console.error(
-      `[DB] Connection string format is invalid - cannot parse as URL`
-    );
     throw new Error(
       `Invalid DATABASE_URL format: ${
         e instanceof Error ? e.message : String(e)
@@ -126,23 +79,12 @@ function getDatabaseAdapter() {
       : undefined,
   };
 
-  console.log(`[DB] Creating PostgreSQL pool with connection string...`);
   const pool = new Pool(poolConfig);
 
   // Add error handler to catch connection issues early
   pool.on("error", (err) => {
     console.error("[DB] Pool error:", err.message);
-    if (
-      err.message.includes("localhost") ||
-      err.message.includes("127.0.0.1")
-    ) {
-      console.error(
-        "[DB] CRITICAL: Pool is trying to connect to localhost. DATABASE_URL is likely misconfigured."
-      );
-    }
   });
-
-  console.log(`[DB] Pool created successfully`);
 
   return new PrismaPg(pool);
 }
