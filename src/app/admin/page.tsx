@@ -3,8 +3,16 @@ import { getAllReviews } from "@/lib/data/reviews";
 import { getAllPortfolioItems } from "@/lib/data/portfolio";
 import { Card } from "@/app/Components/ui/card";
 import Link from "next/link";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function AdminDashboard() {
+  // Validate auth in page handler (Node.js runtime)
+  const session = await auth();
+  if (!session?.user) {
+    redirect("/login");
+  }
+
   const [articles, reviews, portfolio] = await Promise.all([
     getAllArticlesAdmin(),
     getAllReviews(),
