@@ -27,6 +27,7 @@ interface BlogPageProps {
 
 // Disable static generation for blog posts - they're client-heavy with animations
 // This prevents framer-motion evaluation during build
+// Also prevents database access during build time
 export const dynamic = "force-dynamic";
 export const dynamicParams = true;
 
@@ -50,9 +51,4 @@ export default async function BlogPost({ params }: BlogPageProps) {
       </main>
     </div>
   );
-}
-
-export async function generateStaticParams() {
-  const posts = await getAllPosts();
-  return posts.map((post) => ({ slug: post.slug })) as { slug: string }[];
 }
