@@ -3,8 +3,13 @@ import Credentials from "next-auth/providers/credentials";
 import { db } from "@/lib/db/client";
 import { compare } from "bcryptjs";
 
+if (!process.env.AUTH_SECRET) {
+  throw new Error("AUTH_SECRET environment variable is required");
+}
+
 export const { auth, handlers, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
+  trustHost: true, // Required for Vercel deployments
   providers: [
     Credentials({
       credentials: {
