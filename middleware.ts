@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { checkRateLimit } from "@/lib/rateLimit";
 
-export default auth((req) => {
+export default auth((req, event) => {
   try {
     const { pathname } = req.nextUrl;
 
