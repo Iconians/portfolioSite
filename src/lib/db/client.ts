@@ -43,8 +43,22 @@ function getDatabaseAdapter() {
         .replace(/[^.-]+\./g, "***.")
         .substring(0, 30);
       console.log(`[DB] Hostname pattern: ${hostname}...`);
+      console.log(`[DB] Has hostname: ${!!url.hostname}`);
+      console.log(`[DB] Has pathname: ${!!url.pathname}`);
+      console.log(
+        `[DB] Full URL structure valid: ${
+          !!url.hostname && url.pathname ? "yes" : "no"
+        }`
+      );
     } catch (e) {
-      console.log(`[DB] Could not parse connection string as URL`);
+      console.log(
+        `[DB] Could not parse connection string as URL:`,
+        e instanceof Error ? e.message : String(e)
+      );
+      // If URL parsing fails, the connection string is definitely malformed
+      console.error(
+        `[DB] Connection string format is invalid - cannot parse as URL`
+      );
     }
   }
 
