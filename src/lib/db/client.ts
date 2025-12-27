@@ -17,13 +17,45 @@ function getDatabaseAdapter() {
     throw new Error("DATABASE_URL environment variable is not set");
   }
 
+  // Log connection string info for debugging (without exposing sensitive data)
+  if (process.env.NODE_ENV === "production") {
+    const connectionInfo = connectionString
+      .replace(/:[^:@]+@/, ":****@") // Mask password
+      .substring(0, 100); // Show more of the connection string
+    console.log(`[DB] Connecting with: ${connectionInfo}...`);
+    console.log(`[DB] Connection string length: ${connectionString.length}`);
+    console.log(
+      `[DB] Starts with postgresql://: ${connectionString.startsWith(
+        "postgresql://"
+      )}`
+    );
+    console.log(
+      `[DB] Contains -pooler: ${connectionString.includes("-pooler")}`
+    );
+    console.log(
+      `[DB] Contains sslmode: ${connectionString.includes("sslmode")}`
+    );
+
+    // Extract hostname for debugging (masked)
+    try {
+      const url = new URL(connectionString);
+      const hostname = url.hostname
+        .replace(/[^.-]+\./g, "***.")
+        .substring(0, 30);
+      console.log(`[DB] Hostname pattern: ${hostname}...`);
+    } catch (e) {
+      console.log(`[DB] Could not parse connection string as URL`);
+    }
+  }
+
   // Don't validate format strictly - let the Pool constructor handle it
   // This allows various connection string formats (Neon, Supabase, etc.)
   // The actual connection attempt will fail if the format is truly invalid
 
   // Create a connection pool for PostgreSQL
   // For Neon, use pooled connection string for serverless environments
-  const pool = new Pool({
+  // Ensure SSL is required for Neon connections
+  const poolConfig: ConstructorParameters<typeof Pool>[0] = {
     connectionString,
     // Increase connection timeout for Neon (compute activation can take a few seconds)
     // Neon cold starts can take longer, so we use a more generous timeout
@@ -35,7 +67,13 @@ function getDatabaseAdapter() {
     // Keep connections alive to avoid cold starts
     keepAlive: true,
     keepAliveInitialDelayMillis: 10000,
-  });
+    // Ensure SSL for Neon connections (if not already in connection string)
+    ssl: connectionString.includes("neon")
+      ? { rejectUnauthorized: false }
+      : undefined,
+  };
+
+  const pool = new Pool(poolConfig);
 
   return new PrismaPg(pool);
 }
