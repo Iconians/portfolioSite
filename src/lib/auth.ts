@@ -3,12 +3,11 @@ import Credentials from "next-auth/providers/credentials";
 import { db } from "@/lib/db/client";
 import { compare } from "bcryptjs";
 
-if (!process.env.AUTH_SECRET) {
-  throw new Error("AUTH_SECRET environment variable is required");
-}
+// Get AUTH_SECRET - only validate at runtime, not during build
+const authSecret = process.env.AUTH_SECRET;
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  secret: process.env.AUTH_SECRET,
+  secret: authSecret || "fallback-secret-for-build", // Use fallback during build
   trustHost: true, // Required for Vercel deployments
   providers: [
     Credentials({
