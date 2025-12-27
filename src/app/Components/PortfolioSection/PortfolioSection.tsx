@@ -4,6 +4,7 @@ import { PortfolioSectionClient } from "./PortfolioSectionClient";
 const PortfolioSection = async () => {
   try {
     const portfolioItems = await getAllPortfolioItems();
+    console.log(portfolioItems);
 
     if (!portfolioItems || portfolioItems.length === 0) {
       return null;
