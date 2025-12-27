@@ -7,7 +7,7 @@ import { AnimatedSection } from "./Components/Animations/AnimatedSection";
 import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
 import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
 
-// Enable static generation with revalidation for better performance
+// Enable static generation with revalidation for better performance as
 export const revalidate = 3600; // Revalidate every hour
 
 export default function Home() {
