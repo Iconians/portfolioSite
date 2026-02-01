@@ -36,6 +36,10 @@ export async function GET(
     });
   } catch (error) {
     console.error("Failed to fetch article:", error);
+    const msg = error instanceof Error ? error.message : "";
+    if (msg.includes("Can't reach database") || msg.includes("DATABASE_URL")) {
+      return NextResponse.json({ error: "Article not found" }, { status: 404 });
+    }
     return NextResponse.json(
       { error: "Failed to fetch article" },
       { status: 500 }

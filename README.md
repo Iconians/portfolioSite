@@ -103,6 +103,11 @@ bun run build
 bun start
 ```
 
+### Deployment (Vercel)
+
+- In **Vercel → Project → Settings → Environment Variables**, set `DATABASE_URL` (and `AUTH_SECRET` if using auth) for Production (and Preview if needed).
+- If you see “Application error: a server-side exception has occurred” with a **digest** (e.g. `244468507`): open **Vercel → Project → Logs** (or **Deployments → [deployment] → Functions**), filter by time, and search or scan for that digest or for `[App Error]` / `[Global Error]` to see the real error in the server logs.
+
 Recent Updates
 ✅ Migrated from Vite/React to Next.js 15
 

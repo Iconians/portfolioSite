@@ -15,8 +15,12 @@ export async function GET(req: NextRequest) {
     const articles = await searchArticles(validated.q);
     return NextResponse.json({ articles });
   } catch (error) {
+    const msg = error instanceof Error ? error.message : "";
+    if (msg.includes("Can't reach database") || msg.includes("DATABASE_URL")) {
+      return NextResponse.json({ articles: [] });
+    }
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Search failed" },
+      { error: msg || "Search failed" },
       { status: 400 }
     );
   }

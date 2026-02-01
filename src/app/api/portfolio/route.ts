@@ -10,11 +10,12 @@ export async function GET() {
 
     // Return empty array instead of error to prevent frontend crashes
     // The frontend components handle empty arrays gracefully
+    const msg = error instanceof Error ? error.message : "";
     if (
-      error instanceof Error &&
-      error.message.includes("Can't reach database")
+      msg.includes("Can't reach database") ||
+      msg.includes("DATABASE_URL")
     ) {
-      console.warn("Database connection failed, returning empty array");
+      console.warn("Database unavailable, returning empty array:", msg);
       return NextResponse.json({ portfolioItems: [] });
     }
 
