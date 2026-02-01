@@ -1,7 +1,12 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { db } from "@/lib/db/client";
 import { compare } from "bcryptjs";
+
+// Lazy-load db so auth module can load without requiring DATABASE_URL (only used when signing in)
+async function getDb() {
+  const { db } = await import("@/lib/db/client");
+  return db;
+}
 
 // Get AUTH_SECRET - validate at runtime
 const authSecret = process.env.AUTH_SECRET;
@@ -23,6 +28,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       authorize: async (credentials) => {
         if (!credentials?.email || !credentials?.password) return null;
 
+        const db = await getDb();
         const user = await db.user.findUnique({
           where: { email: credentials.email as string },
         });

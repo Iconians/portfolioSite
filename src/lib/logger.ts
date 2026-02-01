@@ -1,6 +1,10 @@
 import { createLogger, format, transports } from "winston";
-import { db } from "@/lib/db/client";
 import type { Prisma } from "@prisma/client";
+
+async function getDb() {
+  const { db } = await import("@/lib/db/client");
+  return db;
+}
 
 export const logger = createLogger({
   level: process.env.NODE_ENV === "production" ? "info" : "debug",
@@ -36,8 +40,9 @@ export async function logAdminAction(
 
   logger.info("Admin action", logData);
 
-  // Also log to database audit table
+  // Also log to database audit table (lazy-load db so logger can be imported without DATABASE_URL)
   try {
+    const db = await getDb();
     await db.auditLog.create({
       data: {
         userId,
