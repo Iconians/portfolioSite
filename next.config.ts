@@ -1,9 +1,13 @@
 import type { NextConfig } from "next";
 import path from "path";
 
+const projectRoot = __dirname;
+
 const nextConfig: NextConfig = {
   webpack: (config, { isServer, dev }) => {
-    config.resolve.alias["@"] = path.resolve(__dirname, "src");
+    config.resolve.alias["@"] = path.resolve(projectRoot, "src");
+    // Ensure tailwindcss and PostCSS deps resolve from project root (avoids wrong context when path has spaces)
+    config.resolve.modules = [path.join(projectRoot, "node_modules"), "node_modules"];
 
     // Fix Prisma client bundling issues
     if (isServer) {
@@ -43,8 +47,8 @@ const nextConfig: NextConfig = {
   },
   // Ensure Prisma client is not bundled (server-side only)
   serverExternalPackages: ["@prisma/client", "@prisma/adapter-pg"],
-  // Explicitly configure Turbopack (empty config to silence warning when using webpack)
-  turbopack: {},
+  // Pin Turbopack root to this project (avoids wrong root when parent/home has a lockfile)
+  turbopack: { root: projectRoot },
 };
 
 export default nextConfig;

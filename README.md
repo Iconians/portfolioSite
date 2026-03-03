@@ -106,6 +106,7 @@ bun start
 ### Deployment (Vercel)
 
 - In **Vercel → Project → Settings → Environment Variables**, set `DATABASE_URL` (and `AUTH_SECRET` if using auth) for Production (and Preview if needed).
+- **Neon on Vercel:** Use Neon's **Pooled** connection string (Neon dashboard → Connection details → **Pooled**), not the Direct connection. The same URL that works locally often fails in production because serverless needs the pooler.
 - If you see “Application error: a server-side exception has occurred” with a **digest** (e.g. `244468507`): open **Vercel → Project → Logs** (or **Deployments → [deployment] → Functions**), filter by time, and search or scan for that digest or for `[App Error]` / `[Global Error]` to see the real error in the server logs.
 
 Recent Updates

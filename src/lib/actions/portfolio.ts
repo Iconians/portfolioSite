@@ -24,6 +24,13 @@ function toUserMessage(error: unknown): string {
   if (msg.includes("DATABASE_URL") || msg.includes("Can't reach database")) {
     return "Database is not configured. Add DATABASE_URL in Vercel → Project → Settings → Environment Variables, then redeploy.";
   }
+  // Neon + Vercel: connection failures often mean the direct URL is used instead of pooled
+  if (
+    (msg.includes("connect") || msg.includes("ECONNREFUSED") || msg.includes("timeout") || msg.includes("too many connections")) &&
+    process.env.DATABASE_URL?.includes("neon")
+  ) {
+    return "Database connection failed. On Vercel, use Neon’s Pooled connection string (Neon dashboard → Connection details → Pooled connection), not the Direct connection.";
+  }
   return msg || "Something went wrong. Check the server logs.";
 }
 
