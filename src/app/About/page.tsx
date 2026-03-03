@@ -64,46 +64,42 @@ export default function aboutPage() {
 
           <div className={styles.descWrapper}>
             <AnimatedParagraph className={styles.bio} delay={0.3}>
-              I’m Clayton Cripe, a passionate full-stack web developer with a
-              strong foundation in both modern web technologies and core
-              computer science concepts. My journey began as a kid tinkering
-              with MS-DOS just to load a Chip ‘n Dale game — and that spark of
-              curiosity has never left.
+              I&apos;m Clayton Cripe, a full-stack engineer focused on building
+              performant, well-architected web applications.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={0.5}>
-              Over the years I’ve explored nearly every major operating system —
-              from Windows 95 through 11, to macOS, which I now use as my
-              primary development environment. My path has taken me from
-              hardware fundamentals to building intuitive, high-performance
-              applications for clients.
+              I specialize in Next.js, TypeScript, and PostgreSQL, with
+              experience designing multi-tenant SaaS systems, integrating Stripe
+              billing, and building SSR-first applications that prioritize
+              performance and clean separation of concerns.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={0.7}>
-              In late 2021, I enrolled in the Devslopes Academy full-stack
-              program. While studying, I began freelancing in 2022 to gain
-              real-world experience, replacing early school projects in my
-              portfolio with professional client work and reviews. I graduated
-              in 2024, but along the way I also pursued independent projects to
-              deepen my backend knowledge (Node.js, Go, Python, PostgreSQL,
-              SQLC) and strengthen my CS fundamentals through writing articles
-              on data structures, algorithms, and problem-solving.
+              My background spans both frontend and backend development. I&apos;ve
+              worked with Node.js, Go, and SQL-based systems,               and I enjoy
+              thinking through architecture decisions — especially around state
+              ownership, abstraction layers, and long-term maintainability.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={0.9}>
-              My portfolio itself reflects that growth: it started as a static
-              HTML/CSS/JavaScript site in 2022, evolved into a React +
-              TypeScript app in 2023, and most recently became a Next.js 15
-              project with animations woven throughout the design. From
-              motion-driven blog cards to animated sections and code blocks, I
-              aim to create experiences that are not only functional but also
-              engaging and dynamic.
+              Over the years, I&apos;ve built client projects, SaaS-style
+              applications, and backend systems while continuously strengthening
+              my computer science fundamentals in data structures, algorithms,
+              and systems thinking.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={1.1}>
-              Whether you’re looking for a polished website, a performant
-              backend system, or just want to chat about ideas, I’d love to
-              connect. You can explore my work here or reach me on{" "}
+              This portfolio reflects that growth. It has evolved from a static
+              HTML site into a modern Next.js application focused on
+              performance, clean UI, and thoughtful interaction design.
+            </AnimatedParagraph>
+
+            <AnimatedParagraph className={styles.bio} delay={1.3}>
+              Whether you&apos;re looking for a performant web application, a
+              well-structured backend system, or someone who enjoys thinking
+              through architectural tradeoffs — I&apos;d be glad to connect. Reach me
+              on{" "}
               <a
                 href="https://linkedin.com/in/claytoncripe"
                 target="_blank"
@@ -114,7 +110,7 @@ export default function aboutPage() {
               .
             </AnimatedParagraph>
 
-            <AnimatedParagraph className={styles.bio} delay={1.3}>
+            <AnimatedParagraph className={styles.bio} delay={1.5}>
               <h3>Skills/ Technologies I know</h3>
             </AnimatedParagraph>
             <AnimatedList className={styles.skillsList}>

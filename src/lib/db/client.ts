@@ -35,6 +35,23 @@ function getDatabaseAdapter() {
     );
   }
 
+  // Neon on Vercel: must use pooled connection string to avoid connection limits/timeouts
+  if (
+    process.env.NODE_ENV === "production" &&
+    connectionString.includes("neon.tech") &&
+    !connectionString.includes("pooler")
+  ) {
+    console.warn(
+      "[DB] Neon in production: use the Pooled connection string (Neon dashboard → Connection details → Pooled). Direct connection often fails on Vercel."
+    );
+  }
+
+  // Ensure SSL for Neon (required in production)
+  if (connectionString.includes("neon") && !connectionString.includes("sslmode=")) {
+    const sep = connectionString.includes("?") ? "&" : "?";
+    connectionString = `${connectionString}${sep}sslmode=require`;
+  }
+
   // Don't validate format strictly - let the Pool constructor handle it
   // This allows various connection string formats (Neon, Supabase, etc.)
   // The actual connection attempt will fail if the format is truly invalid
