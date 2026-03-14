@@ -7,38 +7,38 @@ import styles from "./aboutPage.module.css";
 // Dynamically import Navigation (uses framer-motion) to prevent SSR issues
 const Navigation = dynamic(
   () => import("../Components/Nav/Navigation").then((mod) => mod.Navigation),
-  { ssr: false }
+  { ssr: false },
 );
 
 // Dynamically import animated components to prevent SSR issues during static generation
 const AnimatedSection = dynamic(
   () =>
     import("../Components/Animations/AnimatedSection").then(
-      (mod) => mod.AnimatedSection
+      (mod) => mod.AnimatedSection,
     ),
-  { ssr: false }
+  { ssr: false },
 );
 
 const AnimatedParagraph = dynamic(
   () =>
     import("../Components/Animations/AnimatedParagraphs").then(
-      (mod) => mod.default
+      (mod) => mod.default,
     ),
-  { ssr: false }
+  { ssr: false },
 );
 
 const AnimatedList = dynamic(
   () =>
     import("../Components/Animations/AnimatedList").then((mod) => mod.default),
-  { ssr: false }
+  { ssr: false },
 );
 
 const AnimatedListItem = dynamic(
   () =>
     import("../Components/Animations/AnimatedList").then(
-      (mod) => mod.AnimatedListItem
+      (mod) => mod.AnimatedListItem,
     ),
-  { ssr: false }
+  { ssr: false },
 );
 
 export default function aboutPage() {
@@ -69,16 +69,16 @@ export default function aboutPage() {
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={0.5}>
-              I specialize in Next.js, TypeScript, and PostgreSQL, with
-              experience designing multi-tenant SaaS systems, integrating Stripe
-              billing, and building SSR-first applications that prioritize
-              performance and clean separation of concerns.
+              I primarily work with Next.js, TypeScript, and PostgreSQL, where I
+              design SSR-first applications, multi-tenant SaaS systems, and
+              backend architectures that prioritize performance and clear
+              separation of concerns.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={0.7}>
-              My background spans both frontend and backend development. I&apos;ve
-              worked with Node.js, Go, and SQL-based systems,               and I enjoy
-              thinking through architecture decisions — especially around state
+              My work spans both frontend and backend systems. I&apos;ve built
+              applications using Node.js and SQL-based databases, and I enjoy
+              thinking through architectural decisions — especially around state
               ownership, abstraction layers, and long-term maintainability.
             </AnimatedParagraph>
 
@@ -90,16 +90,16 @@ export default function aboutPage() {
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={1.1}>
-              This portfolio reflects that growth. It has evolved from a static
-              HTML site into a modern Next.js application focused on
-              performance, clean UI, and thoughtful interaction design.
+              This portfolio reflects that progression. What began as a simple
+              static HTML site has evolved into a modern Next.js application
+              focused on performance, clean UI, and thoughtful interaction
+              design.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={1.3}>
-              Whether you&apos;re looking for a performant web application, a
-              well-structured backend system, or someone who enjoys thinking
-              through architectural tradeoffs — I&apos;d be glad to connect. Reach me
-              on{" "}
+              If you&apos;re looking for someone who enjoys building fast,
+              maintainable software and thinking through architectural
+              trade-offs, I&apos;d be glad to connect. Reach me on{" "}
               <a
                 href="https://linkedin.com/in/claytoncripe"
                 target="_blank"
