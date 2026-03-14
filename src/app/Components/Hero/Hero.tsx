@@ -40,7 +40,8 @@ export function Hero() {
             and PostgreSQL — building systems that prioritize performance, clean
             boundaries between frontend and backend logic, and long-term
             maintainability.
-            <br />
+          </p>
+          <p className="text-lg text-muted-foreground leading-relaxed mb-6 text-pretty">
             Recent work includes production SaaS platforms with multi-tenant
             architecture, Stripe subscription billing, and real-time
             collaboration systems.
