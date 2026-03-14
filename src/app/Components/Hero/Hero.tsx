@@ -32,21 +32,19 @@ export function Hero() {
             Clayton Cripe
           </h1>
           <p className="text-xl md:text-2xl text-primary mb-4">
-            Full-Stack Web Developer
+            Full-Stack Engineer
           </p>
           <p className="text-lg text-muted-foreground leading-relaxed mb-6 text-pretty">
-            I build performance-focused web applications with Next.js,
-            TypeScript, and PostgreSQL — emphasizing clean architecture,
-            SSR-first design, and scalable backend systems. From multi-tenant
-            SaaS platforms to polished client projects, I focus on shipping
-            software that is fast, maintainable, and built to grow.
+            I build fast, maintainable web applications designed to scale. My
+            work focuses on SSR-first architectures using Next.js, TypeScript,
+            and PostgreSQL — building systems that prioritize performance, clean
+            boundaries between frontend and backend logic, and long-term
+            maintainability.
+            <br />
+            Recent work includes production SaaS platforms with multi-tenant
+            architecture, Stripe subscription billing, and real-time
+            collaboration systems.
           </p>
-          {/* <p className="text-lg text-muted-foreground leading-relaxed mb-8 text-pretty">
-            I build intuitive, high-performance applications and write about
-            data structures, algorithms, and problem-solving. From motion-driven
-            interfaces to performant backend systems, I create experiences that
-            are both functional and engaging.
-          </p> */}
           <div className="flex gap-4 items-center">
             <Button variant="outline" size="icon" asChild>
               <a

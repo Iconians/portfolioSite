@@ -84,7 +84,9 @@ function getDatabaseAdapter() {
     console.error("[DB] Pool error:", err.message);
   });
 
-  return new PrismaPg(pool);
+  // Cast: project's pg.Pool vs @prisma/adapter-pg's bundled @types/pg are incompatible in TS
+  // but equivalent at runtime; avoids duplicate @types/pg type conflict on Vercel/build.
+  return new PrismaPg(pool as never);
 }
 
 // Lazy initialization of Prisma client
