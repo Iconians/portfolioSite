@@ -28,23 +28,21 @@ export function Hero() {
     <section className="container mx-auto px-4 py-24 md:py-32 max-w-7xl">
       <div className="grid md:grid-cols-2 gap-12 items-center">
         <div className="order-2 md:order-1">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-balance">
+          <h1 className="text-[40px] font-bold mb-4 text-balance leading-tight">
             Clayton Cripe
           </h1>
-          <p className="text-xl md:text-2xl text-primary mb-4">
+          <p className="text-lg text-primary mb-3">
             Full-Stack Engineer
           </p>
-          <p className="text-lg text-muted-foreground leading-relaxed mb-6 text-pretty">
+          <p className="text-xl font-semibold text-foreground mb-4">
+            Building scalable SaaS platforms with a focus on performance and clean architecture.
+          </p>
+          <p className="text-base text-muted-foreground leading-relaxed mb-8 text-pretty">
             I build fast, maintainable web applications designed to scale. My
             work focuses on SSR-first architectures using Next.js, TypeScript,
             and PostgreSQL — building systems that prioritize performance, clean
             boundaries between frontend and backend logic, and long-term
             maintainability.
-          </p>
-          <p className="text-lg text-muted-foreground leading-relaxed mb-6 text-pretty">
-            Recent work includes production SaaS platforms with multi-tenant
-            architecture, Stripe subscription billing, and real-time
-            collaboration systems.
           </p>
           <div className="flex gap-4 items-center">
             <Button variant="outline" size="icon" asChild>
@@ -78,6 +76,11 @@ export function Hero() {
           <TerminalLoader />
         </div>
       </div>
+      <p className="mt-10 pt-8 border-t border-border text-center text-sm text-muted-foreground md:text-base">
+        Recent work includes production SaaS platforms with multi-tenant
+        architecture, Stripe subscription billing, and real-time collaboration
+        systems.
+      </p>
     </section>
   );
 }

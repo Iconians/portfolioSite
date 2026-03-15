@@ -68,6 +68,10 @@ model Portfolio {
   category      String[]
   url           String?
   github        String?
+  keyFeatures   String?  @map("key_features")   // e.g. "Member signups • Event scheduling • Stripe payments"
+  role          String?  @db.Text               // e.g. "Full-stack development and SaaS architecture (built collaboratively)"
+  highlights    String?  @db.Text               // e.g. "REST API design • PostgreSQL schema modeling • SSR pages"
+  projectType   String?  @map("project_type")   // saas | client | engineering | personal — controls display order
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
   createdBy     String   @map("created_by")

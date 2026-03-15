@@ -6,11 +6,11 @@ import type {
   PortfolioItem,
   PortfolioItemWithUser,
 } from "@/lib/types/portfolio";
-import { PortfolioItemSchema } from "@/lib/types/portfolio";
+import { PortfolioItemSchema, PROJECT_TYPE_ORDER } from "@/lib/types/portfolio";
 
 // Public queries
 export async function getAllPortfolioItems(): Promise<PortfolioItem[]> {
-  return db.portfolio.findMany({
+  const items = await db.portfolio.findMany({
     orderBy: { createdAt: "desc" },
     select: {
       id: true,
@@ -20,10 +20,27 @@ export async function getAllPortfolioItems(): Promise<PortfolioItem[]> {
       category: true,
       url: true,
       github: true,
+      keyFeatures: true,
+      role: true,
+      highlights: true,
+      projectType: true,
       createdAt: true,
       updatedAt: true,
       createdBy: true,
     },
+  });
+  // Sort by project type order: 1 SaaS → 2 Client → 3 Engineering → 4 Personal (unset/NULL last), then by createdAt desc within same type
+  return [...items].sort((a, b) => {
+    const typeOrder = (type: string | null | undefined) => {
+      const t = type?.toLowerCase?.() ?? type ?? "";
+      if (!t) return PROJECT_TYPE_ORDER.length;
+      const i = PROJECT_TYPE_ORDER.indexOf(t as (typeof PROJECT_TYPE_ORDER)[number]);
+      return i === -1 ? PROJECT_TYPE_ORDER.length : i;
+    };
+    const orderA = typeOrder(a.projectType);
+    const orderB = typeOrder(b.projectType);
+    if (orderA !== orderB) return orderA - orderB;
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 }
 
@@ -47,10 +64,13 @@ export async function createPortfolioItem(
   const user = await requireAdmin();
 
   const validatedData = PortfolioItemSchema.parse(data);
+  const projectType =
+    validatedData.projectType === "" ? null : validatedData.projectType ?? null;
 
   return db.portfolio.create({
     data: {
       ...validatedData,
+      projectType,
       createdBy: user.id,
     },
   });
@@ -71,11 +91,18 @@ export async function updatePortfolioItem(
   // Optionally, we could add ownership checks here if needed
 
   const validatedData = PortfolioItemSchema.partial().parse(data);
+  const projectType =
+    validatedData.projectType !== undefined
+      ? validatedData.projectType === ""
+        ? null
+        : validatedData.projectType
+      : undefined;
 
   return db.portfolio.update({
     where: { id },
     data: {
       ...validatedData,
+      ...(projectType !== undefined && { projectType }),
       updatedAt: new Date(),
     },
   });

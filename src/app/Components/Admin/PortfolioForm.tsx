@@ -51,6 +51,10 @@ export function PortfolioForm({
       category: (initialData?.category || [""]) as string[],
       url: initialData?.url,
       github: initialData?.github,
+      keyFeatures: initialData?.keyFeatures ?? "",
+      role: initialData?.role ?? "",
+      highlights: initialData?.highlights ?? "",
+      projectType: initialData?.projectType ?? "",
     },
   });
 
@@ -118,6 +122,25 @@ export function PortfolioForm({
       </div>
 
       <div>
+        <Label htmlFor="projectType">Project type (display order)</Label>
+        <select
+          id="projectType"
+          {...register("projectType")}
+          disabled={isPending}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+        >
+          <option value="">Not set (appears last)</option>
+          <option value="saas">1. SaaS platform</option>
+          <option value="client">2. Production client project</option>
+          <option value="engineering">3. Engineering-heavy project</option>
+          <option value="personal">4. Personal / experimental project</option>
+        </select>
+        <p className="text-xs text-muted-foreground mt-1">
+          Cards are ordered by this type on the homepage.
+        </p>
+      </div>
+
+      <div>
         <Label htmlFor="description">Description</Label>
         <Textarea
           id="description"
@@ -130,6 +153,43 @@ export function PortfolioForm({
             {errors.description.message}
           </p>
         )}
+      </div>
+
+      <div>
+        <Label htmlFor="keyFeatures">Key Features</Label>
+        <Input
+          id="keyFeatures"
+          {...register("keyFeatures")}
+          disabled={isPending}
+          placeholder="Member signups • Event scheduling • Stripe payments"
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          One line, separate items with • (bullet)
+        </p>
+      </div>
+
+      <div>
+        <Label htmlFor="highlights">Tech Highlights</Label>
+        <Input
+          id="highlights"
+          {...register("highlights")}
+          disabled={isPending}
+          placeholder="REST API design • PostgreSQL schema • SSR pages"
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          One line, separate items with • (bullet)
+        </p>
+      </div>
+
+      <div>
+        <Label htmlFor="role">Role</Label>
+        <Textarea
+          id="role"
+          {...register("role")}
+          disabled={isPending}
+          rows={2}
+          placeholder="Full-stack development and SaaS architecture (built collaboratively)"
+        />
       </div>
 
       <div>

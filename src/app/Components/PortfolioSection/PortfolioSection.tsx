@@ -11,12 +11,16 @@ export default function PortfolioSection() {
   useEffect(() => {
     const fetchPortfolioItems = async () => {
       try {
-        const response = await fetch("/api/portfolio");
+        const response = await fetch("/api/portfolio", { cache: "no-store" });
+        const data = await response.json().catch(() => ({}));
+        const items = data.portfolioItems ?? [];
         if (!response.ok) {
-          throw new Error("Failed to fetch portfolio items");
+          console.warn(
+            "Portfolio API error:",
+            data.error ?? response.statusText,
+          );
         }
-        const data = await response.json();
-        setPortfolioItems(data.portfolioItems || []);
+        setPortfolioItems(Array.isArray(items) ? items : []);
       } catch (error) {
         console.error("Failed to load portfolio items:", error);
         setPortfolioItems([]);
@@ -31,10 +35,10 @@ export default function PortfolioSection() {
   if (isLoading) {
     return (
       <section id="projects" className="py-16 scroll-mt-20">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">Projects</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">Selected works</h2>
         <p className="text-muted-foreground mb-12 text-lg">
-          Professional client work and personal projects showcasing full-stack
-          development
+          A selection of SaaS platforms, production client work, and
+          engineering-focused projects.
         </p>
         <div className="text-center py-8">Loading projects...</div>
       </section>
@@ -47,10 +51,10 @@ export default function PortfolioSection() {
 
   return (
     <section id="projects" className="py-16 scroll-mt-20">
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">Projects</h2>
+      <h2 className="text-3xl md:text-4xl font-bold mb-4">Selected works</h2>
       <p className="text-muted-foreground mb-12 text-lg">
-        Professional client work and personal projects showcasing full-stack
-        development
+        A selection of SaaS platforms, production client work, and
+        engineering-focused projects.
       </p>
       <PortfolioSectionClient portfolioItems={portfolioItems} />
     </section>
