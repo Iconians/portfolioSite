@@ -15,11 +15,17 @@ export default async function EditPortfolioPage({
     notFound();
   }
 
-  // Convert null values to undefined to match CreatePortfolioInput type
-  const formData = {
-    ...item,
+  const formData: Parameters<typeof PortfolioForm>[0]["initialData"] = {
+    img: item.img,
+    caption: item.caption,
+    description: item.description,
+    category: item.category,
     url: item.url ?? undefined,
     github: item.github ?? undefined,
+    keyFeatures: item.keyFeatures ?? undefined,
+    role: item.role ?? undefined,
+    highlights: item.highlights ?? undefined,
+    projectType: (item.projectType ?? undefined) as "" | "saas" | "client" | "engineering" | "personal" | undefined,
   };
 
   return (
