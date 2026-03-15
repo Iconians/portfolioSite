@@ -5,11 +5,12 @@ import { useEffect, useState, useRef } from "react";
 const TERMINAL_SEQUENCE = [
   { text: "$ initializing portfolio...", delay: 0 },
   { text: "Loading developer profile...", delay: 800 },
-  { text: "✓ Skills: React, Next.js, TypeScript, Node.js", delay: 1400 },
-  { text: "✓ Passion: Building intuitive web experiences", delay: 2000 },
+  { text: "✓ Stack: Next.js, TypeScript, PostgreSQL", delay: 1400 },
+  { text: "✓ Focus: SSR-first SaaS architecture", delay: 2000 },
   { text: "✓ Background: MS-DOS kid turned full-stack dev", delay: 2600 },
   { text: "$ npm run create-awesome-things", delay: 3200 },
   { text: "> Ready to build something amazing! 🚀", delay: 3800 },
+  { text: "$ designing scalable SaaS systems 🏗️", delay: 4400 },
 ];
 
 export function TerminalLoader() {
@@ -20,10 +21,10 @@ export function TerminalLoader() {
     // Clear any existing timeouts
     timeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
     timeoutsRef.current = [];
-    
+
     // Reset lines when component mounts
     setLines([]);
-    
+
     TERMINAL_SEQUENCE.forEach((line) => {
       const timeout = setTimeout(() => {
         setLines((prev) => {
@@ -69,10 +70,10 @@ export function TerminalLoader() {
                 line.startsWith("✓")
                   ? "text-green-400"
                   : line.startsWith("$")
-                  ? "text-primary"
-                  : line.startsWith(">")
-                  ? "text-primary font-semibold"
-                  : "text-foreground"
+                    ? "text-primary"
+                    : line.startsWith(">")
+                      ? "text-primary font-semibold"
+                      : "text-foreground"
               } animate-in fade-in slide-in-from-left-2 duration-300`}
             >
               {line}

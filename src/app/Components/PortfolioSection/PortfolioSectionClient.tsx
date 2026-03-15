@@ -84,41 +84,60 @@ export function PortfolioSectionClient({
             <CardHeader>
               <CardTitle className="text-xl">{item.caption}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4 leading-relaxed text-sm">
+            <CardContent className="space-y-3">
+              <p className="text-muted-foreground leading-relaxed text-sm">
                 {item.description}
               </p>
-              <div className="flex flex-wrap gap-2 mb-4">
+              {item.keyFeatures && (
+                <div className="text-sm">
+                  <span className="font-semibold text-foreground">Key Features: </span>
+                  <span className="text-muted-foreground">{item.keyFeatures}</span>
+                </div>
+              )}
+              {item.highlights && (
+                <div className="text-sm">
+                  <span className="font-semibold text-foreground">Highlights: </span>
+                  <span className="text-muted-foreground">{item.highlights}</span>
+                </div>
+              )}
+              {item.role && (
+                <div className="text-sm">
+                  <span className="font-semibold text-foreground">Role: </span>
+                  <span className="text-muted-foreground">{item.role}</span>
+                </div>
+              )}
+              <div className="flex flex-wrap gap-2 pt-1">
                 {item.category.map((cat, index) => (
                   <Badge key={index} variant="secondary">
                     {cat}
                   </Badge>
                 ))}
               </div>
-              <div className="flex gap-2">
-                {item.github && item.github !== "#" && (
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={item.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <GithubIcon className="h-4 w-4 mr-2" />
-                      Code
-                    </a>
-                  </Button>
-                )}
+              <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-border">
                 {item.url && item.url !== "#" && (
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      website
-                    </a>
-                  </Button>
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                    Live site
+                  </a>
+                )}
+                {item.url && item.url !== "#" && item.github && item.github !== "#" && (
+                  <span className="text-border">|</span>
+                )}
+                {item.github && item.github !== "#" && (
+                  <a
+                    href={item.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <GithubIcon className="h-3.5 w-3.5 shrink-0" />
+                    Source code
+                  </a>
                 )}
               </div>
             </CardContent>

@@ -47,7 +47,7 @@ export default function FeaturedArticles() {
                     : article.date,
                 featured: true,
               } as FrontMatter,
-            })
+            }),
           );
 
         setFeaturedPosts(posts);
@@ -67,7 +67,7 @@ export default function FeaturedArticles() {
       <section className="py-16">
         <div className="mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Featured Articles
+            Engineering Articles
           </h2>
           <p className="text-muted-foreground text-lg">
             Latest articles on algorithms, data structures, and web development
@@ -85,9 +85,9 @@ export default function FeaturedArticles() {
   return (
     <section className="py-16">
       <div className="mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          Featured Articles
-        </h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Engineering Articles
+          </h2>
         <p className="text-muted-foreground text-lg">
           Latest articles on algorithms, data structures, and web development
         </p>

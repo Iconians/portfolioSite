@@ -1,6 +1,8 @@
 import "./globals.css";
 import { Hero } from "./Components/Hero/Hero";
 import { Navigation } from "./Components/Nav/Navigation";
+import { EngineeringPhilosophy } from "./Components/EngineeringPhilosophy/EngineeringPhilosophy";
+import { TechStack } from "./Components/TechStack/TechStack";
 import PortfolioSection from "./Components/PortfolioSection/PortfolioSection";
 import FeaturedArticles from "./Components/FeaturedArticles/FeaturedArticles";
 import { AnimatedSection } from "./Components/Animations/AnimatedSection";
@@ -17,11 +19,19 @@ export default function Home() {
       <Navigation />
 
       <main className="container mx-auto px-4 py-16 max-w-7xl">
-        <section id="personality" className="scroll-mt-20 py-12">
+        <AnimatedSection>
+          <EngineeringPhilosophy />
+        </AnimatedSection>
+
+        {/* <section id="personality" className="scroll-mt-20 py-12">
           <AnimatedSection>
             <JokeAdviceComponent />
           </AnimatedSection>
-        </section>
+        </section> */}
+
+        <AnimatedSection>
+          <TechStack />
+        </AnimatedSection>
 
         <AnimatedSection>
           <PortfolioSection />
