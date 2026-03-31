@@ -10,7 +10,7 @@ todos:
     status: completed
   - id: phase-3-home-server-data
     content: "Home page: server-fetch portfolio/articles/reviews via lib/data, pass props to client islands"
-    status: pending
+    status: completed
   - id: phase-4-blogs-about
     content: Refactor blogs and About toward server shells + minimal client
     status: pending

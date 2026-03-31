@@ -8,11 +8,20 @@ import FeaturedArticles from "@/components/FeaturedArticles/FeaturedArticles";
 import { AnimatedSection } from "@/components/Animations/AnimatedSection";
 import { JokeAdviceComponent } from "@/components/Joke&AdviceComponent/JokeAdviceComponent";
 import { ReviewComponent } from "@/components/ReviewComponet/ReviewComponent";
+import { getAllPortfolioItems } from "@/lib/data/portfolio";
+import { getAllArticles } from "@/lib/data/articles";
+import { getAllReviews } from "@/lib/data/reviews";
 
 // Enable static generation with revalidation for better performance as
 export const revalidate = 3600; // Revalidate every hour
 
-export default function Home() {
+export default async function Home() {
+  const [portfolioItems, articles, reviews] = await Promise.all([
+    getAllPortfolioItems(),
+    getAllArticles(),
+    getAllReviews(),
+  ]);
+
   return (
     <div className="min-h-screen">
       <Hero />
@@ -34,16 +43,16 @@ export default function Home() {
         </AnimatedSection>
 
         <AnimatedSection>
-          <PortfolioSection />
+          <PortfolioSection initialItems={portfolioItems} />
         </AnimatedSection>
 
         <AnimatedSection>
-          <FeaturedArticles />
+          <FeaturedArticles initialArticles={articles} />
         </AnimatedSection>
 
         <section id="reviews" className="scroll-mt-20">
           <AnimatedSection>
-            <ReviewComponent />
+            <ReviewComponent initialReviews={reviews} />
           </AnimatedSection>
         </section>
       </main>
