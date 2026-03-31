@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Navigation } from "@/components/Nav/Navigation";
 import ClientWrapper from "@/components/ClientWrapper/ClientWrapper";
 import BlogPostClient from "@/components/BlogPostClient/BlogPostClient";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote";
-import type { FrontMatter } from "@/app/lib/mdx";
+import type { FrontMatter } from "@/lib/mdx";
 
 export default function BlogPost() {
   const params = useParams();
@@ -66,9 +67,9 @@ export default function BlogPost() {
             <p className="text-muted-foreground mb-4">
               {error || "The article you're looking for doesn't exist."}
             </p>
-            <a href="/blogs" className="text-primary hover:underline">
+            <Link href="/blogs" className="text-primary hover:underline">
               ← Back to Blog
-            </a>
+            </Link>
           </div>
         </main>
       </div>

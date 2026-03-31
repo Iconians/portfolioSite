@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Navigation } from "@/components/Nav/Navigation";
 import BlogGrid from "@/components/blogWrapper/blogWrapper";
-import type { FrontMatter } from "@/app/lib/mdx";
+import type { FrontMatter } from "@/lib/mdx";
 
 interface Post {
   slug: string;

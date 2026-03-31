@@ -1,5 +1,5 @@
 "use client";
-import { skillsArr } from "../utils/skills";
+import { skillsArr } from "@/lib/skills";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import styles from "./aboutPage.module.css";

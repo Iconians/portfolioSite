@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import BlogCard from "../BlogCard.tsx/BlogCard";
-import { FrontMatter } from "@/app/lib/mdx";
+import { FrontMatter } from "@/lib/mdx";
 
 type Post = {
   slug: string;

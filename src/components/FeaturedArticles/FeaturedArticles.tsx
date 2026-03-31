@@ -5,7 +5,7 @@ import Link from "next/link";
 import BlogCard from "../BlogCard.tsx/BlogCard";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
-import type { FrontMatter } from "@/app/lib/mdx";
+import type { FrontMatter } from "@/lib/mdx";
 
 interface Post {
   slug: string;

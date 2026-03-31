@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useDebounce } from "@/hooks/useDebounce";
 import type { Article } from "@/lib/types/articles";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";

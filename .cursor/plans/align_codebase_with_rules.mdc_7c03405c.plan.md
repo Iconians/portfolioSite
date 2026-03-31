@@ -7,7 +7,7 @@ todos:
     status: completed
   - id: phase-2-lib-hooks
     content: Relocate lib/hooks → src/hooks; move app/lib/mdx and app/utils into src/lib
-    status: pending
+    status: completed
   - id: phase-3-home-server-data
     content: "Home page: server-fetch portfolio/articles/reviews via lib/data, pass props to client islands"
     status: pending
