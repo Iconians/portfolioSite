@@ -25,8 +25,8 @@ export default function Home() {
 
         {/* <section id="personality" className="scroll-mt-20 py-12">
           <AnimatedSection>
-            <JokeAdviceComponent />
-          </AnimatedSection>
+            <JokeAdviceComponent /
+            hi
         </section> */}
 
         <AnimatedSection>
