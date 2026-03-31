@@ -36,7 +36,6 @@ type adviceType = {
   response: { status: number; ok: true };
 };
 
-// const advice = new ProductService();
 const adviceService = new ProductService();
 
 export const JokeAdviceComponent = () => {
@@ -82,10 +81,7 @@ export const JokeAdviceComponent = () => {
         error instanceof Error &&
         error.name !== "AbortError"
       ) {
-        // Silently handle errors - don't show to user, just log
         console.warn("Failed to fetch advice:", error.message);
-        // Optionally set a fallback message or leave empty
-        // The UI will just show the loading state until user clicks refresh
       }
     } finally {
       if (!signal?.aborted) {
@@ -117,7 +113,6 @@ export const JokeAdviceComponent = () => {
 
   return (
     <div className="flex flex-wrap justify-around gap-4 p-4">
-      {/* Joke Section */}
       <motion.div
         className="flex-1 min-w-[280px] max-w-[500px]"
         initial="hidden"
@@ -190,7 +185,6 @@ export const JokeAdviceComponent = () => {
         </Card>
       </motion.div>
 
-      {/* Advice Section */}
       <motion.div
         className="flex-1 min-w-[280px] max-w-[500px]"
         initial="hidden"

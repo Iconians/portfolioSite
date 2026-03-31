@@ -7,18 +7,18 @@ import {
   PortfolioItemSchema,
   type CreatePortfolioInput,
 } from "@/lib/types/portfolio";
-import type { z } from "zod";
 import {
   createPortfolioAction,
   updatePortfolioAction,
 } from "@/lib/actions/portfolio";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { ImageUpload } from "./ImageUpload";
+import { PortfolioFormPrimaryFields } from "./portfolio-form/PortfolioFormPrimaryFields";
+import { PortfolioFormDetailFields } from "./portfolio-form/PortfolioFormDetailFields";
+import { PortfolioFormCategories } from "./portfolio-form/PortfolioFormCategories";
+import { PortfolioFormLinks } from "./portfolio-form/PortfolioFormLinks";
+import type { PortfolioFormData } from "./portfolio-form/types";
 
 interface PortfolioFormProps {
   initialData?: Partial<CreatePortfolioInput>;
@@ -34,15 +34,13 @@ export function PortfolioForm({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  type FormData = z.infer<typeof PortfolioItemSchema>;
-
   const {
     register,
     handleSubmit,
     control,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<PortfolioFormData>({
     resolver: zodResolver(PortfolioItemSchema),
     defaultValues: {
       img: initialData?.img || "",
@@ -66,7 +64,7 @@ export function PortfolioForm({
     name: "category" as any,
   });
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: PortfolioFormData) => {
     startTransition(async () => {
       const result = portfolioId
         ? await updatePortfolioAction(portfolioId, data)
@@ -92,160 +90,26 @@ export function PortfolioForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div>
-        <Label htmlFor="img">Image Path</Label>
-        <div className="flex gap-2 mt-2">
-          <Input
-            id="img"
-            {...register("img")}
-            disabled={isPending}
-            placeholder="/image.png"
-            className="flex-1"
-          />
-          <ImageUpload
-            onUpload={(url) => {
-              setValue("img", url);
-            }}
-          />
-        </div>
-        {errors.img && (
-          <p className="text-sm text-red-500 mt-1">{errors.img.message}</p>
-        )}
-      </div>
-
-      <div>
-        <Label htmlFor="caption">Caption</Label>
-        <Input id="caption" {...register("caption")} disabled={isPending} />
-        {errors.caption && (
-          <p className="text-sm text-red-500 mt-1">{errors.caption.message}</p>
-        )}
-      </div>
-
-      <div>
-        <Label htmlFor="projectType">Project type (display order)</Label>
-        <select
-          id="projectType"
-          {...register("projectType")}
-          disabled={isPending}
-          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-        >
-          <option value="">Not set (appears last)</option>
-          <option value="saas">1. SaaS platform</option>
-          <option value="client">2. Production client project</option>
-          <option value="engineering">3. Engineering-heavy project</option>
-          <option value="personal">4. Personal / experimental project</option>
-        </select>
-        <p className="text-xs text-muted-foreground mt-1">
-          Cards are ordered by this type on the homepage.
-        </p>
-      </div>
-
-      <div>
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          {...register("description")}
-          disabled={isPending}
-          rows={4}
-        />
-        {errors.description && (
-          <p className="text-sm text-red-500 mt-1">
-            {errors.description.message}
-          </p>
-        )}
-      </div>
-
-      <div>
-        <Label htmlFor="keyFeatures">Key Features</Label>
-        <Input
-          id="keyFeatures"
-          {...register("keyFeatures")}
-          disabled={isPending}
-          placeholder="Member signups • Event scheduling • Stripe payments"
-        />
-        <p className="text-xs text-muted-foreground mt-1">
-          One line, separate items with • (bullet)
-        </p>
-      </div>
-
-      <div>
-        <Label htmlFor="highlights">Tech Highlights</Label>
-        <Input
-          id="highlights"
-          {...register("highlights")}
-          disabled={isPending}
-          placeholder="REST API design • PostgreSQL schema • SSR pages"
-        />
-        <p className="text-xs text-muted-foreground mt-1">
-          One line, separate items with • (bullet)
-        </p>
-      </div>
-
-      <div>
-        <Label htmlFor="role">Role</Label>
-        <Textarea
-          id="role"
-          {...register("role")}
-          disabled={isPending}
-          rows={2}
-          placeholder="Full-stack development and SaaS architecture (built collaboratively)"
-        />
-      </div>
-
-      <div>
-        <Label>Categories</Label>
-        {fields.map((field, index) => (
-          <div key={field.id} className="flex gap-2 mt-2">
-            <Input {...register(`category.${index}`)} disabled={isPending} />
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => remove(index)}
-              disabled={isPending || fields.length === 1}
-            >
-              Remove
-            </Button>
-          </div>
-        ))}
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => append("")}
-          disabled={isPending}
-          className="mt-2"
-        >
-          Add Category
-        </Button>
-        {errors.category && (
-          <p className="text-sm text-red-500 mt-1">{errors.category.message}</p>
-        )}
-      </div>
-
-      <div>
-        <Label htmlFor="url">URL</Label>
-        <Input
-          id="url"
-          {...register("url")}
-          disabled={isPending}
-          placeholder="https://example.com or #"
-        />
-        {errors.url && (
-          <p className="text-sm text-red-500 mt-1">{errors.url.message}</p>
-        )}
-      </div>
-
-      <div>
-        <Label htmlFor="github">GitHub URL</Label>
-        <Input
-          id="github"
-          {...register("github")}
-          disabled={isPending}
-          placeholder="https://github.com/user/repo or #"
-        />
-        {errors.github && (
-          <p className="text-sm text-red-500 mt-1">{errors.github.message}</p>
-        )}
-      </div>
+      <PortfolioFormPrimaryFields
+        register={register}
+        errors={errors}
+        isPending={isPending}
+        onImageUpload={(url) => setValue("img", url)}
+      />
+      <PortfolioFormDetailFields
+        register={register}
+        errors={errors}
+        isPending={isPending}
+      />
+      <PortfolioFormCategories
+        register={register}
+        errors={errors}
+        fields={fields}
+        append={append}
+        remove={remove}
+        isPending={isPending}
+      />
+      <PortfolioFormLinks register={register} errors={errors} isPending={isPending} />
 
       <Button type="submit" disabled={isPending}>
         {isPending

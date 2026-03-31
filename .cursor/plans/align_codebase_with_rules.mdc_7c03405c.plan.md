@@ -16,7 +16,7 @@ todos:
     status: completed
   - id: phase-5-split-rename
     content: Split ArticleEditor/PortfolioForm/Navigation; rename typo and awkward folders
-    status: pending
+    status: completed
 isProject: false
 ---
 

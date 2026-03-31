@@ -1,5 +1,5 @@
 import Link from "next/link";
-import BlogCard from "../BlogCard.tsx/BlogCard";
+import BlogCard from "../blog-card/BlogCard";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import type { FrontMatter } from "@/lib/mdx";

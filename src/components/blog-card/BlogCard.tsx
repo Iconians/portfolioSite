@@ -1,12 +1,7 @@
 "use client";
-import React from "react";
+
 import { motion } from "framer-motion";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface BlogCardProps {
   title: string;
@@ -26,20 +21,20 @@ export default function BlogCard({ title, description, date }: BlogCardProps) {
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="group hover:border-primary transition-all hover:shadow-lg h-full cursor-pointer">
+      <Card className="group h-full cursor-pointer transition-all hover:border-primary hover:shadow-lg">
         <CardHeader>
-          <CardTitle className="text-xl group-hover:text-primary transition-colors">
+          <CardTitle className="text-xl transition-colors group-hover:text-primary">
             {title}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {description && (
-            <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+            <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
               {description}
             </p>
           )}
           {date && (
-            <small className="text-muted-foreground text-xs">{date}</small>
+            <small className="text-xs text-muted-foreground">{date}</small>
           )}
         </CardContent>
       </Card>

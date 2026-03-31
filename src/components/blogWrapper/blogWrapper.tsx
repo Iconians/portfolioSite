@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import BlogCard from "../BlogCard.tsx/BlogCard";
+import BlogCard from "../blog-card/BlogCard";
 import { FrontMatter } from "@/lib/mdx";
 
 type Post = {
