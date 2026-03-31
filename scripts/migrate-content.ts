@@ -3,8 +3,8 @@ import { readFileSync, readdirSync } from "fs";
 import { join } from "path";
 import matter from "gray-matter";
 import { hash } from "bcryptjs";
-import { review } from "../src/app/utils/reviews";
-import { portfolioItems } from "../src/app/utils/PorfolioItems";
+import { review } from "../src/lib/reviews";
+import { portfolioItems } from "../src/lib/portfolioItems";
 
 async function migrateArticles(userId: string) {
   const postsPath = join(process.cwd(), "src/app/lib/content/posts");

@@ -1,6 +1,6 @@
 import { getAllArticlesAdmin } from "@/lib/data/articles";
 import { notFound } from "next/navigation";
-import { ArticleEditor } from "@/app/Components/Admin/ArticleEditor";
+import { ArticleEditor } from "@/components/Admin/ArticleEditor";
 
 export default async function EditArticlePage({
   params,

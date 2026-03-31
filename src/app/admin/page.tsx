@@ -1,7 +1,7 @@
 import { getAllArticlesAdmin } from "@/lib/data/articles";
 import { getAllReviews } from "@/lib/data/reviews";
 import { getAllPortfolioItems } from "@/lib/data/portfolio";
-import { Card } from "@/app/Components/ui/card";
+import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";

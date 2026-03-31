@@ -1,6 +1,6 @@
 import { getAllReviews } from "@/lib/data/reviews";
 import { notFound } from "next/navigation";
-import { ReviewForm } from "@/app/Components/Admin/ReviewForm";
+import { ReviewForm } from "@/components/Admin/ReviewForm";
 
 export default async function EditReviewPage({
   params,

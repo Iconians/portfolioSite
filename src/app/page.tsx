@@ -1,18 +1,27 @@
 import "./globals.css";
-import { Hero } from "./Components/Hero/Hero";
-import { Navigation } from "./Components/Nav/Navigation";
-import { EngineeringPhilosophy } from "./Components/EngineeringPhilosophy/EngineeringPhilosophy";
-import { TechStack } from "./Components/TechStack/TechStack";
-import PortfolioSection from "./Components/PortfolioSection/PortfolioSection";
-import FeaturedArticles from "./Components/FeaturedArticles/FeaturedArticles";
-import { AnimatedSection } from "./Components/Animations/AnimatedSection";
-import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
-import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
+import { Hero } from "@/components/Hero/Hero";
+import { Navigation } from "@/components/Nav/Navigation";
+import { EngineeringPhilosophy } from "@/components/EngineeringPhilosophy/EngineeringPhilosophy";
+import { TechStack } from "@/components/TechStack/TechStack";
+import PortfolioSection from "@/components/PortfolioSection/PortfolioSection";
+import FeaturedArticles from "@/components/FeaturedArticles/FeaturedArticles";
+import { AnimatedSection } from "@/components/Animations/AnimatedSection";
+import { JokeAdviceComponent } from "@/components/JokeAdvice/JokeAdviceComponent";
+import { ReviewComponent } from "@/components/ReviewComponent/ReviewComponent";
+import { getAllPortfolioItems } from "@/lib/data/portfolio";
+import { getAllArticles } from "@/lib/data/articles";
+import { getAllReviews } from "@/lib/data/reviews";
 
 // Enable static generation with revalidation for better performance as
 export const revalidate = 3600; // Revalidate every hour
 
-export default function Home() {
+export default async function Home() {
+  const [portfolioItems, articles, reviews] = await Promise.all([
+    getAllPortfolioItems(),
+    getAllArticles(),
+    getAllReviews(),
+  ]);
+
   return (
     <div className="min-h-screen">
       <Hero />
@@ -34,16 +43,16 @@ export default function Home() {
         </AnimatedSection>
 
         <AnimatedSection>
-          <PortfolioSection />
+          <PortfolioSection initialItems={portfolioItems} />
         </AnimatedSection>
 
         <AnimatedSection>
-          <FeaturedArticles />
+          <FeaturedArticles initialArticles={articles} />
         </AnimatedSection>
 
         <section id="reviews" className="scroll-mt-20">
           <AnimatedSection>
-            <ReviewComponent />
+            <ReviewComponent initialReviews={reviews} />
           </AnimatedSection>
         </section>
       </main>

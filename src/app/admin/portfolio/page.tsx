@@ -1,7 +1,7 @@
 import { getAllPortfolioItems } from "@/lib/data/portfolio";
 import Link from "next/link";
-import { Button } from "@/app/Components/ui/button";
-import { PortfolioList } from "@/app/Components/Admin/PortfolioList";
+import { Button } from "@/components/ui/button";
+import { PortfolioList } from "@/components/Admin/PortfolioList";
 
 export default async function PortfolioPage() {
   let portfolio: Awaited<ReturnType<typeof getAllPortfolioItems>> = [];

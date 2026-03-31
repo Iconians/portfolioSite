@@ -1,10 +1,10 @@
 import { getAllArticlesAdmin } from "@/lib/data/articles";
 import Link from "next/link";
-import { Button } from "@/app/Components/ui/button";
-import { Card } from "@/app/Components/ui/card";
-import { Badge } from "@/app/Components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { deleteArticleAction } from "@/lib/actions/articles";
-import { ArticleList } from "@/app/Components/Admin/ArticleList";
+import { ArticleList } from "@/components/Admin/ArticleList";
 
 export default async function ArticlesPage() {
   const articles = await getAllArticlesAdmin();

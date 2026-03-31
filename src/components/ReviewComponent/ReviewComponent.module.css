@@ -1,0 +1,164 @@
+.reviewWrapper {
+  padding: clamp(20px, 5vw, 40px) clamp(15px, 3vw, 20px);
+  background: var(--review-card-bg);
+  color: var(--text-primary);
+  border-radius: 20px;
+  transition: background 0.3s ease, color 0.3s ease;
+  margin: clamp(20px, 5vw, 35px) 0;
+}
+
+.reviewTitle h2 {
+  text-align: center;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin-bottom: clamp(10px, 3vw, 20px);
+  color: var(--heading-color);
+}
+
+.reviewCardWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  overflow: visible;
+  min-height: 300px;
+  height: auto;
+  width: 100%;
+  background: var(--card-inner-bg);
+}
+
+.carouselLeftBtn,
+.carouselRightBtn {
+  font-size: clamp(24px, 4vw, 30px);
+  color: var(--accent-color);
+  transition: transform 0.2s ease;
+  position: relative;
+  z-index: 2;
+  width: clamp(48px, 10vw, 80px);
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mainCarouselWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.carouselLeftBtn:hover,
+.carouselRightBtn:hover {
+  transform: scale(1.2);
+}
+
+.carouselReviewsWrapper {
+  position: relative;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carouselReview {
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  padding: clamp(15px, 3vw, 20px);
+  border-radius: 10px;
+  min-height: 300px;
+  height: auto;
+  max-height: none;
+}
+
+.carouselReview.selected {
+  opacity: 1;
+  z-index: 2;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #ffd700;
+}
+
+.stars {
+  color: var(--accent-color);
+  font-size: 1.2rem;
+}
+
+.cardReview p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .carouselReview {
+    padding: clamp(10px, 2vw, 15px);
+  }
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+  }
+
+  .stars {
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+  }
+
+  .reviewCardWrapper {
+    min-height: 250px;
+    padding: 20px 15px;
+  }
+
+  .carouselReview {
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviewTitle h2 {
+    font-size: clamp(1.25rem, 5vw, 1.5rem);
+  }
+
+  .cardReview p {
+    font-size: clamp(0.85rem, 4vw, 0.9rem);
+  }
+
+  .reviewCardWrapper {
+    min-height: 200px;
+    padding: 15px 10px;
+    overflow: visible;
+  }
+
+  .carouselReview {
+    min-height: 150px;
+  }
+
+  .carouselReviewsWrapper {
+    width: 90%;
+  }
+
+  .carouselLeftBtn,
+  .carouselRightBtn {
+    width: 40px;
+    min-height: 40px;
+    font-size: 20px;
+  }
+
+  .mainCarouselWrapper {
+    width: 100%;
+  }
+}
