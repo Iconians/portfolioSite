@@ -46,10 +46,16 @@ function getDatabaseAdapter() {
     );
   }
 
-  // Ensure SSL for Neon (required in production)
-  if (connectionString.includes("neon") && !connectionString.includes("sslmode=")) {
-    const sep = connectionString.includes("?") ? "&" : "?";
-    connectionString = `${connectionString}${sep}sslmode=require`;
+  // Normalize SSL mode for Neon to avoid pg-connection-string alias warnings and
+  // keep explicit strong TLS semantics across pg upgrades.
+  if (connectionString.includes("neon")) {
+    const parsedUrl = new URL(connectionString);
+    const sslMode = parsedUrl.searchParams.get("sslmode");
+
+    if (!sslMode || sslMode === "require" || sslMode === "prefer" || sslMode === "verify-ca") {
+      parsedUrl.searchParams.set("sslmode", "verify-full");
+      connectionString = parsedUrl.toString();
+    }
   }
 
   // Don't validate format strictly - let the Pool constructor handle it
