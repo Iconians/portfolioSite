@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Input } from "@/app/Components/ui/input";
+import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import type { Article } from "@/lib/types/articles";
 import Link from "next/link";
-import { Card } from "@/app/Components/ui/card";
+import { Card } from "@/components/ui/card";
 
 export function ArticleSearch() {
   const [query, setQuery] = useState("");

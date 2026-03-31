@@ -7,7 +7,7 @@ import { MDXRemoteSerializeResult } from "next-mdx-remote";
 // Dynamically import animated components to prevent SSR issues
 const AnimatedHeading = dynamic(
   () =>
-    import("@/app/Components/Animations/AnimateHeading").then(
+    import("@/components/Animations/AnimateHeading").then(
       (mod) => mod.default
     ),
   { ssr: false }
@@ -15,7 +15,7 @@ const AnimatedHeading = dynamic(
 
 const AnimatedList = dynamic(
   () =>
-    import("@/app/Components/Animations/AnimatedList").then(
+    import("@/components/Animations/AnimatedList").then(
       (mod) => mod.default
     ),
   { ssr: false }
@@ -23,7 +23,7 @@ const AnimatedList = dynamic(
 
 const AnimatedListItem = dynamic(
   () =>
-    import("@/app/Components/Animations/AnimatedList").then(
+    import("@/components/Animations/AnimatedList").then(
       (mod) => mod.AnimatedListItem
     ),
   { ssr: false }
@@ -31,7 +31,7 @@ const AnimatedListItem = dynamic(
 
 const AnimatedParagraph = dynamic(
   () =>
-    import("@/app/Components/Animations/AnimatedParagraphs").then(
+    import("@/components/Animations/AnimatedParagraphs").then(
       (mod) => mod.default
     ),
   { ssr: false }
@@ -39,7 +39,7 @@ const AnimatedParagraph = dynamic(
 
 const AnimatedWrapper = dynamic(
   () =>
-    import("@/app/Components/Animations/AnimatedWrapper").then(
+    import("@/components/Animations/AnimatedWrapper").then(
       (mod) => mod.default
     ),
   { ssr: false }

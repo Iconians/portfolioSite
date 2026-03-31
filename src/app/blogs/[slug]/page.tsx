@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Navigation } from "@/app/Components/Nav/Navigation";
-import ClientWrapper from "@/app/Components/ClientWrapper/ClientWrapper";
-import BlogPostClient from "@/app/Components/BlogPostClient/BlogPostClient";
+import { Navigation } from "@/components/Nav/Navigation";
+import ClientWrapper from "@/components/ClientWrapper/ClientWrapper";
+import BlogPostClient from "@/components/BlogPostClient/BlogPostClient";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import type { FrontMatter } from "@/app/lib/mdx";
 

@@ -1,5 +1,5 @@
 import { Linkedin, Mail } from "lucide-react";
-import { Button } from "@/app/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { TerminalLoader } from "../TerminalLoader/TerminalLoader";
 
 function GithubIcon({ className }: { className?: string }) {

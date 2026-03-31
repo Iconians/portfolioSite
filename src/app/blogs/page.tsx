@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Navigation } from "@/app/Components/Nav/Navigation";
-import BlogGrid from "../Components/blogWrapper/blogWrapper";
+import { Navigation } from "@/components/Nav/Navigation";
+import BlogGrid from "@/components/blogWrapper/blogWrapper";
 import type { FrontMatter } from "@/app/lib/mdx";
 
 interface Post {

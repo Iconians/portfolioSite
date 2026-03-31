@@ -3,9 +3,9 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Card } from "@/app/Components/ui/card";
-import { Button } from "@/app/Components/ui/button";
-import { Badge } from "@/app/Components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { deletePortfolioAction } from "@/lib/actions/portfolio";
 import { toast } from "sonner";
 import type { PortfolioItem } from "@/lib/types/portfolio";

@@ -4,7 +4,7 @@ overview: Bring the portfolio site in line with [.cursor/rules.mdc](.cursor/rule
 todos:
   - id: phase-1-components
     content: Move src/app/Components → src/components (domain folders), update all @/ imports, verify build
-    status: pending
+    status: completed
   - id: phase-2-lib-hooks
     content: Relocate lib/hooks → src/hooks; move app/lib/mdx and app/utils into src/lib
     status: pending

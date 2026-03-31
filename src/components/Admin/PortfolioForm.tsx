@@ -12,10 +12,10 @@ import {
   createPortfolioAction,
   updatePortfolioAction,
 } from "@/lib/actions/portfolio";
-import { Button } from "@/app/Components/ui/button";
-import { Input } from "@/app/Components/ui/input";
-import { Textarea } from "@/app/Components/ui/textarea";
-import { Label } from "@/app/Components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "./ImageUpload";

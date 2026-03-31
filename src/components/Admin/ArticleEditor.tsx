@@ -8,23 +8,23 @@ import CodeBlock from "@tiptap/extension-code-block";
 import { MDXRemote } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote";
-import AnimatedParagraph from "@/app/Components/Animations/AnimatedParagraphs";
-import AnimatedHeading from "@/app/Components/Animations/AnimateHeading";
+import AnimatedParagraph from "@/components/Animations/AnimatedParagraphs";
+import AnimatedHeading from "@/components/Animations/AnimateHeading";
 import AnimatedList, {
   AnimatedListItem,
-} from "@/app/Components/Animations/AnimatedList";
-import { AnimatedCode } from "@/app/Components/Animations/AnimatedCode";
-import AnimatedWrapper from "@/app/Components/Animations/AnimatedWrapper";
+} from "@/components/Animations/AnimatedList";
+import { AnimatedCode } from "@/components/Animations/AnimatedCode";
+import AnimatedWrapper from "@/components/Animations/AnimatedWrapper";
 import { serializeToMDX } from "./mdxSerializer";
 import {
   createArticleAction,
   updateArticleAction,
   publishArticleAction,
 } from "@/lib/actions/articles";
-import { Button } from "@/app/Components/ui/button";
-import { Input } from "@/app/Components/ui/input";
-import { Label } from "@/app/Components/ui/label";
-import { Textarea } from "@/app/Components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import type { Article } from "@/lib/types/articles";

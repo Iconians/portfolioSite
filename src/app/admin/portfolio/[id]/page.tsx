@@ -1,6 +1,6 @@
 import { getAllPortfolioItems } from "@/lib/data/portfolio";
 import { notFound } from "next/navigation";
-import { PortfolioForm } from "@/app/Components/Admin/PortfolioForm";
+import { PortfolioForm } from "@/components/Admin/PortfolioForm";
 
 export default async function EditPortfolioPage({
   params,

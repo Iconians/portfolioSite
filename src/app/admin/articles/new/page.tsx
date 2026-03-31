@@ -1,4 +1,4 @@
-import { ArticleEditor } from "@/app/Components/Admin/ArticleEditor";
+import { ArticleEditor } from "@/components/Admin/ArticleEditor";
 
 export default function NewArticlePage() {
   return (

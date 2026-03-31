@@ -1,13 +1,13 @@
 import "./globals.css";
-import { Hero } from "./Components/Hero/Hero";
-import { Navigation } from "./Components/Nav/Navigation";
-import { EngineeringPhilosophy } from "./Components/EngineeringPhilosophy/EngineeringPhilosophy";
-import { TechStack } from "./Components/TechStack/TechStack";
-import PortfolioSection from "./Components/PortfolioSection/PortfolioSection";
-import FeaturedArticles from "./Components/FeaturedArticles/FeaturedArticles";
-import { AnimatedSection } from "./Components/Animations/AnimatedSection";
-import { JokeAdviceComponent } from "./Components/Joke&AdviceComponent/JokeAdviceComponent";
-import { ReviewComponent } from "./Components/ReviewComponet/ReviewComponent";
+import { Hero } from "@/components/Hero/Hero";
+import { Navigation } from "@/components/Nav/Navigation";
+import { EngineeringPhilosophy } from "@/components/EngineeringPhilosophy/EngineeringPhilosophy";
+import { TechStack } from "@/components/TechStack/TechStack";
+import PortfolioSection from "@/components/PortfolioSection/PortfolioSection";
+import FeaturedArticles from "@/components/FeaturedArticles/FeaturedArticles";
+import { AnimatedSection } from "@/components/Animations/AnimatedSection";
+import { JokeAdviceComponent } from "@/components/Joke&AdviceComponent/JokeAdviceComponent";
+import { ReviewComponent } from "@/components/ReviewComponet/ReviewComponent";
 
 // Enable static generation with revalidation for better performance as
 export const revalidate = 3600; // Revalidate every hour

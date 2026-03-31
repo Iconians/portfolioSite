@@ -1,7 +1,7 @@
 import { getAllReviews } from "@/lib/data/reviews";
 import Link from "next/link";
-import { Button } from "@/app/Components/ui/button";
-import { ReviewList } from "@/app/Components/Admin/ReviewList";
+import { Button } from "@/components/ui/button";
+import { ReviewList } from "@/components/Admin/ReviewList";
 
 export default async function ReviewsPage() {
   const reviews = await getAllReviews();

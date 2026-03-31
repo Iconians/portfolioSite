@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import ProductService from "@/app/fetches/adviceFetch";
 import { jokeFetch } from "@/app/fetches/jokeFetch";
-import { Card, CardContent } from "@/app/Components/ui/card";
-import { Button } from "@/app/Components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Smile, Lightbulb, RefreshCw } from "lucide-react";
 
 type jokeArr = {

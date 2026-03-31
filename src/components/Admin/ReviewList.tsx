@@ -2,8 +2,8 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Card } from "@/app/Components/ui/card";
-import { Button } from "@/app/Components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { deleteReviewAction } from "@/lib/actions/reviews";
 import { toast } from "sonner";
 import type { Review } from "@/lib/types/reviews";

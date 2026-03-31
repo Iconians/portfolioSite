@@ -5,10 +5,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReviewSchema, type CreateReviewInput } from "@/lib/types/reviews";
 import { createReviewAction, updateReviewAction } from "@/lib/actions/reviews";
-import { Button } from "@/app/Components/ui/button";
-import { Input } from "@/app/Components/ui/input";
-import { Textarea } from "@/app/Components/ui/textarea";
-import { Label } from "@/app/Components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 

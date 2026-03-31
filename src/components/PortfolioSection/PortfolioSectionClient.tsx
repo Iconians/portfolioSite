@@ -7,9 +7,9 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/app/Components/ui/card";
-import { Badge } from "@/app/Components/ui/badge";
-import { Button } from "@/app/Components/ui/button";
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import type { PortfolioItem } from "@/lib/types/portfolio";
 

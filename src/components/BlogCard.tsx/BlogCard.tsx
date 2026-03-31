@@ -6,7 +6,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/app/Components/ui/card";
+} from "@/components/ui/card";
 
 interface BlogCardProps {
   title: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/app/Components/ui/button";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface ImageUploadProps {

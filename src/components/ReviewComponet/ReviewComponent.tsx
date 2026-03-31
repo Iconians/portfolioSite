@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/app/Components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Quote } from "lucide-react";
 import type { Review } from "@/lib/types/reviews";
 

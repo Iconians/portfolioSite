@@ -6,14 +6,14 @@ import styles from "./aboutPage.module.css";
 
 // Dynamically import Navigation (uses framer-motion) to prevent SSR issues
 const Navigation = dynamic(
-  () => import("../Components/Nav/Navigation").then((mod) => mod.Navigation),
+  () => import("@/components/Nav/Navigation").then((mod) => mod.Navigation),
   { ssr: false },
 );
 
 // Dynamically import animated components to prevent SSR issues during static generation
 const AnimatedSection = dynamic(
   () =>
-    import("../Components/Animations/AnimatedSection").then(
+    import("@/components/Animations/AnimatedSection").then(
       (mod) => mod.AnimatedSection,
     ),
   { ssr: false },
@@ -21,7 +21,7 @@ const AnimatedSection = dynamic(
 
 const AnimatedParagraph = dynamic(
   () =>
-    import("../Components/Animations/AnimatedParagraphs").then(
+    import("@/components/Animations/AnimatedParagraphs").then(
       (mod) => mod.default,
     ),
   { ssr: false },
@@ -29,13 +29,13 @@ const AnimatedParagraph = dynamic(
 
 const AnimatedList = dynamic(
   () =>
-    import("../Components/Animations/AnimatedList").then((mod) => mod.default),
+    import("@/components/Animations/AnimatedList").then((mod) => mod.default),
   { ssr: false },
 );
 
 const AnimatedListItem = dynamic(
   () =>
-    import("../Components/Animations/AnimatedList").then(
+    import("@/components/Animations/AnimatedList").then(
       (mod) => mod.AnimatedListItem,
     ),
   { ssr: false },
