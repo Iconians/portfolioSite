@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useEffect } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -29,7 +29,9 @@ interface ArticleEditorProps {
 export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [mdxContent, setMdxContent] = useState("");
+  const [mdxContent, setMdxContent] = useState(
+    () => initialArticle?.content ?? ""
+  );
   const [preview, setPreview] = useState<MDXRemoteSerializeResult | null>(null);
 
   const {
@@ -66,16 +68,6 @@ export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
       setMdxContent(mdx);
     },
   });
-
-  useEffect(() => {
-    if (initialArticle?.content && editor) {
-      // For existing articles, set the MDX content directly
-      // The editor will be used for new content, existing content is stored as MDX
-      setMdxContent(initialArticle.content);
-      // Try to parse MDX and set in editor (simplified - full parser would be better)
-      // For now, editor starts empty and user can edit the MDX directly or use editor for new content
-    }
-  }, [initialArticle, editor]);
 
   const handlePreview = async () => {
     const currentMdx = editor ? serializeToMDX(editor.getJSON()) : mdxContent;

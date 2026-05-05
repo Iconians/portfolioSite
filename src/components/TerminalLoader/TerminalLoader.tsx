@@ -22,9 +22,6 @@ export function TerminalLoader() {
     timeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
     timeoutsRef.current = [];
 
-    // Reset lines when component mounts
-    setLines([]);
-
     TERMINAL_SEQUENCE.forEach((line) => {
       const timeout = setTimeout(() => {
         setLines((prev) => {

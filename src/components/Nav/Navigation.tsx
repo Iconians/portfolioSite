@@ -1,18 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { NavigationMobile } from "./NavigationMobile";
 import { navigationLinks } from "./navigationLinks";
 
+const emptySubscribe = () => () => {};
+
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   return (
     <nav className="sticky top-0 z-50 bg-background/50 dark:bg-background/30 backdrop-blur-md border-b border-border/50">
