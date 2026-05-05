@@ -54,16 +54,24 @@ const AnimatedCode = dynamic(
 const MotionArticleWrapper = dynamic(
   () =>
     import("framer-motion").then((mod) => {
-      return ({ children }: { children: React.ReactNode }) => (
-        <mod.motion.article
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className={styles.blogArticle}
-        >
-          {children}
-        </mod.motion.article>
-      );
+      function MotionArticleWrapperInner({
+        children,
+      }: {
+        children: React.ReactNode;
+      }) {
+        return (
+          <mod.motion.article
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className={styles.blogArticle}
+          >
+            {children}
+          </mod.motion.article>
+        );
+      }
+      MotionArticleWrapperInner.displayName = "MotionArticleWrapper";
+      return MotionArticleWrapperInner;
     }),
   { ssr: false }
 );

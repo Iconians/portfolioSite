@@ -25,10 +25,12 @@ function getDatabaseAdapter() {
     throw new Error("DATABASE_URL environment variable is empty or invalid");
   }
 
-  // Validate that it's not a localhost connection (which would indicate misconfiguration)
+  // On Vercel, refuse localhost — a prod deploy cannot reach your laptop's Postgres.
+  // Local `next build` may legitimately use localhost; CI/other hosts are unchanged here.
   if (
-    connectionString.includes("localhost") ||
-    connectionString.includes("127.0.0.1")
+    process.env.VERCEL === "1" &&
+    (connectionString.includes("localhost") ||
+      connectionString.includes("127.0.0.1"))
   ) {
     throw new Error(
       "DATABASE_URL points to localhost. Please configure a production database URL."
