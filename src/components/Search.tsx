@@ -13,9 +13,12 @@ export function ArticleSearch() {
   const [isLoading, setIsLoading] = useState(false);
   const debouncedQuery = useDebounce(query, 300);
 
+  const displayResults =
+    debouncedQuery.trim().length > 0 ? results : [];
+  const showSearchLoading = debouncedQuery.trim().length > 0 && isLoading;
+
   useEffect(() => {
     if (!debouncedQuery.trim()) {
-      setResults([]);
       return;
     }
 
@@ -70,13 +73,13 @@ export function ArticleSearch() {
       />
       {query && (
         <div className="absolute z-10 w-full mt-2 bg-background border rounded-lg shadow-lg max-h-96 overflow-auto">
-          {isLoading ? (
+          {showSearchLoading ? (
             <div className="p-4 text-center text-muted-foreground">
               Searching...
             </div>
-          ) : results.length > 0 ? (
+          ) : displayResults.length > 0 ? (
             <div className="p-2">
-              {results.map((article) => (
+              {displayResults.map((article) => (
                 <Link key={article.id} href={`/blogs/${article.slug}`}>
                   <Card className="p-4 mb-2 hover:bg-accent transition-colors cursor-pointer">
                     <h3 className="font-semibold">{article.title}</h3>
