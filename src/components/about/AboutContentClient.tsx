@@ -38,7 +38,9 @@ interface AboutContentClientProps {
   skills: string[];
 }
 
-export default function AboutContentClient({ skills }: AboutContentClientProps) {
+export default function AboutContentClient({
+  skills,
+}: AboutContentClientProps) {
   return (
     <>
       <AnimatedSection className={styles.header}>
@@ -112,7 +114,9 @@ export default function AboutContentClient({ skills }: AboutContentClientProps) 
 
             <AnimatedList className={styles.skillsList}>
               {skills.map((skill, index) => (
-                <AnimatedListItem key={`${skill}-${index}`}>{skill}</AnimatedListItem>
+                <AnimatedListItem key={`${skill}-${index}`}>
+                  {skill}
+                </AnimatedListItem>
               ))}
             </AnimatedList>
           </div>
@@ -120,14 +124,6 @@ export default function AboutContentClient({ skills }: AboutContentClientProps) 
       </AnimatedSection>
 
       <AnimatedSection className={styles.contactIcons} delay={0.4}>
-        <a href="mailto:claytoncripe@gmail.com">
-          <img
-            src="https://img.shields.io/badge/Gmail-333333?style=for-the-badge&logo=gmail&logoColor=red"
-            alt="Gmail"
-            width={100}
-            height={28}
-          />
-        </a>
         <a href="https://github.com/Iconians" target="_blank">
           <Image
             src="/githubLogo.png"
@@ -138,7 +134,7 @@ export default function AboutContentClient({ skills }: AboutContentClientProps) 
           />
         </a>
         <a href="https://www.linkedin.com/in/claytoncripe">
-          <img
+          <Image
             src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"
             alt="LinkedIn"
             width={100}

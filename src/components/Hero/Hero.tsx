@@ -1,4 +1,3 @@
-import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TerminalLoader } from "../TerminalLoader/TerminalLoader";
 
@@ -47,11 +46,10 @@ export function Hero() {
           <h1 className="text-[40px] font-bold mb-4 text-balance leading-tight">
             Clayton Cripe
           </h1>
-          <p className="text-lg text-primary mb-3">
-            Full-Stack Engineer
-          </p>
+          <p className="text-lg text-primary mb-3">Full-Stack Engineer</p>
           <p className="text-xl font-semibold text-foreground mb-4">
-            Building scalable SaaS platforms with a focus on performance and clean architecture.
+            Building scalable SaaS platforms with a focus on performance and
+            clean architecture.
           </p>
           <p className="text-base text-muted-foreground leading-relaxed mb-8 text-pretty">
             I build fast, maintainable web applications designed to scale. My
@@ -79,11 +77,6 @@ export function Hero() {
                 aria-label="LinkedIn"
               >
                 <LinkedInIcon className="h-5 w-5" />
-              </a>
-            </Button>
-            <Button variant="outline" size="icon" asChild>
-              <a href="mailto:claytoncripe@gmail.com" aria-label="Email">
-                <Mail className="h-5 w-5" />
               </a>
             </Button>
           </div>
