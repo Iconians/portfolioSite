@@ -38,7 +38,7 @@
     "@radix-ui/themes": "^3.3.0",
     "@tiptap/core": "3.23.4",
     "@tiptap/extension-code-block": "3.23.6",
-    "@tiptap/pm": "3.23.4",
+    "@tiptap/pm": "3.23.6",
     "@tiptap/react": "3.23.4",
     "@tiptap/starter-kit": "3.23.4",
     "bcryptjs": "^3.0.3",
@@ -93,7 +93,7 @@
       "@hono/node-server": "1.19.14"
     },
     "@tiptap/core": "3.23.4",
-    "@tiptap/pm": "3.23.4"
+    "@tiptap/pm": "3.23.6"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": "eslint"
