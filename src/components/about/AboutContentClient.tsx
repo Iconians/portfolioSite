@@ -3,6 +3,7 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import styles from "@/app/About/aboutPage.module.css";
+import { LinkedInIcon } from "../Hero/Hero";
 
 const AnimatedSection = dynamic(
   () =>
@@ -134,7 +135,7 @@ export default function AboutContentClient({
           />
         </a>
         <a href="https://www.linkedin.com/in/claytoncripe">
-          <Image
+          <img
             src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"
             alt="LinkedIn"
             width={100}
