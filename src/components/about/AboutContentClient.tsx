@@ -3,7 +3,6 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import styles from "@/app/About/aboutPage.module.css";
-import { LinkedInIcon } from "../Hero/Hero";
 
 const AnimatedSection = dynamic(
   () =>
