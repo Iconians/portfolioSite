@@ -75,7 +75,7 @@
     "autoprefixer": "^10.5.0",
     "baseline-browser-mapping": "^2.10.37",
     "eslint": "^9",
-    "eslint-config-next": "^16.2.7",
+    "eslint-config-next": "^16.2.9",
     "fast-uri": "^4.0.0",
     "hono": "^4.12.23",
     "husky": "^9.1.7",
