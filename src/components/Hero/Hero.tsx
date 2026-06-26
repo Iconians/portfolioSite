@@ -48,15 +48,14 @@ export function Hero() {
           </h1>
           <p className="text-lg text-primary mb-3">Full-Stack Engineer</p>
           <p className="text-xl font-semibold text-foreground mb-4">
-            Building scalable SaaS platforms with a focus on performance and
-            clean architecture.
+            Building software that solves operational problems—from internal
+            business systems to production SaaS platforms.
           </p>
           <p className="text-base text-muted-foreground leading-relaxed mb-8 text-pretty">
-            I build fast, maintainable web applications designed to scale. My
-            work focuses on SSR-first architectures using Next.js, TypeScript,
-            and PostgreSQL — building systems that prioritize performance, clean
-            boundaries between frontend and backend logic, and long-term
-            maintainability.
+            I build software that helps businesses operate more efficiently—from
+            internal tools and client portals to production SaaS platforms. My
+            work focuses on architecture, performance, maintainability, and
+            designing systems that continue to evolve as businesses grow.
           </p>
           <div className="flex gap-4 items-center">
             <Button variant="outline" size="icon" asChild>

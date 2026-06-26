@@ -30,7 +30,7 @@ export function EngineeringPhilosophy() {
   return (
     <section id="engineering" className="py-16 scroll-mt-20">
       <h2 className="text-3xl md:text-4xl font-bold mb-4">
-        Engineering Approach
+        Engineering Principles
       </h2>
       <p className="text-muted-foreground text-lg mb-8">
         I approach software development with a strong focus on architecture,
