@@ -3,6 +3,7 @@
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import styles from "@/app/About/aboutPage.module.css";
+import { engineeringArr } from "@/lib/skills";
 
 const AnimatedSection = dynamic(
   () =>
@@ -62,42 +63,69 @@ export default function AboutContentClient({
 
           <div className={styles.descWrapper}>
             <AnimatedParagraph className={styles.bio} delay={0.3}>
-              I&apos;m Clayton Cripe, a full-stack engineer focused on building
-              performant, well-architected web applications.
+              I&apos;m Clayton Cripe, a software engineer who enjoys building
+              operational software that solves business problems—not just
+              shipping features.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={0.5}>
-              I primarily work with Next.js, TypeScript, and PostgreSQL, where I
-              design SSR-first applications, multi-tenant SaaS systems, and
-              backend architectures that prioritize performance and clear
-              separation of concerns.
+              Most of the work I do falls into four areas:
+              <ul>
+                <li>Operational software that replaces manual workflows</li>
+                <li>SaaS platforms built for long-term growth</li>
+                <li>Internal tools and client portals</li>
+                <li>Backend systems designed around maintainability</li>
+              </ul>
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={0.7}>
-              My work spans both frontend and backend systems. I&apos;ve built
-              applications using Node.js and SQL-based databases, and I enjoy
-              thinking through architectural decisions - especially around state
-              ownership, abstraction layers, and long-term maintainability.
+              I primarily work with Next.js, TypeScript, PostgreSQL, and modern
+              cloud infrastructure, but I spend just as much time understanding
+              business workflows, system architecture, and how software fits
+              into an organization&apos;s day-to-day operations.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={0.9}>
-              Over the years, I&apos;ve built client projects, SaaS-style
-              applications, and backend systems while continuously strengthening
-              my computer science fundamentals in data structures, algorithms,
-              and systems thinking.
+              Rather than starting with technology, I start with the problem.
             </AnimatedParagraph>
 
             <AnimatedParagraph className={styles.bio} delay={1.1}>
-              This portfolio reflects that progression. What began as a simple
-              static HTML site has evolved into a modern Next.js application
-              focused on performance, clean UI, and thoughtful interaction
-              design.
+              Whether I&apos;m building a customer-facing SaaS platform,
+              replacing spreadsheet-driven processes, or connecting multiple
+              business systems together, my goal is always the same: create
+              software that&apos;s simple to maintain, easy to extend, and
+              genuinely useful to the people who rely on it every day.
             </AnimatedParagraph>
 
-            <AnimatedParagraph className={styles.bio} delay={1.3}>
-              If you&apos;re looking for someone who enjoys building fast,
-              maintainable software and thinking through architectural
-              trade-offs, I&apos;d be glad to connect. Reach me on{" "}
+            <AnimatedParagraph className={styles.bio} delay={0.4}>
+              <h3>What I value as an engineer</h3>
+              <ul>
+                <li>
+                  Build software around the business, not around the technology.
+                </li>
+                <li>
+                  Prefer maintainable systems over clever implementations.
+                </li>
+                <li>Design for change, not just today&apos;s requirements.</li>
+                <li>
+                  Choose tools because they&apos;re appropriate—not because
+                  they&apos;re trendy.
+                </li>
+              </ul>
+            </AnimatedParagraph>
+
+            <AnimatedParagraph className={styles.bio} delay={1.5}>
+              Outside of client work, I mentor developers, write technical
+              articles, and continue studying software engineering fundamentals.
+              I&apos;m interested in understanding not just how software works,
+              but why certain designs remain maintainable as systems grow.
+            </AnimatedParagraph>
+
+            <AnimatedParagraph className={styles.bio} delay={1.7}>
+              If you&apos;re looking for someone who enjoys solving problems
+              beyond the UI and thinking through the full system—from
+              architecture to deployment—I&apos;d be glad to connect. Reach me
+              on{" "}
               <a
                 href="https://linkedin.com/in/claytoncripe"
                 target="_blank"
@@ -108,8 +136,8 @@ export default function AboutContentClient({
               .
             </AnimatedParagraph>
 
-            <AnimatedParagraph className={styles.bio} delay={1.5}>
-              <h3>Skills/ Technologies I know</h3>
+            <AnimatedParagraph className={styles.bio} delay={0.4}>
+              <h3>Core Technologies</h3>
             </AnimatedParagraph>
 
             <AnimatedList className={styles.skillsList}>
@@ -119,28 +147,20 @@ export default function AboutContentClient({
                 </AnimatedListItem>
               ))}
             </AnimatedList>
+
+            <AnimatedParagraph className={styles.bio} delay={0.4}>
+              <h3>Engineering</h3>
+            </AnimatedParagraph>
+
+            <AnimatedList className={styles.skillsList}>
+              {engineeringArr.map((skill, index) => (
+                <AnimatedListItem key={`${skill}-${index}`}>
+                  {skill}
+                </AnimatedListItem>
+              ))}
+            </AnimatedList>
           </div>
         </div>
-      </AnimatedSection>
-
-      <AnimatedSection className={styles.contactIcons} delay={0.4}>
-        <a href="https://github.com/Iconians" target="_blank">
-          <Image
-            src="/githubLogo.png"
-            alt="GitHub"
-            width={35}
-            height={35}
-            style={{ borderRadius: "100rem" }}
-          />
-        </a>
-        <a href="https://www.linkedin.com/in/claytoncripe">
-          <img
-            src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"
-            alt="LinkedIn"
-            width={100}
-            height={28}
-          />
-        </a>
       </AnimatedSection>
     </>
   );

@@ -3,6 +3,7 @@ import { Hero } from "@/components/Hero/Hero";
 import { Navigation } from "@/components/Nav/Navigation";
 import { EngineeringPhilosophy } from "@/components/EngineeringPhilosophy/EngineeringPhilosophy";
 import { TechStack } from "@/components/TechStack/TechStack";
+import { WhatIEnjoyBuilding } from "@/components/WhatIEnjoyBuilding/WhatIEnjoyBuilding";
 import PortfolioSection from "@/components/PortfolioSection/PortfolioSection";
 import FeaturedArticles from "@/components/FeaturedArticles/FeaturedArticles";
 import { AnimatedSection } from "@/components/Animations/AnimatedSection";
@@ -40,6 +41,10 @@ export default async function Home() {
 
         <AnimatedSection>
           <TechStack />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <WhatIEnjoyBuilding />
         </AnimatedSection>
 
         <AnimatedSection>
