@@ -79,7 +79,7 @@
     "fast-uri": "^4.0.0",
     "hono": "^4.12.30",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.8",
+    "lint-staged": "^17.1.0",
     "postcss": "8.5.19",
     "prisma": "^7.8.0",
     "tailwindcss": "^4.3.1",
