@@ -6,8 +6,8 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "07:00"
-      target-branch: "site-updates"
     open-pull-requests-limit: 10
+    target-branch: "site-updates"
     labels:
       - "dependencies"
       - "security"
