@@ -49,6 +49,10 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@prisma/client", "@prisma/adapter-pg"],
   // Pin Turbopack root to this project (avoids wrong root when parent/home has a lockfile)
   turbopack: { root: projectRoot },
+  // TS 7 has no JS compiler API; run project-local tsc during build (see TS 6/7 side-by-side setup)
+  experimental: {
+    useTypeScriptCli: true,
+  },
 };
 
 export default nextConfig;
