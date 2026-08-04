@@ -20,6 +20,10 @@ If a request conflicts with these rules, follow the rules.
 
 ---
 
+Execution mode: single agent only. Never create, invoke, or delegate to subagents without explicit current-session approval.
+
+---
+
 ## Enforcement Mode
 
 This codebase is already expected to follow the target architecture.
@@ -814,6 +818,64 @@ Generated files, lockfiles, formatting changes, configuration changes,
 and incidental refactors are still changes and must be disclosed.
 
 Never describe work as complete if unreviewed changes remain unexplained.
+
+---
+
+# Agent Execution Policy (Strict)
+
+Use one agent only.
+
+The active agent must perform all planning, implementation, verification,
+testing, review, and reporting itself.
+
+## Forbidden
+
+Do not:
+
+- create subagents
+- delegate work to background agents
+- invoke parallel agents
+- use agent swarms
+- split work across specialized agents
+- launch separate research, coding, review, testing, or planning agents
+- use hidden or asynchronous agent execution
+- ask another agent to inspect or validate the work
+- automatically enable multi-agent or parallel-agent features
+
+## Required Behavior
+
+For every task:
+
+1. Inspect the relevant code and context directly.
+2. Create or follow the approved implementation plan.
+3. Complete one numbered task at a time.
+4. Run the required validation directly.
+5. Report the result.
+6. Stop for review when required.
+
+The same active agent must retain responsibility for the complete task.
+
+## Token and Cost Control
+
+Optimize for minimal unnecessary context and tool usage.
+
+- Read only files relevant to the current task.
+- Do not scan the entire repository unless explicitly required.
+- Do not repeat repository analysis already documented in the approved plan.
+- Do not generate duplicate plans, reviews, or summaries.
+- Do not perform speculative work beyond the current numbered task.
+- Do not start future tasks automatically.
+- Do not use additional agents for speed or convenience.
+
+## Explicit Approval Exception
+
+Multiple agents may be used only when the user explicitly authorizes
+multi-agent execution for a clearly defined task in the current conversation.
+
+A general request to implement, plan, review, test, or fix something does not
+authorize subagents.
+
+When authorization is absent, remain in single-agent mode.
 
 ---
 
