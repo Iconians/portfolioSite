@@ -9,6 +9,35 @@ If a request conflicts with these rules, follow the rules.
 
 ---
 
+# Agent / Subagent Policy
+
+Do not create, spawn, delegate to, or invoke subagents for any task.
+
+This includes:
+- codebase audits
+- planning
+- research
+- implementation
+- testing
+- review
+- documentation
+- parallel analysis
+
+The primary agent must perform the work itself in the current context.
+
+Do not use subagents to save time, parallelize work, reduce context usage, or summarize repository findings.
+
+If the task appears too large for one pass:
+- work sequentially,
+- use existing task gates,
+- stop at a natural checkpoint,
+- report progress,
+- wait for the next instruction.
+
+Do not override this rule unless I explicitly authorize subagent use in the current conversation.
+
+---
+
 # Rule Priority Order
 
 1. Correctness
@@ -52,6 +81,63 @@ New and modified code must meet the current standards immediately.
 * Avoid task-only solutions — design within the system
 * Do not choose the fastest implementation if it produces weak structure
 * The standard is not “works” — the standard is “clean, correctly placed, maintainable, and reviewable”
+
+---
+
+# ESLint Configuration Protection
+
+`eslint.config.mjs` is a protected file.
+
+NEVER modify `eslint.config.mjs` unless the user explicitly asks to modify ESLint configuration in the current conversation.
+
+This includes:
+
+- adding overrides
+- disabling rules
+- changing rule severity
+- adding file-specific exceptions
+- changing ignore patterns
+- changing thresholds
+- restructuring configuration
+
+Lint failures must be fixed in the source code.
+
+If source code cannot reasonably satisfy an existing lint rule:
+
+1. Stop implementation.
+2. Report the exact rule and affected code.
+3. Explain why compliance is impractical.
+4. Wait for explicit approval.
+
+Do not modify ESLint configuration autonomously under any circumstances.
+
+A request to “fix lint errors” is explicitly NOT permission to modify ESLint configuration.
+
+---
+
+# Lint and TypeScript Policy
+
+The project must finish with:
+
+- zero new TypeScript errors
+- zero new ESLint errors
+
+Do not satisfy these requirements by:
+
+- disabling rules
+- changing rule severity
+- adding unnecessary eslint-disable comments
+- using @ts-ignore without approval
+- using "any" unless explicitly requested
+
+Fix the underlying code instead.
+
+Treat lint errors as defects, not obstacles.
+
+If a lint rule fails, modify the implementation to satisfy the rule.
+Do not modify the rule to satisfy the implementation.
+
+If you believe a lint or TypeScript rule should be changed, stop and explain why before making any configuration changes.
 
 ---
 
@@ -162,6 +248,119 @@ The system must distinguish between:
 * Bypassing RLS through application logic
 * Trusting client-provided identifiers when trusted context already exists
 * Treating frontend checks as sufficient enforcement
+
+---
+
+# Repository File Placement (Non-Negotiable)
+
+The root directory structure defines architectural ownership.
+
+## app/
+
+Contains:
+
+- Next.js routes
+- layouts
+- pages
+- route handlers
+- route-specific components that are not reusable outside that route/domain
+
+Do not move reusable supporting UI into app/ merely because a route uses it.
+
+## components/
+
+Contains reusable/supporting React components.
+
+Required:
+
+- Organize components by domain.
+- Do not leave unrelated components flat at the root.
+- Components used across routes belong here rather than app/.
+
+## hooks/
+
+Contains reusable client-side hooks only.
+
+Required:
+
+- Organize hooks by domain.
+- Do not place hooks inside lib/, components/, or tests/.
+
+## lib/
+
+Contains production TypeScript logic:
+
+- services
+- domain logic
+- integrations
+- validation
+- transformations
+- persistence orchestration
+- shared backend/application logic
+
+Required:
+
+- Organize lib files by domain.
+- Production code only.
+
+Forbidden inside lib/:
+
+- *.test.ts
+- *.test.tsx
+- *.spec.ts
+- *.spec.tsx
+
+## tests/
+
+All automated test files belong under tests/.
+
+Use:
+
+tests/unit/<domain>/
+tests/integration/<domain>/
+tests/e2e/<domain>/
+
+Mirror the production domain structure where practical.
+
+Examples:
+
+lib/growth/growth-analytics.ts
+→ tests/unit/growth/growth-analytics.test.ts
+
+lib/projects/github/github-task-commits.ts
+→ tests/unit/projects/github/github-task-commits.test.ts
+
+Never colocate test files with production implementation files.
+
+## scripts/
+
+Contains executable development, maintenance, migration-support,
+build, analysis, or administrative scripts.
+
+Do not place scripts inside lib/.
+
+## types/
+
+Contains shared TypeScript types that are used across multiple files or layers.
+
+Organize by domain.
+
+Types local to one implementation may remain with that implementation.
+
+Do not move domain logic into types/.
+
+## File Creation Rule
+
+Before creating any new file:
+
+1. Identify the file's architectural responsibility.
+2. Select the owning root directory.
+3. Select or create the appropriate domain subdirectory.
+4. Search for an existing matching location.
+5. Create the file only after its destination is clear.
+
+Do not place a file in the nearest convenient directory.
+Physical location must reflect architectural ownership.
 
 ---
 
