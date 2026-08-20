@@ -17,11 +17,33 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  articles  Article[]
-  reviews   Review[]
-  portfolio Portfolio[]
+  articles    Article[]
+  reviews     Review[]
+  portfolio   Portfolio[]
+  mediaAssets MediaAsset[]
 
   @@map("users")
+}
+
+model MediaAsset {
+  id              String   @id @default(uuid())
+  filename        String
+  storageKey      String   @unique @map("storage_key")
+  publicUrl       String   @map("public_url")
+  mimeType        String   @map("mime_type")
+  sizeBytes       Int      @map("size_bytes")
+  width           Int?
+  height          Int?
+  altText         String?  @map("alt_text")
+  caption         String?  @db.Text
+  storageProvider String   @map("storage_provider")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  createdBy       String   @map("created_by")
+  createdByUser   User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@index([createdAt(sort: Desc)], name: "media_assets_created_at_idx")
+  @@map("media_assets")
 }
 
 model Article {

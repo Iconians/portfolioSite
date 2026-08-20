@@ -51,8 +51,10 @@ logs/
 
 # Uploads
 public/uploads/
+public/media/
 
 # Prisma
 node_modules/.prisma/
 
 /src/generated/prisma
+.neon
