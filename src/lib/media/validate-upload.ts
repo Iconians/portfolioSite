@@ -33,9 +33,3 @@ export function validateMediaUpload(input: UploadValidationInput): void {
     throw new Error("File too large. Maximum size is 5MB");
   }
 }
-
-export function buildStorageKey(filename: string): string {
-  const timestamp = Date.now();
-  const sanitizedName = filename.replace(/[^a-zA-Z0-9.-]/g, "_");
-  return `uploads/${timestamp}-${sanitizedName}`;
-}

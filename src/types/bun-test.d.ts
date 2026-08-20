@@ -23,6 +23,7 @@ declare module "bun:test" {
         toEqual(expected: unknown): void;
         toBeTruthy(): void;
         toBeFalsy(): void;
+        toThrow(expected?: string | RegExp | Error): void;
       };
     };
   };

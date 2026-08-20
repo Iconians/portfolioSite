@@ -1,13 +1,15 @@
+import type { MediaStorageFolder } from "@/lib/media/storage-paths";
+import {
+  buildStorageKey,
+  DEFAULT_MEDIA_STORAGE_FOLDER,
+} from "@/lib/media/storage-paths";
 import {
   createMediaAsset,
   getMediaAssetByStorageKey,
 } from "@/lib/data/media";
 import { getStorageProvider, getStorageProviderKind } from "@/lib/storage";
 import type { MediaAsset } from "@/lib/types/media";
-import {
-  buildStorageKey,
-  validateMediaUpload,
-} from "@/lib/media/validate-upload";
+import { validateMediaUpload } from "@/lib/media/validate-upload";
 
 export interface UploadMediaInput {
   buffer: Buffer;
@@ -15,6 +17,7 @@ export interface UploadMediaInput {
   mimeType: string;
   sizeBytes: number;
   createdBy: string;
+  folder?: MediaStorageFolder;
   width?: number;
   height?: number;
 }
@@ -52,7 +55,10 @@ export async function uploadMedia(input: UploadMediaInput): Promise<MediaAsset> 
     sizeBytes: input.sizeBytes,
   });
 
-  const storageKey = buildStorageKey(input.filename);
+  const storageKey = buildStorageKey(
+    input.filename,
+    input.folder ?? DEFAULT_MEDIA_STORAGE_FOLDER
+  );
   const provider = getStorageProvider();
   const stored = await provider.upload({
     key: storageKey,
@@ -77,6 +83,7 @@ export async function createPresignedMediaUpload(input: {
   filename: string;
   mimeType: string;
   sizeBytes: number;
+  folder?: MediaStorageFolder;
 }): Promise<PresignMediaResult> {
   validateMediaUpload(input);
   assertPresignedUploadSupported();
@@ -86,7 +93,10 @@ export async function createPresignedMediaUpload(input: {
     throw new Error("Storage provider does not support presigned uploads");
   }
 
-  const storageKey = buildStorageKey(input.filename);
+  const storageKey = buildStorageKey(
+    input.filename,
+    input.folder ?? DEFAULT_MEDIA_STORAGE_FOLDER
+  );
   const signed = await provider.getSignedUploadUrl({
     key: storageKey,
     mimeType: input.mimeType,

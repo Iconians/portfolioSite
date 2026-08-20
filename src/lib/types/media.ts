@@ -1,10 +1,19 @@
 import { z } from "zod";
 import { MEDIA_MAX_BYTES } from "@/lib/media/validate-upload";
+import { MEDIA_STORAGE_FOLDERS } from "@/lib/media/storage-paths";
+
+const MediaStorageFolderSchema = z.enum(
+  Object.keys(MEDIA_STORAGE_FOLDERS) as [
+    keyof typeof MEDIA_STORAGE_FOLDERS,
+    ...(keyof typeof MEDIA_STORAGE_FOLDERS)[],
+  ]
+);
 
 export const PresignMediaSchema = z.object({
   filename: z.string().min(1).max(255),
   mimeType: z.string().min(1),
   sizeBytes: z.number().int().positive().max(MEDIA_MAX_BYTES),
+  folder: MediaStorageFolderSchema.optional(),
 });
 
 export const CompleteMediaUploadSchema = z.object({
