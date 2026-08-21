@@ -258,43 +258,6 @@ button:hover {
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
-.react-slideshow-fadezoom-wrapper {
-
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-}
-
-.react-slideshow-fadezoom-images-wrap {
-  width: 100%;
-  z-index: 1000;
-}
-
-.each-slide {
-  display: flex;
-  width: 100%;
-  height: 400px;
-}
-
-.each-slide > div {
-  width: 75%;
-}
-
-.each-slide > div img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.each-slide h3 {
-  width: 25%;
-  font-size: 1em;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-  background: #adceed;
-}
 
 .catch-phrase {
   background-image: url(/mountainpic.jpg);
@@ -363,10 +326,6 @@ button:hover {
 
 @media (max-width: 575px) {
   .carouselWrapper, .catch-phrase, .review-wrapper {
-    max-width: 95%;
-    margin: auto;
-  }  
-  .joke-container, .advice-container {
     max-width: 95%;
     margin: auto;
   }

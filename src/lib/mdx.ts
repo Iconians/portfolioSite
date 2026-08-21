@@ -1,4 +1,6 @@
 import { serialize } from "next-mdx-remote/serialize";
+
+import { getArticleCoverImage } from "@/lib/articles/article-cover";
 import { getAllArticles, getArticleBySlug } from "@/lib/data/articles";
 
 export interface FrontMatter {
@@ -7,6 +9,8 @@ export interface FrontMatter {
   date: string;
   featured?: boolean;
   tags?: string[];
+  coverImageUrl?: string;
+  coverImageAlt?: string;
 }
 
 export const getPostBySlug = async (slug: string) => {
@@ -29,6 +33,8 @@ export const getPostBySlug = async (slug: string) => {
     },
   });
 
+  const cover = getArticleCoverImage(article);
+
   return {
     frontMatter: {
       title: article.title,
@@ -36,6 +42,8 @@ export const getPostBySlug = async (slug: string) => {
       date: article.date.toISOString().split("T")[0],
       featured: article.featured,
       tags: article.tags,
+      coverImageUrl: cover?.url,
+      coverImageAlt: cover?.alt,
     } as FrontMatter,
     mdxSource,
   };
@@ -46,17 +54,18 @@ export const getAllPosts = async () => {
   const articles = await getAllArticles(false);
 
   return articles.map((article) => {
-    // Create a URL-friendly slug
-    const slug = article.slug;
+    const cover = getArticleCoverImage(article);
 
     return {
-      slug,
+      slug: article.slug,
       frontMatter: {
         title: article.title,
         description: article.description || "",
         date: article.date.toISOString().split("T")[0],
         featured: article.featured,
         tags: article.tags,
+        coverImageUrl: cover?.url,
+        coverImageAlt: cover?.alt,
       } as FrontMatter,
     };
   });

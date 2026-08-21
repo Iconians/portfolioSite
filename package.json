@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "bun run --bun next dev --turbopack",
+    "dev": "prisma generate && bun run --bun next dev --turbopack",
     "build": "prisma generate && next build --turbopack",
     "start": "next start",
     "lint": "eslint",
@@ -16,11 +16,15 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "migrate:content": "bun run scripts/migrate-content.ts",
+    "seed:admin": "bun run scripts/seed-admin.ts",
+    "backfill:portfolio-slugs": "bun run scripts/backfill-portfolio-slugs.ts",
     "ci": "npm audit --audit-level=high && npm run lint && npm run db:migrate:deploy && npx prisma validate && npm run build",
     "ci:install": "npm ci && npm run ci",
     "ci:github": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ci NEXTAUTH_SECRET=ci-placeholder-secret-min-32-chars-long!! NEXTAUTH_URL=http://localhost:3000 npm run ci"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1114.0",
+    "@aws-sdk/s3-request-presigner": "^3.1114.0",
     "@emotion/is-prop-valid": "^1.4.0",
     "@fortawesome/fontawesome-svg-core": "^7.3.1",
     "@fortawesome/free-regular-svg-icons": "^7.3.1",
@@ -60,7 +64,6 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.83.0",
-    "react-slideshow-image": "^4.4.0",
     "react-syntax-highlighter": "^16.1.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
@@ -80,6 +83,10 @@
     "baseline-browser-mapping": "^2.10.43",
     "eslint": "^9",
     "eslint-config-next": "^16.2.9",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-boundaries": "^7.2.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "fast-uri": "^4.1.2",
     "hono": "^4.12.33",
     "husky": "^9.1.7",
@@ -102,7 +109,8 @@
       "@hono/node-server": "2.0.12"
     },
     "@tiptap/core": "3.29.2",
-    "@tiptap/pm": "3.29.2"
+    "@tiptap/pm": "3.29.2",
+    "deepmerge-ts": "8.0.2"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": "eslint"

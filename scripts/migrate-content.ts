@@ -1,10 +1,11 @@
-import { db } from "../src/lib/db/client";
-import { readFileSync, readdirSync } from "fs";
-import { join } from "path";
-import matter from "gray-matter";
 import { hash } from "bcryptjs";
-import { review } from "../src/lib/reviews";
-import { portfolioItems } from "../src/lib/portfolioItems";
+import { readFileSync, readdirSync } from "fs";
+import matter from "gray-matter";
+import { join } from "path";
+
+import { portfolioSeedItems } from "./migration-data/portfolio-items";
+import { reviewSeedData } from "./migration-data/reviews";
+import { db } from "../src/lib/db/client";
 
 async function migrateArticles(userId: string) {
   const postsPath = join(process.cwd(), "src/app/lib/content/posts");
@@ -55,9 +56,9 @@ async function migrateArticles(userId: string) {
 }
 
 async function migrateReviews(userId: string) {
-  console.log(`Found ${review.length} reviews to migrate`);
+  console.log(`Found ${reviewSeedData.length} reviews to migrate`);
 
-  for (const item of review) {
+  for (const item of reviewSeedData) {
     try {
       // Check if review already exists (by title)
       const existing = await db.review.findFirst({
@@ -84,9 +85,9 @@ async function migrateReviews(userId: string) {
 }
 
 async function migratePortfolio(userId: string) {
-  console.log(`Found ${portfolioItems.length} portfolio items to migrate`);
+  console.log(`Found ${portfolioSeedItems.length} portfolio items to migrate`);
 
-  for (const item of portfolioItems) {
+  for (const item of portfolioSeedItems) {
     try {
       // Check if portfolio item already exists (by caption)
       const existing = await db.portfolio.findFirst({

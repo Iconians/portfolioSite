@@ -1,7 +1,7 @@
-import type { Editor } from "@tiptap/react";
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import type { CreateArticleInput } from "@/lib/types/articles";
+import type { Editor } from "@tiptap/react";
+import type { MDXRemoteSerializeResult } from "next-mdx-remote";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 export type ArticleEditorFormData = Omit<CreateArticleInput, "tags"> & {
   tags: string;

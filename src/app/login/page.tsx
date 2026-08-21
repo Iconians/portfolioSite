@@ -1,14 +1,16 @@
 "use client";
 
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+
 
 const LoginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -17,8 +19,9 @@ const LoginSchema = z.object({
 
 type LoginInput = z.infer<typeof LoginSchema>;
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const {
@@ -33,6 +36,12 @@ export default function LoginPage() {
     },
   });
 
+  useEffect(() => {
+    if (searchParams.get("error") === "AccessDenied") {
+      toast.error("You do not have permission to access admin.");
+    }
+  }, [searchParams]);
+
   const onSubmit = (data: LoginInput) => {
     startTransition(async () => {
       try {
@@ -44,12 +53,20 @@ export default function LoginPage() {
 
         if (res.ok) {
           toast.success("Logged in successfully");
-          router.push("/admin");
+          const callbackUrl = searchParams.get("callbackUrl") || "/admin";
+          router.push(callbackUrl);
           router.refresh();
-        } else {
-          const errorData = await res.json();
-          toast.error(errorData.error || "Invalid email or password");
+          return;
         }
+
+        if (res.status === 429) {
+          const errorData = await res.json();
+          toast.error(errorData.error || "Too many login attempts. Try again later.");
+          return;
+        }
+
+        const errorData = await res.json();
+        toast.error(errorData.error || "Invalid email or password");
       } catch {
         toast.error("An error occurred during login");
       }
@@ -75,11 +92,9 @@ export default function LoginPage() {
               disabled={isPending}
               className={`mt-2 ${errors.email ? "border-red-500" : ""}`}
             />
-            {errors.email && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.email.message}
-              </p>
-            )}
+            {errors.email ? (
+              <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+            ) : null}
           </div>
           <div>
             <Label htmlFor="password">Password</Label>
@@ -90,11 +105,11 @@ export default function LoginPage() {
               disabled={isPending}
               className={`mt-2 ${errors.password ? "border-red-500" : ""}`}
             />
-            {errors.password && (
+            {errors.password ? (
               <p className="text-sm text-red-500 mt-1">
                 {errors.password.message}
               </p>
-            )}
+            ) : null}
           </div>
           <Button type="submit" disabled={isPending} className="w-full">
             {isPending ? "Signing in..." : "Sign In"}
@@ -102,5 +117,13 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

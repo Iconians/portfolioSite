@@ -1,26 +1,30 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import CodeBlock from "@tiptap/extension-code-block";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import CodeBlock from "@tiptap/extension-code-block";
+import { useRouter } from "next/navigation";
 import { serialize } from "next-mdx-remote/serialize";
-import { serializeToMDX } from "./mdxSerializer";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import {
   createArticleAction,
   updateArticleAction,
   publishArticleAction,
 } from "@/lib/actions/articles";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import type { Article } from "@/lib/types/articles";
-import { type CreateArticleInput } from "@/lib/types/articles";
-import type { MDXRemoteSerializeResult } from "next-mdx-remote";
-import { ArticleEditorFields } from "./article-editor/ArticleEditorFields";
-import { ArticleEditorContent } from "./article-editor/ArticleEditorContent";
+
 import { ArticleEditorActions } from "./article-editor/ArticleEditorActions";
+import { ArticleEditorContent } from "./article-editor/ArticleEditorContent";
+import { ArticleEditorCover } from "./article-editor/ArticleEditorCover";
+import { ArticleEditorFields } from "./article-editor/ArticleEditorFields";
+import { serializeToMDX } from "./mdxSerializer";
+
 import type { ArticleEditorFormData } from "./article-editor/types";
+import type { Article, CreateArticleInput } from "@/lib/types/articles";
+import type { MDXRemoteSerializeResult } from "next-mdx-remote";
+
 
 interface ArticleEditorProps {
   initialArticle?: Article;
@@ -33,6 +37,15 @@ export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
     () => initialArticle?.content ?? ""
   );
   const [preview, setPreview] = useState<MDXRemoteSerializeResult | null>(null);
+  const [coverMediaId, setCoverMediaId] = useState<string | null>(
+    () => initialArticle?.coverMediaId ?? null
+  );
+  const [coverImageUrl, setCoverImageUrl] = useState(
+    () => initialArticle?.coverMedia?.publicUrl ?? ""
+  );
+  const [coverImageAlt, setCoverImageAlt] = useState(
+    () => initialArticle?.coverMedia?.altText ?? ""
+  );
 
   const {
     register,
@@ -116,6 +129,7 @@ export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
         tags: tagsArray,
         content: currentMdx,
         date: initialArticle?.date || new Date(),
+        coverMediaId,
       };
 
       const result = initialArticle
@@ -152,6 +166,21 @@ export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <ArticleEditorFields register={register} errors={errors} isPending={isPending} />
+      <ArticleEditorCover
+        coverImageUrl={coverImageUrl}
+        coverImageAlt={coverImageAlt}
+        isPending={isPending}
+        onSelectCover={(asset) => {
+          setCoverMediaId(asset.id);
+          setCoverImageUrl(asset.publicUrl);
+          setCoverImageAlt(asset.altText ?? "");
+        }}
+        onClearCover={() => {
+          setCoverMediaId(null);
+          setCoverImageUrl("");
+          setCoverImageAlt("");
+        }}
+      />
       <ArticleEditorContent
         editor={editor}
         preview={preview}

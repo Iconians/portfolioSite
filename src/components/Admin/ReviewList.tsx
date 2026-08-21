@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { deleteReviewAction } from "@/lib/actions/reviews";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { deleteReviewAction } from "@/lib/actions/reviews";
+
+
 import type { Review } from "@/lib/types/reviews";
 
 interface ReviewListProps {
@@ -17,7 +20,7 @@ export function ReviewList({ reviews: initialReviews }: ReviewListProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = (id: string) => {
-    if (!confirm("Are you sure you want to delete this review?")) return;
+    if (!confirm("Are you sure you want to delete this review?")) {return;}
 
     startTransition(async () => {
       const result = await deleteReviewAction(id);

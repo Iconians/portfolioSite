@@ -1,7 +1,11 @@
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+
+import { getArticleCoverImage } from "@/lib/articles/article-cover";
+
 import BlogCard from "../blog-card/BlogCard";
 import { Button } from "../ui/button";
-import { ArrowRight } from "lucide-react";
+
 import type { FrontMatter } from "@/lib/mdx";
 import type { Article } from "@/lib/types/articles";
 
@@ -20,18 +24,24 @@ export default function FeaturedArticles({
   const featuredPosts: Post[] = initialArticles
     .filter((article) => article.featured === true)
     .slice(0, 3)
-    .map((article) => ({
-      slug: article.slug,
-      frontMatter: {
-        title: article.title,
-        description: article.description || "",
-        date:
-          article.date instanceof Date
-            ? article.date.toISOString().split("T")[0]
-            : String(article.date),
-        featured: true,
-      } as FrontMatter,
-    }));
+    .map((article) => {
+      const cover = getArticleCoverImage(article);
+
+      return {
+        slug: article.slug,
+        frontMatter: {
+          title: article.title,
+          description: article.description || "",
+          date:
+            article.date instanceof Date
+              ? article.date.toISOString().split("T")[0]
+              : String(article.date),
+          featured: true,
+          coverImageUrl: cover?.url,
+          coverImageAlt: cover?.alt,
+        } as FrontMatter,
+      };
+    });
 
   if (featuredPosts.length === 0) {
     return null;
@@ -54,6 +64,8 @@ export default function FeaturedArticles({
               title={post.frontMatter.title}
               description={post.frontMatter.description}
               date={post.frontMatter.date}
+              coverImageUrl={post.frontMatter.coverImageUrl}
+              coverImageAlt={post.frontMatter.coverImageAlt}
             />
           </Link>
         ))}

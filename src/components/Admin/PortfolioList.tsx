@@ -1,13 +1,17 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { deletePortfolioAction } from "@/lib/actions/portfolio";
+import Link from "next/link";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
+
+import { EmptyState } from "@/components/Admin/shared/EmptyState";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { deletePortfolioAction } from "@/lib/actions/portfolio";
+
+
 import type { PortfolioItem } from "@/lib/types/portfolio";
 
 interface PortfolioListProps {
@@ -22,7 +26,7 @@ export function PortfolioList({
 
   const handleDelete = (id: string) => {
     if (!confirm("Are you sure you want to delete this portfolio item?"))
-      return;
+      {return;}
 
     startTransition(async () => {
       const result = await deletePortfolioAction(id);
@@ -82,13 +86,13 @@ export function PortfolioList({
           </div>
         </Card>
       ))}
-      {portfolio.length === 0 && (
-        <Card className="p-12 text-center col-span-2">
-          <p className="text-muted-foreground">
-            No portfolio items yet. Create your first item!
-          </p>
-        </Card>
-      )}
+      {portfolio.length === 0 ? (
+        <EmptyState
+          className="col-span-2 p-12 text-center"
+          title="No portfolio projects yet"
+          description="Create your first project to showcase engineering work on the public site."
+        />
+      ) : null}
     </div>
   );
 }

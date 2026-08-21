@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { searchArticles } from "@/lib/data/articles";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+
+import { searchArticles } from "@/lib/data/articles";
 
 const SearchSchema = z.object({
   q: z.string().min(1).max(100),

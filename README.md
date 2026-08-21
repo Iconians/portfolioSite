@@ -1,132 +1,137 @@
 # Portfolio
 
-Welcome to my personal portfolio site — a hub for my freelance work, client reviews, and technical articles.  
-This site began as a simple HTML/CSS/JavaScript build, evolved into a React + TypeScript app, and is now rebuilt with Next.js 15 for modern performance, SEO, and scalability.
+Welcome to my personal portfolio site — a hub for my freelance work, client reviews, and technical articles.
 
-It’s not just a showcase — it’s my testing ground for design systems, motion-based UI, and full-stack experiments.
+This site is an **Engineering Portfolio Management System**: portfolio projects, media, articles, reviews, metrics, evolution timelines, and platform showcase content are managed through a secured admin interface and stored in PostgreSQL.
 
----
+Live site: [clytoncripe.com](https://www.clytoncripe.com)
 
-## For Recruiters
-
-### What You'll Find
-
-- **Freelance projects** – real-world work solving client needs since 2022  
-- **Client reviews** – feedback pulled directly from my Upwork profile  
-- **Technical articles** – based on both client experience and deep research/practice projects  
-- **Motion-rich design** – nearly every component is animated, from headings and sections to lists, code blocks, and blog cards  
-
-### Why Next.js?
-
-- Fast performance and improved SEO with server-side rendering  
-- Scalable routing for quickly adding new projects, articles, and sections  
-- Polished user experience with consistent animations across the site  
-- Modern toolchain built to grow as my work expands  
-
-### Live Site
-
-Visit my portfolio here: [Portfolio Site](https://www.clytoncripe.com)
+Architecture reference: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
 ---
 
-## For Developers
+## Tech Stack
 
-### Tech Stack
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS + CSS Modules |
+| Animations | Framer Motion |
+| Database | Neon PostgreSQL + Prisma 7 |
+| Auth | Auth.js (NextAuth v5) |
+| Media storage | Local (dev) / Cloudflare R2 via S3 API (prod) |
+| Package manager | Bun |
+| Deploy | Vercel |
 
-- **Framework:** Next.js 15 with App Router  
-- **Language:** TypeScript (since the original React build)  
-- **Styling:** CSS Modules + Tailwind CSS  
-- **Animations:** Framer Motion (`AnimatedParagraph`, `AnimatedList`, `AnimatedCode`, `AnimatedSection`, `AnimatedHeading`, etc.)  
-- **Backend:** PostgreSQL with Prisma ORM
-- **Authentication:** Auth.js (NextAuth v5) with custom authorization
-- **Package Manager:** Bun
-- **Deployment:** Vercel  
+---
 
-### Skills / Technologies
+## Running Locally
 
-- **Frontend:** HTML, CSS, JavaScript, TypeScript, React, React Router, Next.js, Vue, Tailwind, Styled Components  
-- **Backend:** Node.js, Express, Go, Python, PostgreSQL, SQLC, Prisma ORM  
-- **Testing / Dev Tools:** Bun test runner, Bash, GitHub, GitLab, Trello, Zod, Linux  
-- **Other:** Auth.js, WordPress, Unbounce  
+**Prerequisites:** Bun, PostgreSQL (Neon recommended), env vars configured.
 
-### Project Goals
-
-- Showcase freelance work, reviews, and blog posts in one hub  
-- Explore motion-first design, where animation enhances every interaction  
-- Provide a scalable codebase for future full-stack features  
-
-### Project Timeline
-
-- **Late 2021:** Started full-stack program at Devslopes Academy  
-- **2022:** Began freelancing while studying. Built the first portfolio in HTML, CSS, and JavaScript  
-- **2022–2023:** Took on freelance projects, added client reviews from Upwork, and built practice/research projects to explore new technologies  
-- **2023:** Rebuilt the portfolio as a React + TypeScript app while continuing freelance work  
-- **2024:** Graduated from Devslopes Academy. Wrote in-depth technical articles based on both freelance work and research projects  
-- **2025:** Migrated from Vite/React to Next.js 15 with App Router, refining performance, design, and content  
-
-### Running Locally
-
-**Prerequisites:**
-- Bun installed
-- PostgreSQL database running
-- Environment variables configured (see `.env.example`)
-
-**Setup:**
 ```bash
 git clone https://github.com/Iconians/portfolioSite.git
 cd portfolioSite
 bun install
 
-# Set up environment variables
-cp .env.example .env.local
-# Edit .env.local with your DATABASE_URL, AUTH_SECRET, etc.
+# Configure environment (DATABASE_URL, AUTH_SECRET, storage vars — see below)
+cp .env.example .env.local   # if present; otherwise copy from team docs
 
-# Generate Prisma client
-bun run db:generate
-
-# Run database migrations
-bun run db:migrate
-
-# Migrate existing content to database
-bun run migrate:content
-
-# Start development server
+bun run db:migrate:deploy
 bun run dev
 ```
 
-Then open http://localhost:3000 in your browser.
+Open http://localhost:3000.
 
-Build for Production
-bash
-Copy code
-bun run build
-bun start
+`bun run dev` runs `prisma generate` first so schema changes are picked up automatically.
+
+### First-time content (optional)
+
+For a fresh database only:
+
+```bash
+bun run seed:admin          # Create admin user
+bun run migrate:content     # Import legacy MDX articles + seed portfolio/reviews
+bun run backfill:portfolio-slugs
 ```
 
-### Deployment (Vercel)
+Production and normal admin workflows do **not** require these scripts.
 
-- In **Vercel → Project → Settings → Environment Variables**, set `DATABASE_URL` (and `AUTH_SECRET` if using auth) for Production (and Preview if needed).
-- **Neon on Vercel:** Use Neon's **Pooled** connection string (Neon dashboard → Connection details → **Pooled**), not the Direct connection. The same URL that works locally often fails in production because serverless needs the pooler.
-- If you see “Application error: a server-side exception has occurred” with a **digest** (e.g. `244468507`): open **Vercel → Project → Logs** (or **Deployments → [deployment] → Functions**), filter by time, and search or scan for that digest or for `[App Error]` / `[Global Error]` to see the real error in the server logs.
+### Admin
 
-Recent Updates
-✅ Migrated from Vite/React to Next.js 15
+- Sign in at `/admin` with the seeded admin credentials
+- Manage portfolio projects, media, articles, and reviews from the sidebar
 
-✅ Refined App Router setup for dynamic routing
+---
 
-✅ Strengthened TypeScript typing throughout
+## Object Storage (Cloudflare R2)
 
-✅ Added Framer Motion animations across the site (containers, headings, paragraphs, lists, code blocks, blog articles)
+Production media uses the storage abstraction (`src/lib/storage/`).
 
-✅ Rebuilt About Me and blog content for stronger storytelling
+```bash
+STORAGE_PROVIDER=s3
+S3_ENDPOINT=https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+S3_REGION=auto
+S3_BUCKET=engineering-platform-assets
+S3_ACCESS_KEY_ID=
+S3_SECRET_ACCESS_KEY=
+S3_PUBLIC_URL_BASE=https://pub-xxxx.r2.dev
+```
 
-✅ Published technical articles drawn from real freelance and research projects
+- Local dev defaults to `STORAGE_PROVIDER=local` → files under `public/media/`
+- Upload API: `POST /api/media/upload` (admin auth)
+- Set `S3_PUBLIC_URL_BASE` before dev/build when using R2 URLs with `next/image`
 
-🔄 Continuing UX and performance improvements
+---
 
-Planned Features
-🗂 Expand portfolio with more freelance projects
+## Deployment (Vercel)
 
-🤖 AI-powered portfolio assistant to recommend projects and summarize blog posts (planned once API usage costs are feasible)
+1. Set `DATABASE_URL` (Neon **Pooled** connection string), `AUTH_SECRET`, and storage env vars for Production.
+2. Run migrations in CI or manually: `bun run db:migrate:deploy`
+3. Check Vercel function logs if you see a digest error on deploy.
 
-🎥 Video content & feed to showcase projects and tutorials directly on the site
+---
+
+## Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `bun run dev` | Generate Prisma client + start dev server |
+| `bun run build` | Production build |
+| `bun test tests/unit` | Unit tests |
+| `bun run db:migrate:deploy` | Apply migrations |
+| `bun run seed:admin` | Create admin user |
+| `bun run migrate:content` | One-time legacy import |
+| `bun run backfill:portfolio-slugs` | Slug + heroMediaId backfill |
+| `bun run ci` | Lint, migrate, validate, build |
+
+---
+
+## Project Structure (summary)
+
+```
+src/app/              Routes (public, admin, API)
+src/components/       UI by domain (Admin, Portfolio, …)
+src/lib/actions/      Server actions
+src/lib/data/         Prisma queries
+src/lib/portfolio/    Portfolio business logic
+src/lib/media/        Media upload service
+src/lib/storage/      Storage providers
+tests/unit/           Unit tests
+prisma/               Schema + migrations
+scripts/              Migration/backfill utilities
+docs/                 Architecture documentation
+```
+
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full V2 system map.
+
+---
+
+## Quality
+
+```bash
+bun test tests/unit
+npx tsc --noEmit
+npm run lint
+```

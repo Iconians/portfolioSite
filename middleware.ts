@@ -1,25 +1,32 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import NextAuth from "next-auth";
 
-// Simple middleware that checks for auth session cookie
-// Actual auth validation happens in page/route handlers (Node.js runtime)
-export default function middleware(req: NextRequest) {
+import { authConfig } from "@/lib/auth/config";
+import { isAdminRole } from "@/lib/auth/roles";
+
+const { auth } = NextAuth(authConfig);
+
+export default auth((req) => {
   const { pathname } = req.nextUrl;
 
-  // For admin routes, check if auth session cookie exists
-  // If not, redirect to login (actual validation happens in page handler)
-  if (pathname.startsWith("/admin")) {
-    const authToken =
-      req.cookies.get("authjs.session-token") ||
-      req.cookies.get("__Secure-authjs.session-token");
+  if (!pathname.startsWith("/admin")) {
+    return NextResponse.next();
+  }
 
-    if (!authToken) {
-      return NextResponse.redirect(new URL("/login", req.url));
-    }
+  if (!req.auth?.user?.id) {
+    const loginUrl = new URL("/login", req.nextUrl.origin);
+    loginUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  if (!isAdminRole(req.auth.user.role)) {
+    const loginUrl = new URL("/login", req.nextUrl.origin);
+    loginUrl.searchParams.set("error", "AccessDenied");
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
   matcher: ["/admin/:path*"],

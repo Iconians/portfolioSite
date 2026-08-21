@@ -1,16 +1,15 @@
 import "./globals.css";
+import { AnimatedSection } from "@/components/Animations/AnimatedSection";
+import { EngineeringPhilosophy } from "@/components/EngineeringPhilosophy/EngineeringPhilosophy";
+import FeaturedArticles from "@/components/FeaturedArticles/FeaturedArticles";
 import { Hero } from "@/components/Hero/Hero";
 import { Navigation } from "@/components/Nav/Navigation";
-import { EngineeringPhilosophy } from "@/components/EngineeringPhilosophy/EngineeringPhilosophy";
+import PortfolioSection from "@/components/PortfolioSection/PortfolioSection";
+import { ReviewComponent } from "@/components/ReviewComponent/ReviewComponent";
 import { TechStack } from "@/components/TechStack/TechStack";
 import { WhatIEnjoyBuilding } from "@/components/WhatIEnjoyBuilding/WhatIEnjoyBuilding";
-import PortfolioSection from "@/components/PortfolioSection/PortfolioSection";
-import FeaturedArticles from "@/components/FeaturedArticles/FeaturedArticles";
-import { AnimatedSection } from "@/components/Animations/AnimatedSection";
-import { JokeAdviceComponent } from "@/components/JokeAdvice/JokeAdviceComponent";
-import { ReviewComponent } from "@/components/ReviewComponent/ReviewComponent";
-import { getAllPortfolioItems } from "@/lib/data/portfolio";
 import { getAllArticles } from "@/lib/data/articles";
+import { getPublishedPortfolioItems } from "@/lib/data/portfolio";
 import { getAllReviews } from "@/lib/data/reviews";
 
 // Enable static generation with revalidation for better performance as
@@ -18,7 +17,7 @@ export const revalidate = 3600; // Revalidate every hour
 
 export default async function Home() {
   const [portfolioItems, articles, reviews] = await Promise.all([
-    getAllPortfolioItems(),
+    getPublishedPortfolioItems(),
     getAllArticles(),
     getAllReviews(),
   ]);
@@ -32,12 +31,6 @@ export default async function Home() {
         <AnimatedSection>
           <EngineeringPhilosophy />
         </AnimatedSection>
-
-        {/* <section id="personality" className="scroll-mt-20 py-12">
-          <AnimatedSection>
-            <JokeAdviceComponent /
-            hi
-        </section> */}
 
         <AnimatedSection>
           <TechStack />

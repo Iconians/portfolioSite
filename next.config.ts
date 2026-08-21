@@ -1,13 +1,41 @@
-import type { NextConfig } from "next";
 import path from "path";
 
+import type { NextConfig } from "next";
+
 const projectRoot = __dirname;
+
+function getPublicAssetRemotePattern():
+  | {
+      protocol: "http" | "https";
+      hostname: string;
+    }
+  | undefined {
+  const publicUrlBase = process.env.S3_PUBLIC_URL_BASE?.trim();
+  if (!publicUrlBase) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(publicUrlBase);
+    return {
+      protocol: url.protocol === "http:" ? "http" : "https",
+      hostname: url.hostname,
+    };
+  } catch {
+    return undefined;
+  }
+}
+
+const publicAssetRemotePattern = getPublicAssetRemotePattern();
 
 const nextConfig: NextConfig = {
   webpack: (config, { isServer, dev }) => {
     config.resolve.alias["@"] = path.resolve(projectRoot, "src");
     // Ensure tailwindcss and PostCSS deps resolve from project root (avoids wrong context when path has spaces)
-    config.resolve.modules = [path.join(projectRoot, "node_modules"), "node_modules"];
+    config.resolve.modules = [
+      path.join(projectRoot, "node_modules"),
+      "node_modules",
+    ];
 
     // Fix Prisma client bundling issues
     if (isServer) {
@@ -43,6 +71,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "img.shields.io",
       },
+      ...(publicAssetRemotePattern ? [publicAssetRemotePattern] : []),
     ],
   },
   // Ensure Prisma client is not bundled (server-side only)

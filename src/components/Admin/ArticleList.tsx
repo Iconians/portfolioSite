@@ -1,16 +1,27 @@
 "use client";
 
-import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { deleteArticleAction } from "@/lib/actions/articles";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { deleteArticleAction } from "@/lib/actions/articles";
+
+
 import type { Article } from "@/lib/types/articles";
 
 interface ArticleListProps {
   articles: Article[];
+}
+
+function articleStatusVariant(
+  status: string,
+): "default" | "secondary" | "outline" {
+  if (status === "published") {return "default";}
+  if (status === "draft") {return "secondary";}
+  return "outline";
 }
 
 export function ArticleList({ articles: initialArticles }: ArticleListProps) {
@@ -18,7 +29,7 @@ export function ArticleList({ articles: initialArticles }: ArticleListProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = (id: string) => {
-    if (!confirm("Are you sure you want to delete this article?")) return;
+    if (!confirm("Are you sure you want to delete this article?")) {return;}
 
     startTransition(async () => {
       const result = await deleteArticleAction(id);
@@ -44,15 +55,7 @@ export function ArticleList({ articles: initialArticles }: ArticleListProps) {
                 >
                   {article.title}
                 </Link>
-                <Badge
-                  variant={
-                    article.status === "published"
-                      ? "default"
-                      : article.status === "draft"
-                      ? "secondary"
-                      : "outline"
-                  }
-                >
+                <Badge variant={articleStatusVariant(article.status)}>
                   {article.status}
                 </Badge>
                 {article.featured && <Badge variant="outline">Featured</Badge>}

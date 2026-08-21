@@ -1,9 +1,9 @@
 "use client";
 // This file is only loaded on the client - never during SSR/static generation
 import { motion } from "framer-motion";
+import React from "react";
 import { Prism } from "react-syntax-highlighter";
 import { okaidia } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import React from "react";
 
 interface AnimatedCodeClientProps {
   children: string;

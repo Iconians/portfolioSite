@@ -1,34 +1,38 @@
-import { auth } from "@/lib/auth";
+import { isAdminRole } from "@/lib/auth/roles";
+import {
+  requireAdminUser,
+  requireAuthUser,
+} from "@/lib/auth/session";
 
+
+export {
+  AuthenticationError,
+  AuthorizationError,
+  isAuthenticationError,
+  isAuthorizationError,
+  isAuthError,
+} from "@/lib/auth/errors";
+export {
+  getSessionUser,
+  requireAdminPage,
+  requireAdminUser,
+  requireAuthUser,
+  type AdminUser,
+} from "@/lib/auth/session";
+
+/** @deprecated Prefer requireAuthUser — kept for existing imports */
 export async function requireAuth() {
-  const session = await auth();
-  if (!session?.user) {
-    throw new Error("Unauthorized");
-  }
-  return session.user;
+  return requireAuthUser();
 }
 
-export async function requireAdmin(): Promise<{
-  id: string;
-  email?: string | null;
-  role?: string | null;
-}> {
-  const user = await requireAuth();
-  // For now, all authenticated users are admins
-  // Future: check user.role === 'admin'
-
-  // Type assertion: session.user.id should always be present after callbacks
-  if (!user.id) {
-    throw new Error("Unauthorized: User ID is missing");
-  }
-
-  return { id: user.id, email: user.email, role: user.role };
+/** Validates authenticated admin role for server actions, API routes, and data mutations. */
+export async function requireAdmin() {
+  return requireAdminUser();
 }
 
 export function canEditArticle(
-  user: { id: string; role?: string },
+  user: { id: string; role?: string | null },
   article: { createdBy: string }
 ) {
-  // Explicit permission logic
-  return article.createdBy === user.id || user.role === "admin";
+  return article.createdBy === user.id || isAdminRole(user.role);
 }

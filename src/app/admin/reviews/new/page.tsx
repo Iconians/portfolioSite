@@ -1,9 +1,17 @@
+import { PageHeader } from "@/components/Admin/layout/PageHeader";
 import { ReviewForm } from "@/components/Admin/ReviewForm";
 
 export default function NewReviewPage() {
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">Create New Review</h1>
+      <PageHeader
+        title="Create Review"
+        description="Add a new client testimonial."
+        breadcrumbs={[
+          { label: "Reviews", href: "/admin/reviews" },
+          { label: "Create" },
+        ]}
+      />
       <ReviewForm />
     </div>
   );

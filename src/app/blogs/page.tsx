@@ -1,5 +1,5 @@
-import { Navigation } from "@/components/Nav/Navigation";
 import BlogGrid from "@/components/blogWrapper/blogWrapper";
+import { Navigation } from "@/components/Nav/Navigation";
 import { getAllPosts } from "@/lib/mdx";
 
 export default async function BlogIndex() {

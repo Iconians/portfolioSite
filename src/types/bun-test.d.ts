@@ -17,12 +17,14 @@ declare module "bun:test" {
       toBeGreaterThan(expected: number): void;
       toBeLessThan(expected: number): void;
       toContain(expected: unknown): void;
+      toMatch(expected: string | RegExp): void;
       toThrow(expected?: string | RegExp | Error): void;
       not: {
         toBe(expected: unknown): void;
         toEqual(expected: unknown): void;
         toBeTruthy(): void;
         toBeFalsy(): void;
+        toThrow(expected?: string | RegExp | Error): void;
       };
     };
   };

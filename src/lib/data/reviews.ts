@@ -1,13 +1,15 @@
+import { isAdminRole } from "@/lib/auth/roles";
 import { db } from "@/lib/db/client";
 import { requireAdmin } from "@/lib/permissions";
+import { ReviewSchema } from "@/lib/types/reviews";
+
 import type {
   CreateReviewInput,
   UpdateReviewInput,
   Review,
   ReviewWithUser,
 } from "@/lib/types/reviews";
-import { ReviewSchema } from "@/lib/types/reviews";
-import { z } from "zod";
+
 
 // Public queries (no auth required)
 export async function getAllReviews(): Promise<Review[]> {
@@ -25,9 +27,16 @@ export async function getAllReviews(): Promise<Review[]> {
   });
 }
 
+// Admin-only queries
+export async function getAllReviewsAdmin(): Promise<Review[]> {
+  await requireAdmin();
+  return getAllReviews();
+}
+
 export async function getReviewById(
   id: string
 ): Promise<ReviewWithUser | null> {
+  await requireAdmin();
   return db.review.findUnique({
     where: { id },
     include: {
@@ -65,7 +74,7 @@ export async function updateReview(
   }
 
   // Explicit ownership check
-  if (review.createdBy !== user.id && user.role !== "admin") {
+  if (review.createdBy !== user.id && !isAdminRole(user.role)) {
     throw new Error(
       "Forbidden: You do not have permission to edit this review"
     );
@@ -91,7 +100,7 @@ export async function deleteReview(id: string): Promise<void> {
     throw new Error("Review not found");
   }
 
-  if (review.createdBy !== user.id && user.role !== "admin") {
+  if (review.createdBy !== user.id && !isAdminRole(user.role)) {
     throw new Error(
       "Forbidden: You do not have permission to delete this review"
     );

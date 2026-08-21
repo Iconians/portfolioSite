@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
-import { Navigation } from "@/components/Nav/Navigation";
+
 import BlogPostClient from "@/components/BlogPostClient/BlogPostClient";
+import { Navigation } from "@/components/Nav/Navigation";
 import { getPostBySlug } from "@/lib/mdx";
 
 interface BlogPostProps {

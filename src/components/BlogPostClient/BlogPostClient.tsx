@@ -1,8 +1,9 @@
 "use client";
-import { MDXRemote } from "next-mdx-remote";
 import dynamic from "next/dynamic";
+import { MDXRemote , type MDXRemoteSerializeResult } from "next-mdx-remote";
+
 import styles from "./blogPostClient.module.css";
-import { MDXRemoteSerializeResult } from "next-mdx-remote";
+
 
 // Dynamically import animated components to prevent SSR issues
 const AnimatedHeading = dynamic(
@@ -81,6 +82,8 @@ interface FrontMatter {
   description?: string;
   date?: string;
   tags?: string[];
+  coverImageUrl?: string;
+  coverImageAlt?: string;
 }
 
 interface BlogPostClientProps {
@@ -89,15 +92,29 @@ interface BlogPostClientProps {
 }
 
 export default function BlogPostClient({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  frontMatter: _frontMatter,
+  frontMatter,
   mdxSource,
 }: BlogPostClientProps) {
+  const coverImageUrl = frontMatter.coverImageUrl;
+  const coverImageAlt = frontMatter.coverImageAlt || frontMatter.title;
+
+  const coverHeader = coverImageUrl ? (
+    <div className="relative mb-8 aspect-[21/9] overflow-hidden rounded-xl bg-muted">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={coverImageUrl}
+        alt={coverImageAlt}
+        className="h-full w-full object-cover"
+      />
+    </div>
+  ) : null;
+
   // During SSR/static generation, render a simple placeholder
   // Everything loads on the client after hydration
   if (typeof window === "undefined") {
     return (
       <article className={styles.blogArticle}>
+        {coverHeader}
         <div>Loading content...</div>
       </article>
     );
@@ -105,17 +122,20 @@ export default function BlogPostClient({
 
   // On client, render with all animations
   const content = (
-    <MDXRemote
-      {...mdxSource}
-      components={{
-        AnimatedHeading,
-        AnimatedList,
-        AnimatedListItem,
-        AnimatedWrapper,
-        AnimatedParagraph,
-        AnimatedCode,
-      }}
-    />
+    <>
+      {coverHeader}
+      <MDXRemote
+        {...mdxSource}
+        components={{
+          AnimatedHeading,
+          AnimatedList,
+          AnimatedListItem,
+          AnimatedWrapper,
+          AnimatedParagraph,
+          AnimatedCode,
+        }}
+      />
+    </>
   );
 
   return <MotionArticleWrapper>{content}</MotionArticleWrapper>;

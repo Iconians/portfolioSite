@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import { Navigation } from "@/components/Nav/Navigation";
 
 export default function NotFound() {

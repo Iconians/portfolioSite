@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { getArticleBySlug } from "@/lib/data/articles";
 import { serialize } from "next-mdx-remote/serialize";
+
+import { getArticleBySlug } from "@/lib/data/articles";
 
 export async function GET(
   request: Request,

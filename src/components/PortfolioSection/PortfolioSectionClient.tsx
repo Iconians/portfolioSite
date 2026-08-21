@@ -1,16 +1,25 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
+import { ExternalLink } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ExternalLink } from "lucide-react";
+import {
+  canViewProjectDetail,
+  getProjectCardSummary,
+  getProjectDetailHref,
+  isValidProjectLink,
+  uniqueCategories,
+} from "@/lib/portfolio/public-project";
+
 import type { PortfolioItem } from "@/lib/types/portfolio";
 
 function GithubIcon({ className }: { className?: string }) {
@@ -65,85 +74,84 @@ export function PortfolioSectionClient({
       initial="hidden"
       animate="visible"
     >
-      {portfolioItems.map((item) => (
-        <motion.div
-          key={item.id}
-          variants={cardVariants}
-          whileHover={{ y: -5 }}
-        >
-          <Card className="overflow-hidden group h-full">
-            <div className="relative aspect-video overflow-hidden bg-muted">
-              <Image
-                width={600}
-                height={400}
-                src={item.img}
-                alt={item.caption}
-                className="object-cover w-full h-full transition-transform group-hover:scale-105"
-              />
-            </div>
-            <CardHeader>
-              <CardTitle className="text-xl">{item.caption}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-muted-foreground leading-relaxed text-sm">
-                {item.description}
-              </p>
-              {item.keyFeatures && (
-                <div className="text-sm">
-                  <span className="font-semibold text-foreground">Key Features: </span>
-                  <span className="text-muted-foreground">{item.keyFeatures}</span>
-                </div>
-              )}
-              {item.highlights && (
-                <div className="text-sm">
-                  <span className="font-semibold text-foreground">Highlights: </span>
-                  <span className="text-muted-foreground">{item.highlights}</span>
-                </div>
-              )}
-              {item.role && (
-                <div className="text-sm">
-                  <span className="font-semibold text-foreground">Role: </span>
-                  <span className="text-muted-foreground">{item.role}</span>
-                </div>
-              )}
-              <div className="flex flex-wrap gap-2 pt-1">
-                {item.category.map((cat, index) => (
-                  <Badge key={index} variant="secondary">
-                    {cat}
-                  </Badge>
-                ))}
+      {portfolioItems.map((item) => {
+        const showDetailLink = canViewProjectDetail(item);
+        const hasLiveSite = isValidProjectLink(item.url);
+        const hasGithub = isValidProjectLink(item.github);
+
+        return (
+          <motion.div
+            key={item.id}
+            variants={cardVariants}
+            whileHover={{ y: -5 }}
+          >
+            <Card className="overflow-hidden group h-full flex flex-col">
+              <div className="relative aspect-video overflow-hidden bg-muted">
+                <Image
+                  width={600}
+                  height={400}
+                  src={item.img}
+                  alt={item.caption}
+                  className="object-cover w-full h-full transition-transform group-hover:scale-105"
+                />
               </div>
-              <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-border">
-                {item.url && item.url !== "#" && (
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                    Live site
-                  </a>
-                )}
-                {item.url && item.url !== "#" && item.github && item.github !== "#" && (
-                  <span className="text-border">|</span>
-                )}
-                {item.github && item.github !== "#" && (
-                  <a
-                    href={item.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <GithubIcon className="h-3.5 w-3.5 shrink-0" />
-                    Source code
-                  </a>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      ))}
+              <CardHeader>
+                <CardTitle className="text-xl">{item.caption}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 flex-1 flex flex-col">
+                <p className="text-muted-foreground leading-relaxed text-sm">
+                  {getProjectCardSummary(item)}
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {uniqueCategories(item.category).map((cat) => (
+                    <Badge key={cat} variant="secondary">
+                      {cat}
+                    </Badge>
+                  ))}
+                </div>
+                <div className="mt-auto flex flex-wrap items-center gap-3 pt-3 border-t border-border">
+                  {showDetailLink && (
+                    <Link
+                      href={getProjectDetailHref(item.slug!)}
+                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      View project
+                    </Link>
+                  )}
+                  {showDetailLink && hasLiveSite && (
+                    <span className="text-border">|</span>
+                  )}
+                  {hasLiveSite && (
+                    <a
+                      href={item.url!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                      Live site
+                    </a>
+                  )}
+                  {hasLiveSite && hasGithub && (
+                    <span className="text-border">|</span>
+                  )}
+                  {hasGithub && (
+                    <a
+                      href={item.github!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <GithubIcon className="h-3.5 w-3.5 shrink-0" />
+                      Source code
+                    </a>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        );
+      })}
     </motion.div>
   );
 }

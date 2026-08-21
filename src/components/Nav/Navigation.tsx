@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
-import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { NavigationMobile } from "./NavigationMobile";
+import Link from "next/link";
+import { useState, useSyncExternalStore } from "react";
+
 import { navigationLinks } from "./navigationLinks";
+import { NavigationMobile } from "./NavigationMobile";
 
 const emptySubscribe = () => () => {};
 

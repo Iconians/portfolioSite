@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+
+import { type FrontMatter } from "@/lib/mdx";
+
 import BlogCard from "../blog-card/BlogCard";
-import { FrontMatter } from "@/lib/mdx";
 
 type Post = {
   slug: string;
@@ -35,6 +37,8 @@ export default function BlogGrid({ posts }: { posts: Post[] }) {
             title={post.frontMatter.title}
             description={post.frontMatter.description}
             date={post.frontMatter.date}
+            coverImageUrl={post.frontMatter.coverImageUrl}
+            coverImageAlt={post.frontMatter.coverImageAlt}
           />
         </Link>
       ))}

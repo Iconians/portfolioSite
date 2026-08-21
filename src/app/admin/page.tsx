@@ -1,21 +1,16 @@
-import { getAllArticlesAdmin } from "@/lib/data/articles";
-import { getAllReviews } from "@/lib/data/reviews";
-import { getAllPortfolioItems } from "@/lib/data/portfolio";
-import { Card } from "@/components/ui/card";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+
+import { PageHeader } from "@/components/Admin/layout/PageHeader";
+import { Card } from "@/components/ui/card";
+import { getAllArticlesAdmin } from "@/lib/data/articles";
+import { getAllPortfolioItems } from "@/lib/data/portfolio";
+import { getAllReviewsAdmin } from "@/lib/data/reviews";
+
 
 export default async function AdminDashboard() {
-  // Validate auth in page handler (Node.js runtime)
-  const session = await auth();
-  if (!session?.user) {
-    redirect("/login");
-  }
-
   const [articles, reviews, portfolio] = await Promise.all([
     getAllArticlesAdmin(),
-    getAllReviews(),
+    getAllReviewsAdmin(),
     getAllPortfolioItems(),
   ]);
 
@@ -24,32 +19,53 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+      <PageHeader
+        title="Dashboard"
+        description="Overview of portfolio content and quick links to admin sections."
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-2">Articles</h2>
+          <h2 className="mb-2 text-xl font-semibold">Articles</h2>
           <p className="text-3xl font-bold">{articles.length}</p>
-          <p className="text-sm text-muted-foreground mt-2">
+          <p className="mt-2 text-sm text-muted-foreground">
             {publishedArticles.length} published, {draftArticles.length} drafts
           </p>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-2">Reviews</h2>
+          <h2 className="mb-2 text-xl font-semibold">Reviews</h2>
           <p className="text-3xl font-bold">{reviews.length}</p>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-2">Portfolio Items</h2>
+          <h2 className="mb-2 text-xl font-semibold">Portfolio Items</h2>
           <p className="text-3xl font-bold">{portfolio.length}</p>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <Link href="/admin/portfolio">
+          <Card className="cursor-pointer p-6 transition-colors hover:bg-accent">
+            <h3 className="mb-2 font-semibold">Manage Portfolio</h3>
+            <p className="text-sm text-muted-foreground">
+              Update projects and engineering case studies
+            </p>
+          </Card>
+        </Link>
+
+        <Link href="/admin/media">
+          <Card className="cursor-pointer p-6 transition-colors hover:bg-accent">
+            <h3 className="mb-2 font-semibold">Manage Media</h3>
+            <p className="text-sm text-muted-foreground">
+              Upload and organize project images
+            </p>
+          </Card>
+        </Link>
+
         <Link href="/admin/articles">
-          <Card className="p-6 hover:bg-accent transition-colors cursor-pointer">
-            <h3 className="font-semibold mb-2">Manage Articles</h3>
+          <Card className="cursor-pointer p-6 transition-colors hover:bg-accent">
+            <h3 className="mb-2 font-semibold">Manage Articles</h3>
             <p className="text-sm text-muted-foreground">
               Create, edit, and publish articles
             </p>
@@ -57,19 +73,10 @@ export default async function AdminDashboard() {
         </Link>
 
         <Link href="/admin/reviews">
-          <Card className="p-6 hover:bg-accent transition-colors cursor-pointer">
-            <h3 className="font-semibold mb-2">Manage Reviews</h3>
+          <Card className="cursor-pointer p-6 transition-colors hover:bg-accent">
+            <h3 className="mb-2 font-semibold">Manage Reviews</h3>
             <p className="text-sm text-muted-foreground">
               Add and edit client reviews
-            </p>
-          </Card>
-        </Link>
-
-        <Link href="/admin/portfolio">
-          <Card className="p-6 hover:bg-accent transition-colors cursor-pointer">
-            <h3 className="font-semibold mb-2">Manage Portfolio</h3>
-            <p className="text-sm text-muted-foreground">
-              Update portfolio items
             </p>
           </Card>
         </Link>
