@@ -1,7 +1,10 @@
 import { getPortfolioItemById } from "@/lib/data/portfolio";
+import { getMediaAssetById } from "@/lib/data/media";
 import { notFound } from "next/navigation";
-import { PortfolioForm } from "@/components/Admin/PortfolioForm";
+import { ProjectEditor } from "@/components/Admin/portfolio/ProjectEditor";
 import { PageHeader } from "@/components/Admin/layout/PageHeader";
+import { mapPortfolioItemToEditorValues } from "@/lib/portfolio/project-editor";
+import { listMetricsForPortfolio, listVersionsForPortfolio } from "@/lib/portfolio/portfolio.service";
 
 export default async function EditPortfolioPage({
   params,
@@ -15,37 +18,33 @@ export default async function EditPortfolioPage({
     notFound();
   }
 
-  const formData: Parameters<typeof PortfolioForm>[0]["initialData"] = {
-    img: item.img,
-    caption: item.caption,
-    description: item.description,
-    category: item.category,
-    url: item.url ?? undefined,
-    github: item.github ?? undefined,
-    keyFeatures: item.keyFeatures ?? undefined,
-    role: item.role ?? undefined,
-    highlights: item.highlights ?? undefined,
-    projectType: (item.projectType ?? undefined) as
-      | ""
-      | "saas"
-      | "client"
-      | "engineering"
-      | "personal"
-      | undefined,
-  };
+  let initialOgImageUrl = "";
+  if (item.ogMediaId) {
+    const ogMedia = await getMediaAssetById(item.ogMediaId);
+    initialOgImageUrl = ogMedia?.publicUrl ?? "";
+  }
+
+  const initialMetrics = await listMetricsForPortfolio(item.id);
+  const initialVersions = await listVersionsForPortfolio(item.id);
 
   return (
     <div>
       <PageHeader
         title="Edit Project"
-        description="Update portfolio project details and hero image."
+        description="Update project details, story, metrics, evolution, platform showcase, and SEO."
         breadcrumbs={[
           { label: "Portfolio", href: "/admin/portfolio" },
           { label: "Edit" },
           { label: item.caption },
         ]}
       />
-      <PortfolioForm initialData={formData} portfolioId={item.id} />
+      <ProjectEditor
+        portfolioId={item.id}
+        initialValues={mapPortfolioItemToEditorValues(item)}
+        initialOgImageUrl={initialOgImageUrl}
+        initialMetrics={initialMetrics}
+        initialVersions={initialVersions}
+      />
     </div>
   );
 }

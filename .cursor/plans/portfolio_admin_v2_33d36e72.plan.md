@@ -22,19 +22,19 @@ todos:
     status: completed
   - id: p07-editor-core
     content: "Phase 7: Project editor core — Overview, Media, Details, Links & SEO"
-    status: pending
+    status: completed
   - id: p08-story
     content: "Phase 8: Engineering story editor sections"
-    status: pending
+    status: completed
   - id: p09-metrics-editor
     content: "Phase 9: Metrics editor (admin only)"
-    status: pending
+    status: completed
   - id: p10-evolution-editor
     content: "Phase 10: Project evolution editor + preview component"
-    status: pending
+    status: completed
   - id: p11-platform-editor
     content: "Phase 11: Platform showcase editor"
-    status: pending
+    status: completed
   - id: p12-public-route
     content: "Phase 12: Public /projects/[slug] foundation + homepage CTA"
     status: pending

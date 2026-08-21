@@ -8,9 +8,9 @@ import {
 import { revalidatePath } from "next/cache";
 import type {
   CreatePortfolioInput,
+  PortfolioExtendedInput,
   UpdatePortfolioInput,
 } from "@/lib/types/portfolio";
-import { PortfolioItemSchema } from "@/lib/types/portfolio";
 import { z } from "zod";
 import { logAdminAction } from "@/lib/logger";
 import { requireAdmin } from "@/lib/permissions";
@@ -35,11 +35,12 @@ function toUserMessage(error: unknown): string {
 }
 
 export async function createPortfolioAction(
-  data: CreatePortfolioInput
+  data: CreatePortfolioInput,
+  extended?: PortfolioExtendedInput
 ): Promise<ActionResult<Awaited<ReturnType<typeof createPortfolioItem>>>> {
   try {
     const user = await requireAdmin();
-    const item = await createPortfolioItem(data);
+    const item = await createPortfolioItem(data, extended);
     await logAdminAction(user.id, "create", "portfolio", item.id, {
       caption: item.caption,
     }).catch(() => {});
@@ -52,11 +53,12 @@ export async function createPortfolioAction(
 
 export async function updatePortfolioAction(
   id: string,
-  data: UpdatePortfolioInput
+  data: UpdatePortfolioInput,
+  extended?: PortfolioExtendedInput
 ): Promise<ActionResult<Awaited<ReturnType<typeof updatePortfolioItem>>>> {
   try {
     const user = await requireAdmin();
-    const item = await updatePortfolioItem(id, data);
+    const item = await updatePortfolioItem(id, data, extended);
     await logAdminAction(user.id, "update", "portfolio", item.id, {
       caption: item.caption,
     }).catch(() => {});

@@ -17,6 +17,8 @@ import {
   updateProjectVersionRecord,
 } from "@/lib/data/project-versions";
 import { getPortfolioItemById } from "@/lib/data/portfolio";
+import { getMetricReorderPair } from "@/lib/portfolio/metric-order";
+import { getVersionReorderPair } from "@/lib/portfolio/version-order";
 export {
   assignPortfolioSlug,
   resolveUniquePortfolioSlug,
@@ -70,6 +72,31 @@ export async function deletePortfolioMetric(metricId: string): Promise<void> {
   await deletePortfolioMetricRecord(metricId);
 }
 
+export async function reorderPortfolioMetric(
+  metricId: string,
+  direction: "up" | "down"
+): Promise<PortfolioMetric[]> {
+  const metric = await getPortfolioMetricById(metricId);
+  if (!metric) {
+    throw new Error("Portfolio metric not found");
+  }
+
+  const metrics = await listPortfolioMetrics(metric.portfolioId);
+  const pair = getMetricReorderPair(metrics, metricId, direction);
+  if (!pair) {
+    return metrics;
+  }
+
+  await updatePortfolioMetricRecord(pair.current.id, {
+    displayOrder: pair.adjacent.displayOrder,
+  });
+  await updatePortfolioMetricRecord(pair.adjacent.id, {
+    displayOrder: pair.current.displayOrder,
+  });
+
+  return listPortfolioMetrics(metric.portfolioId);
+}
+
 export async function listMetricsForPortfolio(
   portfolioId: string
 ): Promise<PortfolioMetric[]> {
@@ -118,6 +145,31 @@ export async function deleteProjectVersion(versionId: string): Promise<void> {
   }
 
   await deleteProjectVersionRecord(versionId);
+}
+
+export async function reorderProjectVersion(
+  versionId: string,
+  direction: "up" | "down"
+): Promise<ProjectVersion[]> {
+  const version = await getProjectVersionById(versionId);
+  if (!version) {
+    throw new Error("Project version not found");
+  }
+
+  const versions = await listProjectVersions(version.portfolioId);
+  const pair = getVersionReorderPair(versions, versionId, direction);
+  if (!pair) {
+    return versions;
+  }
+
+  await updateProjectVersionRecord(pair.current.id, {
+    sortOrder: pair.adjacent.sortOrder,
+  });
+  await updateProjectVersionRecord(pair.adjacent.id, {
+    sortOrder: pair.current.sortOrder,
+  });
+
+  return listProjectVersions(version.portfolioId);
 }
 
 export async function listVersionsForPortfolio(

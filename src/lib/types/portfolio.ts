@@ -50,12 +50,12 @@ export const PortfolioExtendedFieldsSchema = z.object({
     .optional(),
   subtitle: z.string().max(255).optional(),
   summary: z.string().max(5000).optional(),
-  problem: z.string().max(10000).optional(),
-  solution: z.string().max(10000).optional(),
-  architecture: z.string().max(10000).optional(),
-  challenges: z.string().max(10000).optional(),
-  lessonsLearned: z.string().max(10000).optional(),
-  futureImprovements: z.string().max(10000).optional(),
+  problem: z.string().max(10000).nullable().optional(),
+  solution: z.string().max(10000).nullable().optional(),
+  architecture: z.string().max(10000).nullable().optional(),
+  challenges: z.string().max(10000).nullable().optional(),
+  lessonsLearned: z.string().max(10000).nullable().optional(),
+  futureImprovements: z.string().max(10000).nullable().optional(),
   lifecycleStatus: z.enum(LIFECYCLE_STATUSES).optional(),
   publishStatus: z.enum(PUBLISH_STATUSES).optional(),
   startDate: z.coerce.date().optional().nullable(),
@@ -92,9 +92,47 @@ export const ProjectVersionInputSchema = z.object({
 
 export const ProjectVersionUpdateSchema = ProjectVersionInputSchema.partial();
 
+export const PortfolioStoryFieldsSchema = PortfolioExtendedFieldsSchema.pick({
+  problem: true,
+  solution: true,
+  architecture: true,
+  challenges: true,
+  lessonsLearned: true,
+  futureImprovements: true,
+}).partial();
+
+export const ProjectEditorSchema = PortfolioItemSchema.extend({
+  slug: z.string().max(255).optional(),
+  subtitle: z.string().max(255).optional(),
+  summary: z.string().max(5000).optional(),
+  problem: z.string().max(10000).optional(),
+  solution: z.string().max(10000).optional(),
+  architecture: z.string().max(10000).optional(),
+  challenges: z.string().max(10000).optional(),
+  lessonsLearned: z.string().max(10000).optional(),
+  futureImprovements: z.string().max(10000).optional(),
+  lifecycleStatus: z.enum(LIFECYCLE_STATUSES),
+  publishStatus: z.enum(PUBLISH_STATUSES),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+  sortOrder: z.number().int().min(0).max(9999),
+  gallery: z.array(PortfolioGalleryItemSchema).max(50),
+  features: z.array(z.string().max(500)).max(100),
+  responsibilities: z.array(z.string().max(500)).max(100),
+  seoTitle: z.string().max(255).optional(),
+  seoDescription: z.string().max(500).optional(),
+  docs: urlSchema,
+  heroMediaId: z.string().uuid().nullable().optional(),
+  ogMediaId: z.string().uuid().nullable().optional(),
+  showPlatformSection: z.boolean(),
+  platformFeatures: z.array(z.string().max(255)).max(50),
+});
+
 export type CreatePortfolioInput = z.infer<typeof PortfolioItemSchema>;
 export type UpdatePortfolioInput = Partial<CreatePortfolioInput>;
 export type PortfolioExtendedInput = z.infer<typeof PortfolioExtendedFieldsSchema>;
+export type PortfolioStoryFieldsInput = z.infer<typeof PortfolioStoryFieldsSchema>;
+export type ProjectEditorFormData = z.infer<typeof ProjectEditorSchema>;
 export type PortfolioGalleryItem = z.infer<typeof PortfolioGalleryItemSchema>;
 export type PortfolioMetricInput = z.infer<typeof PortfolioMetricInputSchema>;
 export type PortfolioMetricUpdate = z.infer<typeof PortfolioMetricUpdateSchema>;

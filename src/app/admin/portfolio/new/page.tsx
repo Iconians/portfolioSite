@@ -1,4 +1,4 @@
-import { PortfolioForm } from "@/components/Admin/PortfolioForm";
+import { ProjectEditor } from "@/components/Admin/portfolio/ProjectEditor";
 import { PageHeader } from "@/components/Admin/layout/PageHeader";
 
 export default function NewPortfolioPage() {
@@ -6,13 +6,13 @@ export default function NewPortfolioPage() {
     <div>
       <PageHeader
         title="Create Project"
-        description="Add a new portfolio project to the public site."
+        description="Add a new portfolio project with the sectioned editor."
         breadcrumbs={[
           { label: "Portfolio", href: "/admin/portfolio" },
           { label: "Create" },
         ]}
       />
-      <PortfolioForm />
+      <ProjectEditor />
     </div>
   );
 }
