@@ -1,10 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { listMediaAssetsAction } from "@/lib/actions/media";
+
 import type { MediaAsset } from "@/lib/types/media";
-import { toast } from "sonner";
 
 export interface MediaPickerSelection {
   id: string;

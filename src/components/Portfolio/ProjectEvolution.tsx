@@ -1,10 +1,11 @@
 import { ProjectEvolutionItem } from "@/components/Portfolio/ProjectEvolutionItem";
 import { ProjectPageSection } from "@/components/Portfolio/ProjectPageSection";
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 import {
   hasProjectEvolution,
   sortProjectVersions,
 } from "@/lib/portfolio/project-evolution";
+import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
+
 import type { ProjectVersion } from "@/lib/types/portfolio";
 
 interface ProjectEvolutionProps {

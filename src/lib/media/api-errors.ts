@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import { authApiErrorResponse } from "@/lib/auth/api-response";
 
 const CLIENT_ERROR_PATTERNS = [

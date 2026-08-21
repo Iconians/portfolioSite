@@ -1,8 +1,11 @@
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+
+import { getArticleCoverImage } from "@/lib/articles/article-cover";
+
 import BlogCard from "../blog-card/BlogCard";
 import { Button } from "../ui/button";
-import { ArrowRight } from "lucide-react";
-import { getArticleCoverImage } from "@/lib/articles/article-cover";
+
 import type { FrontMatter } from "@/lib/mdx";
 import type { Article } from "@/lib/types/articles";
 

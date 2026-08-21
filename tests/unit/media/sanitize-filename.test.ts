@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+
 import { sanitizeMediaFilename } from "@/lib/media/sanitize-filename";
 
 describe("sanitizeMediaFilename", () => {

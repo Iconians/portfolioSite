@@ -1,4 +1,5 @@
 import path from "path";
+
 import type { LocalStorageConfig, S3StorageConfig } from "./types";
 
 function requireEnv(name: string): string {

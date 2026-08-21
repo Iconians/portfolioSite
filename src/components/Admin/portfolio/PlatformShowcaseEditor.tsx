@@ -1,17 +1,19 @@
 "use client";
 
 import { useState } from "react";
+
 import { FormField } from "@/components/Admin/shared/FormField";
 import { FormSection } from "@/components/Admin/shared/FormSection";
 import { PlatformShowcase } from "@/components/Portfolio/PlatformShowcase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { normalizePlatformFeatures } from "@/lib/portfolio/platform";
 import {
   PLATFORM_FEATURE_CATALOG,
   partitionPlatformFeatures,
 } from "@/lib/portfolio/platform-feature-catalog";
-import { normalizePlatformFeatures } from "@/lib/portfolio/platform";
+
 import type { ProjectEditorSectionProps } from "./sections/types";
 
 export function PlatformShowcaseEditor({

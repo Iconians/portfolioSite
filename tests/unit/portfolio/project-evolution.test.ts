@@ -1,8 +1,10 @@
 import { describe, expect, test } from "bun:test";
+
 import {
   hasProjectEvolution,
   sortProjectVersions,
 } from "@/lib/portfolio/project-evolution";
+
 import type { ProjectVersion } from "@/lib/types/portfolio";
 
 function buildVersion(

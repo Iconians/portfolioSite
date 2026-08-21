@@ -1,8 +1,10 @@
 import { ExternalLink, FileText } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { isValidProjectLink } from "@/lib/portfolio/public-project";
-import type { PortfolioItem } from "@/lib/types/portfolio";
 import { cn } from "@/lib/utils";
+
+import type { PortfolioItem } from "@/lib/types/portfolio";
 
 function GithubIcon({ className }: { className?: string }) {
   return (

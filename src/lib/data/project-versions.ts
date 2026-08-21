@@ -1,13 +1,14 @@
 import { db } from "@/lib/db/client";
 import { requireAdmin } from "@/lib/permissions";
+import {
+  ProjectVersionInputSchema,
+  ProjectVersionUpdateSchema,
+} from "@/lib/types/portfolio";
+
 import type {
   ProjectVersion,
   ProjectVersionInput,
   ProjectVersionUpdate,
-} from "@/lib/types/portfolio";
-import {
-  ProjectVersionInputSchema,
-  ProjectVersionUpdateSchema,
 } from "@/lib/types/portfolio";
 
 export async function listProjectVersions(

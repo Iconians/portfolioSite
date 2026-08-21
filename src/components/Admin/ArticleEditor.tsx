@@ -1,27 +1,30 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import CodeBlock from "@tiptap/extension-code-block";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import CodeBlock from "@tiptap/extension-code-block";
+import { useRouter } from "next/navigation";
 import { serialize } from "next-mdx-remote/serialize";
-import { serializeToMDX } from "./mdxSerializer";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import {
   createArticleAction,
   updateArticleAction,
   publishArticleAction,
 } from "@/lib/actions/articles";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import type { Article } from "@/lib/types/articles";
-import { type CreateArticleInput } from "@/lib/types/articles";
-import type { MDXRemoteSerializeResult } from "next-mdx-remote";
-import { ArticleEditorFields } from "./article-editor/ArticleEditorFields";
-import { ArticleEditorCover } from "./article-editor/ArticleEditorCover";
-import { ArticleEditorContent } from "./article-editor/ArticleEditorContent";
+
 import { ArticleEditorActions } from "./article-editor/ArticleEditorActions";
+import { ArticleEditorContent } from "./article-editor/ArticleEditorContent";
+import { ArticleEditorCover } from "./article-editor/ArticleEditorCover";
+import { ArticleEditorFields } from "./article-editor/ArticleEditorFields";
+import { serializeToMDX } from "./mdxSerializer";
+
 import type { ArticleEditorFormData } from "./article-editor/types";
+import type { Article, CreateArticleInput } from "@/lib/types/articles";
+import type { MDXRemoteSerializeResult } from "next-mdx-remote";
+
 
 interface ArticleEditorProps {
   initialArticle?: Article;

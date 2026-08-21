@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { uniqueCategories } from "@/lib/portfolio/public-project";
+
 import { ProjectPageSection } from "./ProjectPageSection";
 
 interface ProjectTechnologiesProps {

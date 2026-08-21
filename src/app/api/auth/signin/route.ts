@@ -1,8 +1,9 @@
+import { type NextRequest, NextResponse } from "next/server";
 import { AuthError } from "next-auth";
+import { z } from "zod";
+
 import { signIn } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rateLimit";
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 const SignInSchema = z.object({
   email: z.string().email(),

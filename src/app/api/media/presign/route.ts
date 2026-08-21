@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
+
 import { mediaApiError } from "@/lib/media/api-errors";
 import { createPresignedMediaUpload } from "@/lib/media/media.service";
 import { requireAdmin } from "@/lib/permissions";

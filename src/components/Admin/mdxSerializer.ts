@@ -18,16 +18,16 @@ interface TipTapDocument extends TipTapNode {
 }
 
 export function serializeToMDX(content: unknown): string {
-  if (!content || typeof content !== "object") return "";
+  if (!content || typeof content !== "object") {return "";}
   const doc = content as TipTapDocument;
-  if (!doc.content) return "";
+  if (!doc.content) {return "";}
   return serializeNode(doc);
 }
 
 function serializeNode(node: TipTapNode | string): string {
-  if (typeof node === "string") return node;
+  if (typeof node === "string") {return node;}
 
-  if (!node || typeof node !== "object") return "";
+  if (!node || typeof node !== "object") {return "";}
 
   switch (node.type) {
     case "doc":
@@ -62,9 +62,9 @@ function serializeNode(node: TipTapNode | string): string {
       // Handle marks (bold, italic, etc.)
       if (node.marks) {
         node.marks.forEach((mark: TipTapMark) => {
-          if (mark.type === "bold") text = `**${text}**`;
-          if (mark.type === "italic") text = `*${text}*`;
-          if (mark.type === "code") text = `<code>${text}</code>`;
+          if (mark.type === "bold") {text = `**${text}**`;}
+          if (mark.type === "italic") {text = `*${text}*`;}
+          if (mark.type === "code") {text = `<code>${text}</code>`;}
         });
       }
       return text;

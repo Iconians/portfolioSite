@@ -1,3 +1,4 @@
+import { getPortfolioItemById } from "@/lib/data/portfolio";
 import {
   countPortfolioMetrics,
   createPortfolioMetricRecord,
@@ -16,14 +17,9 @@ import {
   listProjectVersions,
   updateProjectVersionRecord,
 } from "@/lib/data/project-versions";
-import { getPortfolioItemById } from "@/lib/data/portfolio";
 import { getMetricReorderPair } from "@/lib/portfolio/metric-order";
 import { getVersionReorderPair } from "@/lib/portfolio/version-order";
-export {
-  assignPortfolioSlug,
-  resolveUniquePortfolioSlug,
-} from "@/lib/portfolio/assign-slug";
-export { validatePortfolioExtendedInput } from "@/lib/portfolio/validate-extended";
+
 import type {
   PortfolioMetric,
   PortfolioMetricInput,
@@ -32,6 +28,12 @@ import type {
   ProjectVersionInput,
   ProjectVersionUpdate,
 } from "@/lib/types/portfolio";
+
+export {
+  assignPortfolioSlug,
+  resolveUniquePortfolioSlug,
+} from "@/lib/portfolio/assign-slug";
+export { validatePortfolioExtendedInput } from "@/lib/portfolio/validate-extended";
 
 export async function createPortfolioMetric(
   portfolioId: string,

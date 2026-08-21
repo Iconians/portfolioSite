@@ -1,8 +1,9 @@
+import { MediaPicker } from "@/components/Admin/media/MediaPicker";
 import { FormField } from "@/components/Admin/shared/FormField";
 import { FormSection } from "@/components/Admin/shared/FormSection";
-import { MediaPicker } from "@/components/Admin/media/MediaPicker";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+
 import type { ProjectEditorSectionProps } from "./types";
 
 interface LinksSeoSectionProps extends ProjectEditorSectionProps {

@@ -1,11 +1,12 @@
 import { describe, expect, test } from "bun:test";
+
 import { validateAuthEnvironment } from "@/lib/auth/env";
-import { isAdminRole } from "@/lib/auth/roles";
 import {
   AuthenticationError,
   AuthorizationError,
   isAuthError,
 } from "@/lib/auth/errors";
+import { isAdminRole } from "@/lib/auth/roles";
 
 describe("isAdminRole", () => {
   test("accepts admin role only", () => {

@@ -1,6 +1,8 @@
-import { normalizePlatformFeatures } from "@/lib/portfolio/platform";
 import { Check } from "lucide-react";
+
+import { normalizePlatformFeatures } from "@/lib/portfolio/platform";
 import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
+
 import { ProjectPageSection } from "./ProjectPageSection";
 
 interface PlatformShowcaseProps {

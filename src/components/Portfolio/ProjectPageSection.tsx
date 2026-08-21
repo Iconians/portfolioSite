@@ -4,6 +4,7 @@ import {
   type ProjectSectionWidth,
 } from "@/lib/portfolio/project-page-styles";
 import { cn } from "@/lib/utils";
+
 import type { ReactNode } from "react";
 
 interface ProjectPageSectionProps {

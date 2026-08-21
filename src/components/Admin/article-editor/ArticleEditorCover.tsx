@@ -1,6 +1,6 @@
+import { MediaPicker } from "@/components/Admin/media/MediaPicker";
 import { FormField } from "@/components/Admin/shared/FormField";
 import { FormSection } from "@/components/Admin/shared/FormSection";
-import { MediaPicker } from "@/components/Admin/media/MediaPicker";
 import { Button } from "@/components/ui/button";
 
 interface ArticleEditorCoverProps {

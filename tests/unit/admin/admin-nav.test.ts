@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+
 import { isAdminNavActive } from "@/components/Admin/layout/admin-nav-config";
 
 describe("isAdminNavActive", () => {

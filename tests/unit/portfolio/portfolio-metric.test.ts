@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
+
 import { getMetricReorderPair } from "@/lib/portfolio/metric-order";
 import { PortfolioMetricInputSchema } from "@/lib/types/portfolio";
+
 import type { PortfolioMetric } from "@/lib/types/portfolio";
 
 function buildMetric(

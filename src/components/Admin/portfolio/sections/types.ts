@@ -1,10 +1,10 @@
+import type { ProjectEditorFormData } from "@/lib/types/portfolio";
 import type {
   FieldErrors,
   UseFormRegister,
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
-import type { ProjectEditorFormData } from "@/lib/types/portfolio";
 
 export interface ProjectEditorSectionProps {
   register: UseFormRegister<ProjectEditorFormData>;

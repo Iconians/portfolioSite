@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
 import { AdminShellClient } from "@/components/Admin/layout/AdminShellClient";
+
+import type { ReactNode } from "react";
 
 interface AdminShellProps {
   userEmail?: string | null;

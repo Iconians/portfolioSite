@@ -1,8 +1,10 @@
 import { describe, expect, test } from "bun:test";
+
 import {
   hasProjectMetrics,
   sortPortfolioMetrics,
 } from "@/lib/portfolio/project-metrics";
+
 import type { PortfolioMetric } from "@/lib/types/portfolio";
 
 function buildMetric(

@@ -1,11 +1,50 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
+
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
+
 import type { Article } from "@/lib/types/articles";
-import Link from "next/link";
-import { Card } from "@/components/ui/card";
+
+function SearchResultsPanel({
+  showSearchLoading,
+  displayResults,
+}: {
+  showSearchLoading: boolean;
+  displayResults: Article[];
+}) {
+  if (showSearchLoading) {
+    return (
+      <div className="p-4 text-center text-muted-foreground">Searching...</div>
+    );
+  }
+
+  if (displayResults.length > 0) {
+    return (
+      <div className="p-2">
+        {displayResults.map((article) => (
+          <Link key={article.id} href={`/blogs/${article.slug}`}>
+            <Card className="p-4 mb-2 hover:bg-accent transition-colors cursor-pointer">
+              <h3 className="font-semibold">{article.title}</h3>
+              {article.description && (
+                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                  {article.description}
+                </p>
+              )}
+            </Card>
+          </Link>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-4 text-center text-muted-foreground">No results found</div>
+  );
+}
 
 export function ArticleSearch() {
   const [query, setQuery] = useState("");
@@ -73,30 +112,10 @@ export function ArticleSearch() {
       />
       {query && (
         <div className="absolute z-10 w-full mt-2 bg-background border rounded-lg shadow-lg max-h-96 overflow-auto">
-          {showSearchLoading ? (
-            <div className="p-4 text-center text-muted-foreground">
-              Searching...
-            </div>
-          ) : displayResults.length > 0 ? (
-            <div className="p-2">
-              {displayResults.map((article) => (
-                <Link key={article.id} href={`/blogs/${article.slug}`}>
-                  <Card className="p-4 mb-2 hover:bg-accent transition-colors cursor-pointer">
-                    <h3 className="font-semibold">{article.title}</h3>
-                    {article.description && (
-                      <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                        {article.description}
-                      </p>
-                    )}
-                  </Card>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="p-4 text-center text-muted-foreground">
-              No results found
-            </div>
-          )}
+          <SearchResultsPanel
+            showSearchLoading={showSearchLoading}
+            displayResults={displayResults}
+          />
         </div>
       )}
     </div>

@@ -1,4 +1,5 @@
 import { serialize } from "next-mdx-remote/serialize";
+
 import { getArticleCoverImage } from "@/lib/articles/article-cover";
 import { getAllArticles, getArticleBySlug } from "@/lib/data/articles";
 

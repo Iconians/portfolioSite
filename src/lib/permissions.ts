@@ -1,3 +1,10 @@
+import { isAdminRole } from "@/lib/auth/roles";
+import {
+  requireAdminUser,
+  requireAuthUser,
+} from "@/lib/auth/session";
+
+
 export {
   AuthenticationError,
   AuthorizationError,
@@ -12,13 +19,6 @@ export {
   requireAuthUser,
   type AdminUser,
 } from "@/lib/auth/session";
-
-import {
-  requireAdminUser,
-  requireAuthUser,
-} from "@/lib/auth/session";
-
-import { isAdminRole } from "@/lib/auth/roles";
 
 /** @deprecated Prefer requireAuthUser — kept for existing imports */
 export async function requireAuth() {

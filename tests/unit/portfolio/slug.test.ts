@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+
 import { appendSlugSuffix, isValidSlug, slugifyTitle } from "@/lib/portfolio/slug";
 
 describe("slugifyTitle", () => {

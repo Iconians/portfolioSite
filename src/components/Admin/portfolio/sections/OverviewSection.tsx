@@ -6,6 +6,7 @@ import {
   LIFECYCLE_STATUSES,
   PUBLISH_STATUSES,
 } from "@/lib/types/portfolio";
+
 import type { ProjectEditorSectionProps } from "./types";
 
 const selectClassName =

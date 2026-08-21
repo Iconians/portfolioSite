@@ -1,8 +1,11 @@
 import { Badge } from "@/components/ui/badge";
-import { getProjectCardSummary, uniqueCategories } from "@/lib/portfolio/public-project";
 import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
-import type { PortfolioItem } from "@/lib/types/portfolio";
+import { getProjectCardSummary, uniqueCategories } from "@/lib/portfolio/public-project";
+
 import { ProjectPageSection } from "./ProjectPageSection";
+
+import type { PortfolioItem } from "@/lib/types/portfolio";
+
 
 interface ProjectSummaryProps {
   project: PortfolioItem;

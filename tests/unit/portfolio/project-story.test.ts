@@ -1,10 +1,12 @@
 import { describe, expect, test } from "bun:test";
+
 import {
   formatProjectDateRange,
   getProjectStoryListItems,
   getProjectStorySections,
   hasProjectStoryContent,
 } from "@/lib/portfolio/project-story";
+
 import type { PortfolioItem } from "@/lib/types/portfolio";
 
 function createPortfolioItem(

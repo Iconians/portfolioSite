@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import { getAllPortfolioItems } from "@/lib/data/portfolio";
 
 export const dynamic = "force-dynamic";

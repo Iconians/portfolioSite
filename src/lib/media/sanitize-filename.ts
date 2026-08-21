@@ -25,7 +25,12 @@ export function sanitizeMediaFilename(filename: string): string {
     .slice(0, MAX_FILENAME_LENGTH);
 
   const ext = rawExt.toLowerCase().replace(/[^a-z0-9.]/g, "");
-  const safeExt = ext.startsWith(".") ? ext : ext ? `.${ext}` : "";
+  let safeExt = "";
+  if (ext.startsWith(".")) {
+    safeExt = ext;
+  } else if (ext) {
+    safeExt = `.${ext}`;
+  }
 
   if (!normalizedName) {
     return safeExt ? `file${safeExt}` : "file";

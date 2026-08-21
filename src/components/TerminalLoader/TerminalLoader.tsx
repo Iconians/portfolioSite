@@ -13,6 +13,13 @@ const TERMINAL_SEQUENCE = [
   { text: "$ designing scalable SaaS systems 🏗️", delay: 4400 },
 ];
 
+function terminalLineClass(line: string): string {
+  if (line.startsWith("✓")) {return "text-green-400";}
+  if (line.startsWith("$")) {return "text-primary";}
+  if (line.startsWith(">")) {return "text-primary font-semibold";}
+  return "text-foreground";
+}
+
 export function TerminalLoader() {
   const [lines, setLines] = useState<string[]>([]);
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
@@ -63,15 +70,7 @@ export function TerminalLoader() {
           {lines.map((line, index) => (
             <div
               key={index}
-              className={`${
-                line.startsWith("✓")
-                  ? "text-green-400"
-                  : line.startsWith("$")
-                    ? "text-primary"
-                    : line.startsWith(">")
-                      ? "text-primary font-semibold"
-                      : "text-foreground"
-              } animate-in fade-in slide-in-from-left-2 duration-300`}
+              className={`${terminalLineClass(line)} animate-in fade-in slide-in-from-left-2 duration-300`}
             >
               {line}
             </div>

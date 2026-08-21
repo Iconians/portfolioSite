@@ -1,7 +1,8 @@
-import { FormField } from "@/components/Admin/shared/FormField";
-import { FormSection } from "@/components/Admin/shared/FormSection";
 import { MediaPicker } from "@/components/Admin/media/MediaPicker";
 import { GalleryEditor } from "@/components/Admin/portfolio/GalleryEditor";
+import { FormField } from "@/components/Admin/shared/FormField";
+import { FormSection } from "@/components/Admin/shared/FormSection";
+
 import type { ProjectEditorSectionProps } from "./types";
 
 interface MediaSectionProps extends ProjectEditorSectionProps {

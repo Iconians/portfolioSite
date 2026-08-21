@@ -1,6 +1,6 @@
+import { AdminShell } from "@/components/Admin/layout/AdminShell";
 import { signOut } from "@/lib/auth";
 import { requireAdminPage } from "@/lib/permissions";
-import { AdminShell } from "@/components/Admin/layout/AdminShell";
 
 async function logoutAction() {
   "use server";

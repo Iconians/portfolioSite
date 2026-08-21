@@ -1,8 +1,9 @@
-import { getAllReviewsAdmin } from "@/lib/data/reviews";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ReviewList } from "@/components/Admin/ReviewList";
+
 import { PageHeader } from "@/components/Admin/layout/PageHeader";
+import { ReviewList } from "@/components/Admin/ReviewList";
+import { Button } from "@/components/ui/button";
+import { getAllReviewsAdmin } from "@/lib/data/reviews";
 
 export default async function ReviewsPage() {
   const reviews = await getAllReviewsAdmin();

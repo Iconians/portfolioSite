@@ -1,4 +1,3 @@
-import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
   Boxes,
@@ -12,6 +11,8 @@ import {
   TestTube2,
   Users,
 } from "lucide-react";
+
+import type { LucideIcon } from "lucide-react";
 
 const METRIC_ICON_RULES: Array<{ pattern: RegExp; icon: LucideIcon }> = [
   { pattern: /test|coverage|spec/i, icon: TestTube2 },

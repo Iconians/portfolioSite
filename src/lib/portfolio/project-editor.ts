@@ -1,14 +1,12 @@
-import type {
-  CreatePortfolioInput,
-  PortfolioExtendedInput,
-  PortfolioItem,
-  UpdatePortfolioInput,
-} from "@/lib/types/portfolio";
+import { normalizePlatformFeatures } from "@/lib/portfolio/platform";
 import {
   ProjectEditorSchema,
   type ProjectEditorFormData,
-} from "@/lib/types/portfolio";
-import { normalizePlatformFeatures } from "@/lib/portfolio/platform";
+
+  type CreatePortfolioInput,
+  type PortfolioExtendedInput,
+  type PortfolioItem,
+  type UpdatePortfolioInput} from "@/lib/types/portfolio";
 
 function formatDateInputValue(value: Date | null | undefined): string {
   if (!value) {

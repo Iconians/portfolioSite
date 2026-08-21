@@ -7,6 +7,12 @@ interface ArticleEditorActionsProps {
   onPublish: () => void;
 }
 
+function articleSubmitLabel(isPending: boolean, isEditing: boolean): string {
+  if (isPending) {return "Saving...";}
+  if (isEditing) {return "Update Article";}
+  return "Create Article";
+}
+
 export function ArticleEditorActions({
   isPending,
   isEditing,
@@ -16,7 +22,7 @@ export function ArticleEditorActions({
   return (
     <div className="flex gap-2">
       <Button type="submit" disabled={isPending}>
-        {isPending ? "Saving..." : isEditing ? "Update Article" : "Create Article"}
+        {articleSubmitLabel(isPending, isEditing)}
       </Button>
       {canPublish && (
         <Button

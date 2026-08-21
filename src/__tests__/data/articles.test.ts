@@ -1,6 +1,7 @@
 import { test, expect, describe, beforeAll, afterAll } from "bun:test";
-import { db } from "@/lib/db/client";
+
 import { getAllArticles } from "@/lib/data/articles";
+import { db } from "@/lib/db/client";
 
 // Note: These tests require a test database
 // Set TEST_DATABASE_URL in .env for running tests

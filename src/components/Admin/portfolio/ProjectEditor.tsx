@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { useFieldArray, useForm, useWatch, type FieldArrayPath } from "react-hook-form";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -16,18 +18,20 @@ import {
 } from "@/lib/portfolio/project-editor";
 import {
   ProjectEditorSchema,
+  type PortfolioMetric,
   type ProjectEditorFormData,
+  type ProjectVersion,
 } from "@/lib/types/portfolio";
-import { toast } from "sonner";
+
+import { MetricEditor } from "./MetricEditor";
+import { PlatformShowcaseEditor } from "./PlatformShowcaseEditor";
+import { ProjectEvolutionEditor } from "./ProjectEvolutionEditor";
 import { DetailsSection } from "./sections/DetailsSection";
 import { LinksSeoSection } from "./sections/LinksSeoSection";
 import { MediaSection } from "./sections/MediaSection";
 import { OverviewSection } from "./sections/OverviewSection";
 import { StorySection } from "./sections/StorySection";
-import { MetricEditor } from "./MetricEditor";
-import { ProjectEvolutionEditor } from "./ProjectEvolutionEditor";
-import { PlatformShowcaseEditor } from "./PlatformShowcaseEditor";
-import type { PortfolioMetric, ProjectVersion } from "@/lib/types/portfolio";
+
 
 interface ProjectEditorProps {
   initialValues?: ProjectEditorFormData;
@@ -36,6 +40,16 @@ interface ProjectEditorProps {
   initialVersions?: ProjectVersion[];
   portfolioId?: string;
   onSuccess?: () => void;
+}
+
+function projectSubmitLabel(isPending: boolean, portfolioId?: string): string {
+  if (isPending) {
+    return "Saving...";
+  }
+  if (portfolioId) {
+    return "Save project";
+  }
+  return "Create project";
 }
 
 export function ProjectEditor({
@@ -64,12 +78,18 @@ export function ProjectEditor({
 
   const heroImageUrl = useWatch({ control, name: "img" }) ?? "";
 
-  const { fields, append, remove } = useFieldArray({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    control: control as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    name: "category" as any,
+  const {
+    fields: categoryFields,
+    append,
+    remove: removeCategory,
+  } = useFieldArray({
+    control,
+    name: "category" as FieldArrayPath<ProjectEditorFormData>,
   });
+
+  const appendCategory = (value: string): void => {
+    append(value as never);
+  };
 
   const sectionProps = {
     register,
@@ -187,9 +207,9 @@ export function ProjectEditor({
         <TabsContent value="details">
           <DetailsSection
             {...sectionProps}
-            categoryFields={fields}
-            appendCategory={append}
-            removeCategory={remove}
+            categoryFields={categoryFields}
+            appendCategory={appendCategory}
+            removeCategory={removeCategory}
           />
         </TabsContent>
 
@@ -231,11 +251,7 @@ export function ProjectEditor({
           ) : null}
         </div>
         <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
-          {isPending
-            ? "Saving..."
-            : portfolioId
-              ? "Save project"
-              : "Create project"}
+          {projectSubmitLabel(isPending, portfolioId)}
         </Button>
       </div>
     </form>

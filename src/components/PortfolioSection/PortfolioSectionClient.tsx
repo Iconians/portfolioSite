@@ -1,16 +1,17 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
 import {
   canViewProjectDetail,
   getProjectCardSummary,
@@ -18,6 +19,7 @@ import {
   isValidProjectLink,
   uniqueCategories,
 } from "@/lib/portfolio/public-project";
+
 import type { PortfolioItem } from "@/lib/types/portfolio";
 
 function GithubIcon({ className }: { className?: string }) {

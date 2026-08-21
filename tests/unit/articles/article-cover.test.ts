@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+
 import { getArticleCoverImage } from "@/lib/articles/article-cover";
 
 describe("getArticleCoverImage", () => {

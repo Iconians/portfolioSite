@@ -1,7 +1,8 @@
-import { getArticleByIdAdmin } from "@/lib/data/articles";
 import { notFound } from "next/navigation";
+
 import { ArticleEditor } from "@/components/Admin/ArticleEditor";
 import { PageHeader } from "@/components/Admin/layout/PageHeader";
+import { getArticleByIdAdmin } from "@/lib/data/articles";
 
 export default async function EditArticlePage({
   params,

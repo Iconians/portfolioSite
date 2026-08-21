@@ -1,14 +1,16 @@
 "use server";
 
-import { listMediaAssets } from "@/lib/data/media";
-import { deleteMedia, updateMediaMetadata } from "@/lib/media/media.service";
-import { logAdminAction } from "@/lib/logger";
-import { requireAdmin } from "@/lib/permissions";
-import type { ActionResult } from "@/lib/types/actions";
-import type { MediaAsset, UpdateMediaMetadataInput } from "@/lib/types/media";
-import { UpdateMediaMetadataSchema } from "@/lib/types/media";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+
+import { listMediaAssets } from "@/lib/data/media";
+import { logAdminAction } from "@/lib/logger";
+import { deleteMedia, updateMediaMetadata } from "@/lib/media/media.service";
+import { requireAdmin } from "@/lib/permissions";
+import { UpdateMediaMetadataSchema } from "@/lib/types/media";
+
+import type { ActionResult } from "@/lib/types/actions";
+import type { MediaAsset, UpdateMediaMetadataInput } from "@/lib/types/media";
 
 export async function listMediaAssetsAction(): Promise<
   ActionResult<MediaAsset[]>

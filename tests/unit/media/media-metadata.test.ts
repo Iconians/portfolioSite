@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+
 import { UpdateMediaMetadataSchema } from "@/lib/types/media";
 
 describe("UpdateMediaMetadataSchema", () => {

@@ -1,7 +1,9 @@
 import Image from "next/image";
+
 import { ProjectPageSection } from "@/components/Portfolio/ProjectPageSection";
 import { normalizeGalleryItems } from "@/lib/portfolio/gallery";
 import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
+
 import type { PortfolioGalleryItem } from "@/lib/types/portfolio";
 
 interface ProjectGalleryProps {

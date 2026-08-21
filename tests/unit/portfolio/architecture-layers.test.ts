@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+
 import { parseArchitectureLayers } from "@/lib/portfolio/architecture-layers";
 
 describe("parseArchitectureLayers", () => {

@@ -1,10 +1,11 @@
-import { db } from "../src/lib/db/client";
-import { readFileSync, readdirSync } from "fs";
-import { join } from "path";
-import matter from "gray-matter";
 import { hash } from "bcryptjs";
-import { reviewSeedData } from "./migration-data/reviews";
+import { readFileSync, readdirSync } from "fs";
+import matter from "gray-matter";
+import { join } from "path";
+
 import { portfolioSeedItems } from "./migration-data/portfolio-items";
+import { reviewSeedData } from "./migration-data/reviews";
+import { db } from "../src/lib/db/client";
 
 async function migrateArticles(userId: string) {
   const postsPath = join(process.cwd(), "src/app/lib/content/posts");

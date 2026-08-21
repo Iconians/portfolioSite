@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+
 import {
   buildProjectPageMetadata,
   canViewProjectDetail,
@@ -7,6 +8,7 @@ import {
   isValidProjectLink,
   uniqueCategories,
 } from "@/lib/portfolio/public-project";
+
 import type { PortfolioItem } from "@/lib/types/portfolio";
 
 function createPortfolioItem(

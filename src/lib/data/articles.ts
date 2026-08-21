@@ -1,13 +1,15 @@
+import { isAdminRole } from "@/lib/auth/roles";
 import { db } from "@/lib/db/client";
 import { requireAdmin } from "@/lib/permissions";
-import { isAdminRole } from "@/lib/auth/roles";
+import { ArticleSchema } from "@/lib/types/articles";
+
 import type {
   CreateArticleInput,
   UpdateArticleInput,
   Article,
   ArticleWithUser,
 } from "@/lib/types/articles";
-import { ArticleSchema } from "@/lib/types/articles";
+
 
 const articleCoverMediaSelect = {
   select: {
@@ -164,7 +166,7 @@ export async function updateArticle(
   const user = await requireAdmin();
 
   const article = await db.article.findUnique({ where: { id } });
-  if (!article) throw new Error("Article not found");
+  if (!article) {throw new Error("Article not found");}
 
   // Explicit ownership check
   if (article.createdBy !== user.id && !isAdminRole(user.role)) {
@@ -188,7 +190,7 @@ export async function deleteArticle(id: string): Promise<void> {
   const user = await requireAdmin();
 
   const article = await db.article.findUnique({ where: { id } });
-  if (!article) throw new Error("Article not found");
+  if (!article) {throw new Error("Article not found");}
 
   if (article.createdBy !== user.id && !isAdminRole(user.role)) {
     throw new Error("Forbidden");
@@ -201,7 +203,7 @@ export async function publishArticle(id: string): Promise<Article> {
   await requireAdmin();
 
   const article = await db.article.findUnique({ where: { id } });
-  if (!article) throw new Error("Article not found");
+  if (!article) {throw new Error("Article not found");}
 
   return db.article.update({
     where: { id },

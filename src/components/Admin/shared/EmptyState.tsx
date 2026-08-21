@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
 import { Card } from "@/components/ui/card";
+
+import type { ReactNode } from "react";
 
 interface EmptyStateProps {
   title: string;

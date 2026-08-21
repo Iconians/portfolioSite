@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { getMetricIcon } from "@/lib/portfolio/metric-icons";
 import { BarChart3, Gauge, TestTube2 } from "lucide-react";
+
+import { getMetricIcon } from "@/lib/portfolio/metric-icons";
 
 describe("getMetricIcon", () => {
   test("maps test-related labels", () => {

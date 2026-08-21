@@ -1,5 +1,6 @@
 import { ProjectMetricIcon } from "@/components/Portfolio/ProjectMetricIcon";
 import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
+
 import type { PortfolioMetric } from "@/lib/types/portfolio";
 
 interface ProjectMetricCardProps {

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
+
 import {
-  ALLOWED_IMAGE_MIME_TYPES,
+  type ALLOWED_IMAGE_MIME_TYPES,
   validateMediaUpload,
 } from "@/lib/media/validate-upload";
 

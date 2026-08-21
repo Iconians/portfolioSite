@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
+
 import { Navigation } from "@/components/Nav/Navigation";
 import { ProjectDetailHero } from "@/components/Portfolio/ProjectDetailHero";
 import { ProjectEvolution } from "@/components/Portfolio/ProjectEvolution";
@@ -10,20 +10,22 @@ import { ProjectPlatformShowcase } from "@/components/Portfolio/ProjectPlatformS
 import { ProjectPreviewBanner } from "@/components/Portfolio/ProjectPreviewBanner";
 import { ProjectStory } from "@/components/Portfolio/ProjectStory";
 import { ProjectSummary } from "@/components/Portfolio/ProjectSummary";
-import { getMediaPublicUrlById } from "@/lib/data/media";
-import { listPublicPortfolioMetrics } from "@/lib/data/portfolio-metrics";
-import { listPublicProjectVersions } from "@/lib/data/project-versions";
-import {
-  getPortfolioItemBySlug,
-  getPublishedPortfolioItemBySlug,
-} from "@/lib/data/portfolio";
-import { requireAdminUser } from "@/lib/auth/session";
 import {
   AuthenticationError,
   AuthorizationError,
 } from "@/lib/auth/errors";
-import { buildProjectPageMetadata } from "@/lib/portfolio/public-project";
+import { requireAdminUser } from "@/lib/auth/session";
+import { getMediaPublicUrlById } from "@/lib/data/media";
+import {
+  getPortfolioItemBySlug,
+  getPublishedPortfolioItemBySlug,
+} from "@/lib/data/portfolio";
+import { listPublicPortfolioMetrics } from "@/lib/data/portfolio-metrics";
+import { listPublicProjectVersions } from "@/lib/data/project-versions";
 import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
+import { buildProjectPageMetadata } from "@/lib/portfolio/public-project";
+
+import type { Metadata } from "next";
 
 export const revalidate = 3600;
 

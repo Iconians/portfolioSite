@@ -1,14 +1,16 @@
 import { EditorContent } from "@tiptap/react";
 import { MDXRemote } from "next-mdx-remote";
-import AnimatedParagraph from "@/components/Animations/AnimatedParagraphs";
-import AnimatedHeading from "@/components/Animations/AnimateHeading";
+
+import { AnimatedCode } from "@/components/Animations/AnimatedCode";
 import AnimatedList, {
   AnimatedListItem,
 } from "@/components/Animations/AnimatedList";
-import { AnimatedCode } from "@/components/Animations/AnimatedCode";
+import AnimatedParagraph from "@/components/Animations/AnimatedParagraphs";
 import AnimatedWrapper from "@/components/Animations/AnimatedWrapper";
+import AnimatedHeading from "@/components/Animations/AnimateHeading";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+
 import type { ArticleEditorContentProps } from "./types";
 
 export function ArticleEditorContent({

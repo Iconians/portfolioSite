@@ -1,8 +1,9 @@
 "use client";
-import { MDXRemote } from "next-mdx-remote";
 import dynamic from "next/dynamic";
+import { MDXRemote , type MDXRemoteSerializeResult } from "next-mdx-remote";
+
 import styles from "./blogPostClient.module.css";
-import { MDXRemoteSerializeResult } from "next-mdx-remote";
+
 
 // Dynamically import animated components to prevent SSR issues
 const AnimatedHeading = dynamic(

@@ -1,21 +1,29 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ReviewSchema, type CreateReviewInput } from "@/lib/types/reviews";
-import { createReviewAction, updateReviewAction } from "@/lib/actions/reviews";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { Textarea } from "@/components/ui/textarea";
+import { createReviewAction, updateReviewAction } from "@/lib/actions/reviews";
+import { ReviewSchema, type CreateReviewInput } from "@/lib/types/reviews";
+
 
 interface ReviewFormProps {
   initialData?: Partial<CreateReviewInput>;
   reviewId?: string;
   onSuccess?: () => void;
+}
+
+function reviewSubmitLabel(isPending: boolean, reviewId?: string): string {
+  if (isPending) {return "Saving...";}
+  if (reviewId) {return "Update Review";}
+  return "Create Review";
 }
 
 export function ReviewForm({
@@ -113,7 +121,7 @@ export function ReviewForm({
       </div>
 
       <Button type="submit" disabled={isPending}>
-        {isPending ? "Saving..." : reviewId ? "Update Review" : "Create Review"}
+        {reviewSubmitLabel(isPending, reviewId)}
       </Button>
     </form>
   );

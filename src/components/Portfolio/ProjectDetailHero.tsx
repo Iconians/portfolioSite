@@ -1,6 +1,8 @@
 import Image from "next/image";
+
 import { ProjectActions } from "@/components/Portfolio/ProjectActions";
 import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
+
 import type { PortfolioItem } from "@/lib/types/portfolio";
 
 interface ProjectDetailHeroProps {

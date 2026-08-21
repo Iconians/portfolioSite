@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { X } from "lucide-react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 const AnimatePresence = dynamic(
   () => import("framer-motion").then((mod) => mod.AnimatePresence),

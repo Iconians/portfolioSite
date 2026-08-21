@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import dynamic from "next/dynamic";
+import Image from "next/image";
+
 import styles from "@/app/About/aboutPage.module.css";
 import { engineeringArr } from "@/lib/skills";
 

@@ -1,7 +1,8 @@
+import { StringListEditor } from "@/components/Admin/portfolio/StringListEditor";
 import { FormField } from "@/components/Admin/shared/FormField";
 import { FormSection } from "@/components/Admin/shared/FormSection";
-import { StringListEditor } from "@/components/Admin/portfolio/StringListEditor";
 import { Textarea } from "@/components/ui/textarea";
+
 import type { ProjectEditorSectionProps } from "./types";
 
 const STORY_FIELDS = [

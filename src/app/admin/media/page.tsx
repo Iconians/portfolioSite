@@ -1,7 +1,7 @@
-import { listMediaAssets } from "@/lib/data/media";
+import { PageHeader } from "@/components/Admin/layout/PageHeader";
 import { MediaGrid } from "@/components/Admin/media/MediaGrid";
 import { MediaLibraryUpload } from "@/components/Admin/media/MediaLibraryUpload";
-import { PageHeader } from "@/components/Admin/layout/PageHeader";
+import { listMediaAssets } from "@/lib/data/media";
 
 export default async function MediaLibraryPage() {
   let assets: Awaited<ReturnType<typeof listMediaAssets>> = [];

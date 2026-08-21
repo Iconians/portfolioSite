@@ -2,18 +2,19 @@ import { db } from "@/lib/db/client";
 import { requireAdmin } from "@/lib/permissions";
 import { assignPortfolioSlug } from "@/lib/portfolio/assign-slug";
 import { validatePortfolioExtendedInput } from "@/lib/portfolio/validate-extended";
+import {
+  mapPortfolioRecord,
+  PortfolioItemSchema,
+  portfolioItemSelect,
+  PROJECT_TYPE_ORDER,
+} from "@/lib/types/portfolio";
+
 import type {
   CreatePortfolioInput,
   PortfolioExtendedInput,
   PortfolioItem,
   PortfolioItemWithUser,
   UpdatePortfolioInput,
-} from "@/lib/types/portfolio";
-import {
-  mapPortfolioRecord,
-  PortfolioItemSchema,
-  portfolioItemSelect,
-  PROJECT_TYPE_ORDER,
 } from "@/lib/types/portfolio";
 
 function normalizeProjectType(
@@ -87,14 +88,14 @@ function sortPortfolioItems(items: PortfolioItem[]): PortfolioItem[] {
   return [...items].sort((a, b) => {
     const typeOrder = (type: string | null | undefined) => {
       const t = type?.toLowerCase?.() ?? type ?? "";
-      if (!t) return PROJECT_TYPE_ORDER.length;
+      if (!t) {return PROJECT_TYPE_ORDER.length;}
       const i = PROJECT_TYPE_ORDER.indexOf(t as (typeof PROJECT_TYPE_ORDER)[number]);
       return i === -1 ? PROJECT_TYPE_ORDER.length : i;
     };
     const orderA = typeOrder(a.projectType);
     const orderB = typeOrder(b.projectType);
-    if (orderA !== orderB) return orderA - orderB;
-    if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+    if (orderA !== orderB) {return orderA - orderB;}
+    if (a.sortOrder !== b.sortOrder) {return a.sortOrder - b.sortOrder;}
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 }
@@ -238,12 +239,12 @@ export async function updatePortfolioItem(
         (await assignPortfolioSlug(nextCaption, undefined, id));
 
   const nextImg = validatedData.img ?? item.img;
-  const heroMediaId =
-    extended?.heroMediaId !== undefined
-      ? extended.heroMediaId
-      : validatedData.img !== undefined
-        ? await resolveHeroMediaIdFromImg(nextImg)
-        : undefined;
+  let heroMediaId: string | null | undefined;
+  if (extended?.heroMediaId !== undefined) {
+    heroMediaId = extended.heroMediaId;
+  } else if (validatedData.img !== undefined) {
+    heroMediaId = await resolveHeroMediaIdFromImg(nextImg);
+  }
 
   const updated = await db.portfolio.update({
     where: { id },

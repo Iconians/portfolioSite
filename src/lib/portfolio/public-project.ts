@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import type { PortfolioItem } from "@/lib/types/portfolio";
+import type { Metadata } from "next";
 
 export function canViewProjectDetail(item: PortfolioItem): boolean {
   return item.publishStatus === "published" && Boolean(item.slug?.trim());

@@ -1,5 +1,7 @@
-import { Card } from "@/components/ui/card";
 import { Quote } from "lucide-react";
+
+import { Card } from "@/components/ui/card";
+
 import type { Review } from "@/lib/types/reviews";
 
 interface ReviewComponentProps {

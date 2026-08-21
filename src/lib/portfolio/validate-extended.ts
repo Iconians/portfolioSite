@@ -1,6 +1,7 @@
 import { validatePlatformShowcase } from "@/lib/portfolio/platform";
-import type { PortfolioExtendedInput } from "@/lib/types/portfolio";
 import { PortfolioExtendedFieldsSchema } from "@/lib/types/portfolio";
+
+import type { PortfolioExtendedInput } from "@/lib/types/portfolio";
 
 export function validatePortfolioExtendedInput(
   input: PortfolioExtendedInput

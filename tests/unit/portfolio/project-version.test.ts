@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
+
 import { getVersionReorderPair } from "@/lib/portfolio/version-order";
 import { ProjectVersionInputSchema } from "@/lib/types/portfolio";
+
 import type { ProjectVersion } from "@/lib/types/portfolio";
 
 function buildVersion(

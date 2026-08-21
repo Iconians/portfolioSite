@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+
 import {
   ADMIN_NAV_ITEMS,
   isAdminNavActive,
 } from "@/components/Admin/layout/admin-nav-config";
+import { cn } from "@/lib/utils";
 
 interface AdminNavProps {
   onNavigate?: () => void;

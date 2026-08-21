@@ -1,10 +1,11 @@
-import type { UseFieldArrayRemove } from "react-hook-form";
 import { FormField } from "@/components/Admin/shared/FormField";
 import { FormSection } from "@/components/Admin/shared/FormSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+
 import type { ProjectEditorSectionProps } from "./types";
+import type { UseFieldArrayRemove } from "react-hook-form";
 
 interface DetailsSectionProps extends ProjectEditorSectionProps {
   categoryFields: { id: string }[];
