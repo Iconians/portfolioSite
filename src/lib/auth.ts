@@ -2,7 +2,8 @@ import { compare } from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-import { getAuthSecret, validateAuthEnvironment } from "@/lib/auth/env";
+import { authConfig } from "@/lib/auth/config";
+import { validateAuthEnvironment } from "@/lib/auth/env";
 import { isAdminRole } from "@/lib/auth/roles";
 
 validateAuthEnvironment();
@@ -13,8 +14,7 @@ async function getDb() {
 }
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  secret: getAuthSecret(),
-  trustHost: true,
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -48,22 +48,4 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  session: { strategy: "jwt" },
-  pages: { signIn: "/login" },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.role = user.role;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user && token.id) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
-      }
-      return session;
-    },
-  },
 });
