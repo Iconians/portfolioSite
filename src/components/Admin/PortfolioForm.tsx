@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   PortfolioItemSchema,
@@ -56,6 +56,8 @@ export function PortfolioForm({
     },
   });
 
+  const heroImageUrl = useWatch({ control, name: "img" }) ?? "";
+
   // TypeScript inference issue with zodResolver and useFieldArray - type assertions needed
   const { fields, append, remove } = useFieldArray({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -94,7 +96,10 @@ export function PortfolioForm({
         register={register}
         errors={errors}
         isPending={isPending}
-        onImageUpload={(url) => setValue("img", url)}
+        heroImageUrl={heroImageUrl}
+        onSelectHero={(publicUrl) =>
+          setValue("img", publicUrl, { shouldValidate: true, shouldDirty: true })
+        }
       />
       <PortfolioFormDetailFields
         register={register}

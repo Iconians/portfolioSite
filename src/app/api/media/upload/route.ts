@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { mediaApiError } from "@/lib/media/api-errors";
 import { uploadMedia } from "@/lib/media/media.service";
-import { resolveMediaStorageFolder } from "@/lib/media/storage-paths";
 import { requireAdmin } from "@/lib/permissions";
 
 export async function POST(req: NextRequest) {
@@ -9,10 +8,6 @@ export async function POST(req: NextRequest) {
     const user = await requireAdmin();
     const formData = await req.formData();
     const file = formData.get("file");
-    const folderEntry = formData.get("folder");
-    const folder = resolveMediaStorageFolder(
-      typeof folderEntry === "string" ? folderEntry : null
-    );
 
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -25,7 +20,6 @@ export async function POST(req: NextRequest) {
       mimeType: file.type,
       sizeBytes: file.size,
       createdBy: user.id,
-      folder,
     });
 
     return NextResponse.json({ success: true, asset });

@@ -1,22 +1,10 @@
 import path from "path";
 import type { LocalStorageConfig, S3StorageConfig } from "./types";
 
-function readEnv(primary: string, fallback?: string): string | undefined {
-  const primaryValue = process.env[primary];
-  if (primaryValue) {
-    return primaryValue;
-  }
-  if (fallback) {
-    return process.env[fallback];
-  }
-  return undefined;
-}
-
-function requireEnv(primary: string, fallback?: string): string {
-  const value = readEnv(primary, fallback);
+function requireEnv(name: string): string {
+  const value = process.env[name];
   if (!value) {
-    const hint = fallback ? ` or ${fallback}` : "";
-    throw new Error(`Missing required environment variable: ${primary}${hint}`);
+    throw new Error(`Missing required environment variable: ${name}`);
   }
   return value;
 }
@@ -33,18 +21,12 @@ export function loadLocalStorageConfig(): LocalStorageConfig {
 }
 
 export function loadS3StorageConfig(): S3StorageConfig {
-  const endpoint = requireEnv("S3_ENDPOINT", "AWS_ENDPOINT_URL_S3");
+  const endpoint = requireEnv("S3_ENDPOINT");
   const bucket = requireEnv("S3_BUCKET");
-  const region = requireEnv("S3_REGION", "AWS_REGION");
-  const accessKeyId = requireEnv("S3_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID");
-  const secretAccessKey = requireEnv(
-    "S3_SECRET_ACCESS_KEY",
-    "AWS_SECRET_ACCESS_KEY"
-  );
-
-  const publicUrlBase =
-    process.env.S3_PUBLIC_URL_BASE?.replace(/\/$/, "") ??
-    `${endpoint.replace(/\/$/, "")}/${bucket}`;
+  const region = requireEnv("S3_REGION");
+  const accessKeyId = requireEnv("S3_ACCESS_KEY_ID");
+  const secretAccessKey = requireEnv("S3_SECRET_ACCESS_KEY");
+  const publicUrlBase = requireEnv("S3_PUBLIC_URL_BASE").replace(/\/$/, "");
 
   return {
     endpoint,

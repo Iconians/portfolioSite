@@ -109,6 +109,30 @@ bun start
 - **Neon on Vercel:** Use Neon's **Pooled** connection string (Neon dashboard → Connection details → **Pooled**), not the Direct connection. The same URL that works locally often fails in production because serverless needs the pooler.
 - If you see “Application error: a server-side exception has occurred” with a **digest** (e.g. `244468507`): open **Vercel → Project → Logs** (or **Deployments → [deployment] → Functions**), filter by time, and search or scan for that digest or for `[App Error]` / `[Global Error]` to see the real error in the server logs.
 
+### Object Storage (Cloudflare R2)
+
+Media uploads use a provider-neutral storage layer. Production uses Cloudflare R2 through the S3-compatible provider.
+
+Required production variables:
+
+```bash
+STORAGE_PROVIDER=s3
+S3_ENDPOINT=https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+S3_REGION=auto
+S3_BUCKET=engineering-platform-assets
+S3_ACCESS_KEY_ID=
+S3_SECRET_ACCESS_KEY=
+S3_PUBLIC_URL_BASE=https://pub-xxxx.r2.dev
+```
+
+Notes:
+
+- `S3_PUBLIC_URL_BASE` is the public delivery URL for uploaded assets. It can later become a custom domain such as `https://assets.example.com` without code changes. `next.config.ts` reads this hostname for `next/image` — set it in `.env.local` / Vercel before dev or build when using R2 images.
+- `S3_ENDPOINT` is the private S3-compatible API endpoint only. Do not use it for browser-facing image URLs.
+- Local development defaults to `STORAGE_PROVIDER=local` and writes files under `public/media/`.
+- Portfolio project hero uploads use the canonical object prefix `portfolio/projects/heroes/`.
+- Presigned direct uploads are supported for S3-compatible providers, but the current admin/dev verification flow uses server-side multipart upload. Presigned uploads require R2 CORS configuration if used from the browser later.
+
 Recent Updates
 ✅ Migrated from Vite/React to Next.js 15
 

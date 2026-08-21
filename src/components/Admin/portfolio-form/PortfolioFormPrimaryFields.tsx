@@ -1,34 +1,49 @@
-import { ImageUpload } from "../ImageUpload";
+import { MediaPicker } from "@/components/Admin/media/MediaPicker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { PortfolioFormSectionProps } from "./types";
 
 interface PortfolioFormPrimaryFieldsProps extends PortfolioFormSectionProps {
-  onImageUpload: (url: string) => void;
+  heroImageUrl: string;
+  onSelectHero: (publicUrl: string) => void;
 }
 
 export function PortfolioFormPrimaryFields({
   register,
   errors,
   isPending,
-  onImageUpload,
+  heroImageUrl,
+  onSelectHero,
 }: PortfolioFormPrimaryFieldsProps) {
   return (
     <>
       <div>
-        <Label htmlFor="img">Image Path</Label>
-        <div className="mt-2 flex gap-2">
-          <Input
-            id="img"
-            {...register("img")}
-            disabled={isPending}
-            placeholder="/image.png"
-            className="flex-1"
-          />
-          <ImageUpload onUpload={onImageUpload} />
+        <Label>Hero image</Label>
+        <div className="mt-2 space-y-3">
+          {heroImageUrl ? (
+            <div className="rounded-md border p-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={heroImageUrl}
+                alt="Selected project hero"
+                className="max-h-48 rounded object-contain"
+              />
+              <p className="mt-2 truncate text-xs text-muted-foreground">
+                {heroImageUrl}
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Choose an image from the media library or upload a new one.
+            </p>
+          )}
+          <MediaPicker onSelect={(asset) => onSelectHero(asset.publicUrl)} />
+          <input type="hidden" {...register("img")} />
         </div>
-        {errors.img && <p className="mt-1 text-sm text-red-500">{errors.img.message}</p>}
+        {errors.img && (
+          <p className="mt-1 text-sm text-red-500">{errors.img.message}</p>
+        )}
       </div>
 
       <div>

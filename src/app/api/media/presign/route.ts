@@ -9,7 +9,13 @@ export async function POST(req: NextRequest) {
   try {
     await requireAdmin();
     const body = PresignMediaSchema.parse(await req.json());
-    const result = await createPresignedMediaUpload(body);
+    const { domain, type, ...uploadInput } = body;
+    const objectKey =
+      domain && type ? { domain, type } : undefined;
+    const result = await createPresignedMediaUpload({
+      ...uploadInput,
+      objectKey,
+    });
     return NextResponse.json({ success: true, ...result });
   } catch (error) {
     if (error instanceof ZodError) {

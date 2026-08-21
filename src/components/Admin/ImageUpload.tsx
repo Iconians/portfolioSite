@@ -4,6 +4,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
+/**
+ * @deprecated Use MediaPicker with /api/media/upload for portfolio and admin media workflows.
+ */
 interface ImageUploadProps {
   onUpload: (url: string) => void;
 }
@@ -11,28 +14,30 @@ interface ImageUploadProps {
 export function ImageUpload({ onUpload }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
 
     setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      const res = await fetch("/api/upload", {
+      const response = await fetch("/api/media/upload", {
         method: "POST",
         body: formData,
       });
+      const data = await response.json();
 
-      const data = await res.json();
-      if (data.success) {
-        onUpload(data.url);
+      if (response.ok && data.asset?.publicUrl) {
+        onUpload(data.asset.publicUrl);
         toast.success("Image uploaded successfully");
       } else {
         toast.error(data.error || "Upload failed");
       }
-    } catch (error) {
+    } catch {
       toast.error("Upload failed");
     } finally {
       setUploading(false);
@@ -43,10 +48,10 @@ export function ImageUpload({ onUpload }: ImageUploadProps) {
     <div className="relative">
       <input
         type="file"
-        accept="image/*"
+        accept="image/png,image/jpeg,image/webp,image/gif"
         onChange={handleUpload}
         disabled={uploading}
-        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
         id="image-upload"
       />
       <Button

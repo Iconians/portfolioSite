@@ -1,6 +1,10 @@
 import { db } from "@/lib/db/client";
 import { requireAdmin } from "@/lib/permissions";
-import type { CreateMediaAssetInput, MediaAsset } from "@/lib/types/media";
+import type {
+  CreateMediaAssetInput,
+  MediaAsset,
+  UpdateMediaMetadataInput,
+} from "@/lib/types/media";
 
 export async function createMediaAsset(
   input: CreateMediaAssetInput
@@ -26,4 +30,43 @@ export async function listMediaAssets(): Promise<MediaAsset[]> {
   return db.mediaAsset.findMany({
     orderBy: { createdAt: "desc" },
   });
+}
+
+export async function updateMediaAsset(
+  id: string,
+  data: UpdateMediaMetadataInput
+): Promise<MediaAsset> {
+  await requireAdmin();
+  return db.mediaAsset.update({
+    where: { id },
+    data,
+  });
+}
+
+export async function deleteMediaAssetRecord(id: string): Promise<void> {
+  await requireAdmin();
+  await db.mediaAsset.delete({ where: { id } });
+}
+
+export async function countPortfolioImgReferences(
+  publicUrl: string
+): Promise<number> {
+  await requireAdmin();
+  return db.portfolio.count({
+    where: { img: publicUrl },
+  });
+}
+
+export async function countPortfolioMediaAssetReferences(
+  mediaAssetId: string,
+  publicUrl: string
+): Promise<number> {
+  await requireAdmin();
+  const [imgCount, heroCount, ogCount] = await Promise.all([
+    db.portfolio.count({ where: { img: publicUrl } }),
+    db.portfolio.count({ where: { heroMediaId: mediaAssetId } }),
+    db.portfolio.count({ where: { ogMediaId: mediaAssetId } }),
+  ]);
+
+  return imgCount + heroCount + ogCount;
 }

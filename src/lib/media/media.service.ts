@@ -1,14 +1,20 @@
-import type { MediaStorageFolder } from "@/lib/media/storage-paths";
 import {
-  buildStorageKey,
-  DEFAULT_MEDIA_STORAGE_FOLDER,
-} from "@/lib/media/storage-paths";
+  createMediaObjectKey,
+  DEFAULT_MEDIA_OBJECT_KEY_DESCRIPTOR,
+  isAllowedMediaObjectKey,
+  type MediaObjectKeyDescriptor,
+} from "@/lib/media/object-keys";
 import {
   createMediaAsset,
+  deleteMediaAssetRecord,
+  countPortfolioMediaAssetReferences,
+  getMediaAssetById,
   getMediaAssetByStorageKey,
+  updateMediaAsset,
 } from "@/lib/data/media";
 import { getStorageProvider, getStorageProviderKind } from "@/lib/storage";
-import type { MediaAsset } from "@/lib/types/media";
+import type { MediaAsset, UpdateMediaMetadataInput } from "@/lib/types/media";
+import { UpdateMediaMetadataSchema } from "@/lib/types/media";
 import { validateMediaUpload } from "@/lib/media/validate-upload";
 
 export interface UploadMediaInput {
@@ -17,7 +23,7 @@ export interface UploadMediaInput {
   mimeType: string;
   sizeBytes: number;
   createdBy: string;
-  folder?: MediaStorageFolder;
+  objectKey?: MediaObjectKeyDescriptor;
   width?: number;
   height?: number;
 }
@@ -42,9 +48,31 @@ export interface CompleteMediaUploadInput {
   height?: number;
 }
 
+function resolveObjectKeyInput(
+  input?: MediaObjectKeyDescriptor
+): MediaObjectKeyDescriptor {
+  return input ?? DEFAULT_MEDIA_OBJECT_KEY_DESCRIPTOR;
+}
+
+function buildStorageKey(
+  filename: string,
+  objectKey?: MediaObjectKeyDescriptor
+): string {
+  return createMediaObjectKey({
+    ...resolveObjectKeyInput(objectKey),
+    filename,
+  });
+}
+
 function assertPresignedUploadSupported(): void {
   if (getStorageProviderKind() !== "s3") {
     throw new Error("Presigned uploads require STORAGE_PROVIDER=s3");
+  }
+}
+
+function assertAllowedStorageKey(storageKey: string): void {
+  if (!isAllowedMediaObjectKey(storageKey)) {
+    throw new Error("Invalid storage key for media upload");
   }
 }
 
@@ -55,10 +83,7 @@ export async function uploadMedia(input: UploadMediaInput): Promise<MediaAsset> 
     sizeBytes: input.sizeBytes,
   });
 
-  const storageKey = buildStorageKey(
-    input.filename,
-    input.folder ?? DEFAULT_MEDIA_STORAGE_FOLDER
-  );
+  const storageKey = buildStorageKey(input.filename, input.objectKey);
   const provider = getStorageProvider();
   const stored = await provider.upload({
     key: storageKey,
@@ -83,7 +108,7 @@ export async function createPresignedMediaUpload(input: {
   filename: string;
   mimeType: string;
   sizeBytes: number;
-  folder?: MediaStorageFolder;
+  objectKey?: MediaObjectKeyDescriptor;
 }): Promise<PresignMediaResult> {
   validateMediaUpload(input);
   assertPresignedUploadSupported();
@@ -93,10 +118,7 @@ export async function createPresignedMediaUpload(input: {
     throw new Error("Storage provider does not support presigned uploads");
   }
 
-  const storageKey = buildStorageKey(
-    input.filename,
-    input.folder ?? DEFAULT_MEDIA_STORAGE_FOLDER
-  );
+  const storageKey = buildStorageKey(input.filename, input.objectKey);
   const signed = await provider.getSignedUploadUrl({
     key: storageKey,
     mimeType: input.mimeType,
@@ -122,6 +144,7 @@ export async function completePresignedMediaUpload(
     sizeBytes: input.sizeBytes,
   });
   assertPresignedUploadSupported();
+  assertAllowedStorageKey(input.storageKey);
 
   const existing = await getMediaAssetByStorageKey(input.storageKey);
   if (existing) {
@@ -141,4 +164,37 @@ export async function completePresignedMediaUpload(
     storageProvider: provider.kind,
     createdBy: input.createdBy,
   });
+}
+
+export async function updateMediaMetadata(
+  id: string,
+  input: UpdateMediaMetadataInput
+): Promise<MediaAsset> {
+  const data = UpdateMediaMetadataSchema.parse(input);
+  const existing = await getMediaAssetById(id);
+  if (!existing) {
+    throw new Error("Media asset not found");
+  }
+  return updateMediaAsset(id, data);
+}
+
+export async function deleteMedia(id: string): Promise<void> {
+  const asset = await getMediaAssetById(id);
+  if (!asset) {
+    throw new Error("Media asset not found");
+  }
+
+  const usageCount = await countPortfolioMediaAssetReferences(
+    asset.id,
+    asset.publicUrl
+  );
+  if (usageCount > 0) {
+    throw new Error(
+      `Cannot delete media used by ${usageCount} portfolio project(s)`
+    );
+  }
+
+  const provider = getStorageProvider();
+  await provider.delete(asset.storageKey);
+  await deleteMediaAssetRecord(id);
 }

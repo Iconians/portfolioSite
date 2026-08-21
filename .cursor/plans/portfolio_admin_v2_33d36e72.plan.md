@@ -10,13 +10,13 @@ todos:
     status: completed
   - id: p03-media-library
     content: "Phase 3: /admin/media library — grid, edit metadata, delete"
-    status: pending
+    status: completed
   - id: p04-media-picker
     content: "Phase 4: MediaPicker + portfolio hero workflow (img from library, no manual paths)"
-    status: pending
+    status: completed
   - id: p05-schema
     content: "Phase 5: Portfolio schema foundation — metrics, versions, platform fields, slugs"
-    status: pending
+    status: completed
   - id: p06-admin-shell
     content: "Phase 6: Admin shell + auth hardening"
     status: pending
