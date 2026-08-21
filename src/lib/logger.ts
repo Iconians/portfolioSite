@@ -1,10 +1,32 @@
 import { createLogger, format, transports } from "winston";
 
 import type { Prisma } from "@prisma/client";
+import type winston from "winston";
 
 async function getDb() {
   const { db } = await import("@/lib/db/client");
   return db;
+}
+
+function buildTransports(): winston.transport[] {
+  const consoleTransport = new transports.Console({
+    format:
+      process.env.NODE_ENV === "development"
+        ? format.combine(format.colorize(), format.simple())
+        : undefined,
+  });
+
+  // File transports only in local dev. Vercel/serverless filesystems are read-only
+  // and winston creates the logs/ directory at module load (ENOENT in production).
+  if (process.env.NODE_ENV === "development") {
+    return [
+      consoleTransport,
+      new transports.File({ filename: "logs/error.log", level: "error" }),
+      new transports.File({ filename: "logs/combined.log" }),
+    ];
+  }
+
+  return [consoleTransport];
 }
 
 export const logger = createLogger({
@@ -14,13 +36,7 @@ export const logger = createLogger({
     format.errors({ stack: true }),
     format.json()
   ),
-  transports: [
-    new transports.File({ filename: "logs/error.log", level: "error" }),
-    new transports.File({ filename: "logs/combined.log" }),
-    ...(process.env.NODE_ENV === "development"
-      ? [new transports.Console({ format: format.simple() })]
-      : []),
-  ],
+  transports: buildTransports(),
 });
 
 export async function logAdminAction(
