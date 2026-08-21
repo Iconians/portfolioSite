@@ -1,4 +1,5 @@
-export const portfolioItems = [
+/** One-time seed data for `scripts/migrate-content.ts` only — not used at runtime. */
+export const portfolioSeedItems = [
   {
     img: "/RoyalCaninePic.png",
     caption: "The Royal Canine",
@@ -14,16 +15,6 @@ export const portfolioItems = [
     key: 0,
     id: 5,
   },
-  // {
-  //   img: "/triviaApp1.png",
-  //   caption: "Volcano Trivia App",
-  //   desc: "An interactive trivia app—version 2.0 of my original project. Rebuilt with Next.js, TypeScript, TailwindCSS, and Convex, it showcases my ability to create responsive, data-driven applications with real-time capabilities. Inspired by my fascination with volcanoes and natural wonders, the app offers an engaging way for users to test their knowledge while exploring the world's most powerful phenomena.",
-  //   category: ["Next", "TypeScript", "TailwindCSS", "Convex"],
-  //   url: "https://volcanoapp.vercel.app/",
-  //   github: "#",
-  //   key: 2,
-  //   id: 3,
-  // },
   {
     img: "/constructionSite.png",
     caption: "Downriver Renovations",

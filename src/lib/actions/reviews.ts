@@ -3,7 +3,6 @@
 import { createReview, updateReview, deleteReview } from "@/lib/data/reviews";
 import { revalidatePath } from "next/cache";
 import type { CreateReviewInput, UpdateReviewInput } from "@/lib/types/reviews";
-import { ReviewSchema } from "@/lib/types/reviews";
 import { z } from "zod";
 import { logAdminAction } from "@/lib/logger";
 import { requireAdmin } from "@/lib/permissions";

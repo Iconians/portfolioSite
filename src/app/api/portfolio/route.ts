@@ -10,16 +10,8 @@ export async function GET() {
   } catch (error) {
     console.error("Failed to fetch portfolio items:", error);
 
-    // Return empty array instead of error to prevent frontend crashes
     const msg = error instanceof Error ? error.message : String(error);
-    if (
-      msg.includes("Can't reach database") ||
-      msg.includes("DATABASE_URL") ||
-      (msg.includes("column") && (msg.includes("does not exist") || msg.includes("key_features") || msg.includes("project_type") || msg.includes("role") || msg.includes("highlights")))
-    ) {
-      if (msg.includes("column")) {
-        console.warn("Portfolio schema may be outdated. Run: bunx prisma migrate deploy");
-      }
+    if (msg.includes("Can't reach database") || msg.includes("DATABASE_URL")) {
       return NextResponse.json({ portfolioItems: [] });
     }
 

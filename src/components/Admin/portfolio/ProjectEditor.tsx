@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,7 +56,7 @@ export function ProjectEditor({
     control,
     setValue,
     watch,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<ProjectEditorFormData>({
     resolver: zodResolver(ProjectEditorSchema),
     defaultValues: initialValues ?? mapPortfolioItemToEditorValues(),
@@ -78,6 +78,19 @@ export function ProjectEditor({
     setValue,
     watch,
   };
+
+  useEffect(() => {
+    if (!isDirty) {
+      return;
+    }
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty]);
 
   const onSubmit = (data: ProjectEditorFormData) => {
     startTransition(async () => {
@@ -105,15 +118,55 @@ export function ProjectEditor({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Tabs defaultValue="overview">
-        <TabsList className="flex h-auto w-full flex-wrap">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="media">Media</TabsTrigger>
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="story">Story</TabsTrigger>
-          <TabsTrigger value="metrics">Metrics</TabsTrigger>
-          <TabsTrigger value="evolution">Evolution</TabsTrigger>
-          <TabsTrigger value="platform">Platform</TabsTrigger>
-          <TabsTrigger value="links">Links & SEO</TabsTrigger>
+        <TabsList className="flex h-auto w-full flex-wrap gap-1 bg-muted/50 p-1">
+          <TabsTrigger
+            value="overview"
+            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
+          >
+            Overview
+          </TabsTrigger>
+          <TabsTrigger
+            value="media"
+            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
+          >
+            Media
+          </TabsTrigger>
+          <TabsTrigger
+            value="details"
+            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
+          >
+            Details
+          </TabsTrigger>
+          <TabsTrigger
+            value="story"
+            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
+          >
+            Story
+          </TabsTrigger>
+          <TabsTrigger
+            value="metrics"
+            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
+          >
+            Metrics
+          </TabsTrigger>
+          <TabsTrigger
+            value="evolution"
+            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
+          >
+            Evolution
+          </TabsTrigger>
+          <TabsTrigger
+            value="platform"
+            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
+          >
+            Platform
+          </TabsTrigger>
+          <TabsTrigger
+            value="links"
+            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
+          >
+            Links & SEO
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -171,13 +224,20 @@ export function ProjectEditor({
         </TabsContent>
       </Tabs>
 
-      <Button type="submit" disabled={isPending}>
-        {isPending
-          ? "Saving..."
-          : portfolioId
-            ? "Save project"
-            : "Create project"}
-      </Button>
+      <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-h-5">
+          {isDirty ? (
+            <p className="text-sm text-amber-600 dark:text-amber-400">Unsaved changes</p>
+          ) : null}
+        </div>
+        <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
+          {isPending
+            ? "Saving..."
+            : portfolioId
+              ? "Save project"
+              : "Create project"}
+        </Button>
+      </div>
     </form>
   );
 }

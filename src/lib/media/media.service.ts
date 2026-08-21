@@ -190,7 +190,7 @@ export async function deleteMedia(id: string): Promise<void> {
   );
   if (usageCount > 0) {
     throw new Error(
-      `Cannot delete media used by ${usageCount} portfolio project(s)`
+      `Cannot delete media used by ${usageCount} portfolio, gallery, or article reference(s)`
     );
   }
 

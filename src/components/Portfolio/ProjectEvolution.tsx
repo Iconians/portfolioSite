@@ -1,10 +1,11 @@
 import { ProjectEvolutionItem } from "@/components/Portfolio/ProjectEvolutionItem";
+import { ProjectPageSection } from "@/components/Portfolio/ProjectPageSection";
+import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 import {
   hasProjectEvolution,
   sortProjectVersions,
 } from "@/lib/portfolio/project-evolution";
 import type { ProjectVersion } from "@/lib/types/portfolio";
-import { cn } from "@/lib/utils";
 
 interface ProjectEvolutionProps {
   versions: ProjectVersion[];
@@ -14,7 +15,7 @@ interface ProjectEvolutionProps {
 
 export function ProjectEvolution({
   versions,
-  title = "Project evolution",
+  title = "Timeline",
   className,
 }: ProjectEvolutionProps) {
   if (!hasProjectEvolution(versions)) {
@@ -22,17 +23,17 @@ export function ProjectEvolution({
   }
 
   const sortedVersions = sortProjectVersions(versions);
-  const headingId = "project-evolution-heading";
 
   return (
-    <section
-      aria-labelledby={headingId}
-      className={cn("rounded-lg border bg-card p-6", className)}
+    <ProjectPageSection
+      id="evolution"
+      title={title}
+      description="Major milestones across the project lifecycle."
+      width="wide"
+      surface
+      className={className}
     >
-      <h2 id={headingId} className="text-2xl font-semibold">
-        {title}
-      </h2>
-      <ol className="mt-6">
+      <ol className={projectPageStyles.cardPadding}>
         {sortedVersions.map((version, index) => (
           <ProjectEvolutionItem
             key={version.id}
@@ -41,6 +42,6 @@ export function ProjectEvolution({
           />
         ))}
       </ol>
-    </section>
+    </ProjectPageSection>
   );
 }

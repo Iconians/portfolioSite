@@ -11,7 +11,6 @@ import type {
   CreateArticleInput,
   UpdateArticleInput,
 } from "@/lib/types/articles";
-import { ArticleSchema } from "@/lib/types/articles";
 import { z } from "zod";
 import { logAdminAction } from "@/lib/logger";
 import { requireAdmin } from "@/lib/permissions";

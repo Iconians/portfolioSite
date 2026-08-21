@@ -57,17 +57,48 @@ export async function countPortfolioImgReferences(
   });
 }
 
+export async function getMediaPublicUrlById(id: string): Promise<string | null> {
+  const asset = await db.mediaAsset.findUnique({
+    where: { id },
+    select: { publicUrl: true },
+  });
+
+  return asset?.publicUrl ?? null;
+}
+
 export async function countPortfolioMediaAssetReferences(
   mediaAssetId: string,
   publicUrl: string
 ): Promise<number> {
   await requireAdmin();
-  const [imgCount, heroCount, ogCount, articleCoverCount] = await Promise.all([
-    db.portfolio.count({ where: { img: publicUrl } }),
-    db.portfolio.count({ where: { heroMediaId: mediaAssetId } }),
-    db.portfolio.count({ where: { ogMediaId: mediaAssetId } }),
-    db.article.count({ where: { coverMediaId: mediaAssetId } }),
-  ]);
+  const [imgCount, heroCount, ogCount, articleCoverCount, portfolios] =
+    await Promise.all([
+      db.portfolio.count({ where: { img: publicUrl } }),
+      db.portfolio.count({ where: { heroMediaId: mediaAssetId } }),
+      db.portfolio.count({ where: { ogMediaId: mediaAssetId } }),
+      db.article.count({ where: { coverMediaId: mediaAssetId } }),
+      db.portfolio.findMany({ select: { gallery: true } }),
+    ]);
 
-  return imgCount + heroCount + ogCount + articleCoverCount;
+  let galleryCount = 0;
+  for (const portfolio of portfolios) {
+    if (!Array.isArray(portfolio.gallery)) {
+      continue;
+    }
+
+    for (const item of portfolio.gallery) {
+      if (
+        item &&
+        typeof item === "object" &&
+        ("mediaId" in item || "url" in item)
+      ) {
+        const record = item as { mediaId?: string; url?: string };
+        if (record.mediaId === mediaAssetId || record.url === publicUrl) {
+          galleryCount += 1;
+        }
+      }
+    }
+  }
+
+  return imgCount + heroCount + ogCount + articleCoverCount + galleryCount;
 }

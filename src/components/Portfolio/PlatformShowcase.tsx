@@ -1,16 +1,16 @@
 import { normalizePlatformFeatures } from "@/lib/portfolio/platform";
-import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
+import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
+import { ProjectPageSection } from "./ProjectPageSection";
 
 interface PlatformShowcaseProps {
   features: string[];
   title?: string;
-  className?: string;
 }
 
 export function PlatformShowcase({
   features,
-  title = "Built with this platform",
-  className,
+  title = "Platform capabilities",
 }: PlatformShowcaseProps) {
   const normalizedFeatures = normalizePlatformFeatures(features);
 
@@ -18,26 +18,26 @@ export function PlatformShowcase({
     return null;
   }
 
-  const headingId = "platform-showcase-heading";
-
   return (
-    <section
-      aria-labelledby={headingId}
-      className={cn("rounded-lg border bg-card p-6", className)}
+    <ProjectPageSection
+      id="platform"
+      title={title}
+      description="Capabilities demonstrated by this project."
+      width="wide"
     >
-      <h2 id={headingId} className="text-2xl font-semibold">
-        {title}
-      </h2>
-      <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {normalizedFeatures.map((feature) => (
-          <li key={feature} className="flex items-start gap-2 text-sm">
-            <span aria-hidden="true" className="mt-0.5 text-primary">
-              ✓
+          <li
+            key={feature}
+            className={`${projectPageStyles.card} ${projectPageStyles.cardPadding} flex h-full min-h-[4.5rem] items-start gap-2.5`}
+          >
+            <span className={projectPageStyles.iconWrap}>
+              <Check className="h-4 w-4" aria-hidden />
             </span>
-            <span>{feature}</span>
+            <span className="pt-1.5 text-[0.9375rem] leading-6 text-foreground">{feature}</span>
           </li>
         ))}
       </ul>
-    </section>
+    </ProjectPageSection>
   );
 }

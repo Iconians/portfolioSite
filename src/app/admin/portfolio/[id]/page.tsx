@@ -1,8 +1,10 @@
 import { getPortfolioItemById } from "@/lib/data/portfolio";
 import { getMediaAssetById } from "@/lib/data/media";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProjectEditor } from "@/components/Admin/portfolio/ProjectEditor";
 import { PageHeader } from "@/components/Admin/layout/PageHeader";
+import { Button } from "@/components/ui/button";
 import { mapPortfolioItemToEditorValues } from "@/lib/portfolio/project-editor";
 import { listMetricsForPortfolio, listVersionsForPortfolio } from "@/lib/portfolio/portfolio.service";
 
@@ -37,6 +39,15 @@ export default async function EditPortfolioPage({
           { label: "Edit" },
           { label: item.caption },
         ]}
+        actions={
+          item.slug ? (
+            <Button variant="outline" size="sm" asChild>
+              <Link href={`/projects/${item.slug}?preview=1`} target="_blank" rel="noopener noreferrer">
+                Preview project
+              </Link>
+            </Button>
+          ) : null
+        }
       />
       <ProjectEditor
         portfolioId={item.id}

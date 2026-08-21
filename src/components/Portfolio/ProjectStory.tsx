@@ -1,9 +1,18 @@
-import { ProjectStorySection } from "@/components/Portfolio/ProjectStorySection";
+import { ProjectArchitectureSection } from "@/components/Portfolio/ProjectArchitectureSection";
+import { ProjectFeatureList } from "@/components/Portfolio/ProjectFeatureList";
+import { ProjectPageSection } from "@/components/Portfolio/ProjectPageSection";
+import { ProjectResponsibilityList } from "@/components/Portfolio/ProjectResponsibilityList";
+import {
+  ProjectStoryCallout,
+  ProjectStorySection,
+} from "@/components/Portfolio/ProjectStorySection";
+import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 import {
   formatProjectDateRange,
   getProjectStoryListItems,
   getProjectStorySections,
   hasProjectStoryContent,
+  type ProjectStorySection as StorySection,
 } from "@/lib/portfolio/project-story";
 import type { PortfolioItem } from "@/lib/types/portfolio";
 
@@ -11,30 +20,11 @@ interface ProjectStoryProps {
   project: PortfolioItem;
 }
 
-function ProjectStoryList({
-  title,
-  items,
-}: {
-  title: string;
-  items: string[];
-}) {
-  if (items.length === 0) {
-    return null;
-  }
-
-  return (
-    <article className="space-y-3">
-      <h3 className="text-lg font-semibold">{title}</h3>
-      <ul className="space-y-2 text-muted-foreground">
-        {items.map((item, index) => (
-          <li key={`${item}-${index}`} className="flex gap-3 leading-relaxed">
-            <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </article>
-  );
+function getStoryContent(
+  sections: StorySection[],
+  title: string
+): string | undefined {
+  return sections.find((section) => section.title === title)?.content;
 }
 
 export function ProjectStory({ project }: ProjectStoryProps) {
@@ -43,30 +33,71 @@ export function ProjectStory({ project }: ProjectStoryProps) {
   }
 
   const sections = getProjectStorySections(project);
+  const problem = getStoryContent(sections, "Problem");
+  const solution = getStoryContent(sections, "Solution");
+  const architecture = getStoryContent(sections, "Architecture");
+  const challenges = getStoryContent(sections, "Challenges");
+  const lessonsLearned = getStoryContent(sections, "Lessons learned");
+  const futureImprovements = getStoryContent(sections, "Future improvements");
   const features = getProjectStoryListItems(project.features);
   const responsibilities = getProjectStoryListItems(project.responsibilities);
   const dateRange = formatProjectDateRange(project.startDate, project.endDate);
 
   return (
-    <section className="space-y-8">
-      <h2 className="text-2xl font-semibold">Engineering story</h2>
-      <div className="space-y-8">
-        {sections.map((section) => (
-          <ProjectStorySection
-            key={section.title}
-            title={section.title}
-            content={section.content}
-          />
-        ))}
-        <ProjectStoryList title="Features" items={features} />
-        <ProjectStoryList title="Responsibilities" items={responsibilities} />
-        {dateRange && (
-          <article className="space-y-3">
-            <h3 className="text-lg font-semibold">Project timeline</h3>
-            <p className="text-muted-foreground leading-relaxed">{dateRange}</p>
-          </article>
+    <ProjectPageSection
+      id="story"
+      title="Engineering story"
+      description="How the platform was scoped, built, and refined."
+      width="article"
+    >
+      <div className="space-y-6 md:space-y-7">
+        {(problem || solution) && (
+          <div className="grid gap-4 md:grid-cols-2 md:gap-5">
+            {problem ? (
+              <ProjectStorySection title="Problem" content={problem} variant="card" />
+            ) : null}
+            {solution ? (
+              <ProjectStorySection title="Solution" content={solution} variant="card" />
+            ) : null}
+          </div>
         )}
+
+        {architecture ? <ProjectArchitectureSection content={architecture} /> : null}
+
+        {(challenges || lessonsLearned) && (
+          <div className="grid gap-4 md:grid-cols-2 md:gap-5">
+            {challenges ? (
+              <ProjectStorySection title="Challenges" content={challenges} variant="card" />
+            ) : null}
+            {lessonsLearned ? (
+              <ProjectStorySection
+                title="Lessons learned"
+                content={lessonsLearned}
+                variant="card"
+              />
+            ) : null}
+          </div>
+        )}
+
+        {futureImprovements ? (
+          <ProjectStoryCallout title="Future improvements" content={futureImprovements} />
+        ) : null}
+
+        {(features.length > 0 || responsibilities.length > 0) && (
+          <div className="grid items-stretch gap-4 md:grid-cols-2 md:gap-5">
+            <ProjectFeatureList items={features} />
+            <ProjectResponsibilityList items={responsibilities} />
+          </div>
+        )}
+
+        {dateRange ? (
+          <p
+            className={`${projectPageStyles.eyebrow} border-t border-[var(--blog-card-border)] pt-5`}
+          >
+            Project timeline · {dateRange}
+          </p>
+        ) : null}
       </div>
-    </section>
+    </ProjectPageSection>
   );
 }

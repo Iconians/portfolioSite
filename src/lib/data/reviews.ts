@@ -8,7 +8,6 @@ import type {
   ReviewWithUser,
 } from "@/lib/types/reviews";
 import { ReviewSchema } from "@/lib/types/reviews";
-import { z } from "zod";
 
 // Public queries (no auth required)
 export async function getAllReviews(): Promise<Review[]> {

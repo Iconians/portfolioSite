@@ -1,8 +1,8 @@
-export const review = [
+/** One-time seed data for `scripts/migrate-content.ts` only — not used at runtime. */
+export const reviewSeedData = [
   {
     title: "Basic Event Website Set Up",
     stars: 5,
-    // stars: "⭐⭐⭐⭐⭐",
     p: "Clayton was awesome to work with. He is a great communicator and even follows up with detailed information after each task within the project. For our project he helped us set up a new event website on WordPress for our annual company conference and he did an incredible job. Throughout the process we added and subtracted tasks and he always kept up with the new vision perfectly. When I had an idea, Clayton researched how to accomplish the task or already had the knowledge to complete the ask quickly. I recommend working with Clayton on your website project.",
     id: 0,
   },

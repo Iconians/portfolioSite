@@ -198,7 +198,7 @@ export async function deleteArticle(id: string): Promise<void> {
 }
 
 export async function publishArticle(id: string): Promise<Article> {
-  const user = await requireAdmin();
+  await requireAdmin();
 
   const article = await db.article.findUnique({ where: { id } });
   if (!article) throw new Error("Article not found");

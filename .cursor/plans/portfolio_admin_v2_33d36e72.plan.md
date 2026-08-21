@@ -58,10 +58,10 @@ todos:
     status: completed
   - id: p19-legacy-cleanup
     content: "Phase 19: Legacy migration and cleanup"
-    status: pending
+    status: completed
   - id: p20-optional
     content: "Phase 20: Optional enhancements (non-blocking)"
-    status: pending
+    status: completed
 isProject: false
 ---
 

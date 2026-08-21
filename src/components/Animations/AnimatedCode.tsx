@@ -9,11 +9,7 @@ interface AnimatedCodeProps {
 
 // During static generation, render a simple code block without animation
 // The animated version will be rendered on the client via dynamic import in BlogPostClient
-export const AnimatedCode: React.FC<AnimatedCodeProps> = ({
-  children,
-  language = "javascript",
-  delay = 0,
-}) => {
+export const AnimatedCode: React.FC<AnimatedCodeProps> = ({ children }) => {
   // Render a plain code block during SSR/static generation
   // This avoids any issues with framer-motion or react-syntax-highlighter
   return (

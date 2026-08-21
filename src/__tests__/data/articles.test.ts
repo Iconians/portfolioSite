@@ -1,11 +1,6 @@
 import { test, expect, describe, beforeAll, afterAll } from "bun:test";
 import { db } from "@/lib/db/client";
-import {
-  createArticle,
-  getAllArticles,
-  getArticleBySlug,
-} from "@/lib/data/articles";
-import type { CreateArticleInput } from "@/lib/types/articles";
+import { getAllArticles } from "@/lib/data/articles";
 
 // Note: These tests require a test database
 // Set TEST_DATABASE_URL in .env for running tests

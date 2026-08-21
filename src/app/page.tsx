@@ -7,7 +7,6 @@ import { WhatIEnjoyBuilding } from "@/components/WhatIEnjoyBuilding/WhatIEnjoyBu
 import PortfolioSection from "@/components/PortfolioSection/PortfolioSection";
 import FeaturedArticles from "@/components/FeaturedArticles/FeaturedArticles";
 import { AnimatedSection } from "@/components/Animations/AnimatedSection";
-import { JokeAdviceComponent } from "@/components/JokeAdvice/JokeAdviceComponent";
 import { ReviewComponent } from "@/components/ReviewComponent/ReviewComponent";
 import { getPublishedPortfolioItems } from "@/lib/data/portfolio";
 import { getAllArticles } from "@/lib/data/articles";
@@ -32,12 +31,6 @@ export default async function Home() {
         <AnimatedSection>
           <EngineeringPhilosophy />
         </AnimatedSection>
-
-        {/* <section id="personality" className="scroll-mt-20 py-12">
-          <AnimatedSection>
-            <JokeAdviceComponent /
-            hi
-        </section> */}
 
         <AnimatedSection>
           <TechStack />

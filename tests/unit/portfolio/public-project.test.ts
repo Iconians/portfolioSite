@@ -133,4 +133,10 @@ describe("buildProjectPageMetadata", () => {
     expect(metadata.title).toBe("Sample Project");
     expect(metadata.description).toBe("Modern engineering portfolio system");
   });
+
+  test("marks preview metadata as noindex", () => {
+    const metadata = buildProjectPageMetadata(createPortfolioItem(), { preview: true });
+
+    expect(metadata.robots).toEqual({ index: false, follow: false });
+  });
 });
