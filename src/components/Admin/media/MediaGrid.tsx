@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ConfirmDialog } from "@/components/Admin/media/ConfirmDialog";
+import { EmptyState } from "@/components/Admin/shared/EmptyState";
+import { ConfirmDialog } from "@/components/Admin/shared/ConfirmDialog";
 import { MediaMetadataForm } from "@/components/Admin/media/MediaMetadataForm";
 import {
   formatDimensions,
@@ -48,11 +49,10 @@ export function MediaGrid({ assets }: MediaGridProps) {
 
   if (assets.length === 0) {
     return (
-      <Card className="p-12 text-center">
-        <p className="text-muted-foreground">
-          No media yet. Upload an image to get started.
-        </p>
-      </Card>
+      <EmptyState
+        title="No media yet"
+        description="Upload an image to get started with the media library."
+      />
     );
   }
 

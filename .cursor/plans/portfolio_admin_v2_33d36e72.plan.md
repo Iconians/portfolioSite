@@ -18,8 +18,8 @@ todos:
     content: "Phase 5: Portfolio schema foundation — metrics, versions, platform fields, slugs"
     status: completed
   - id: p06-admin-shell
-    content: "Phase 6: Admin shell + auth hardening"
-    status: pending
+    content: "Phase 6: Admin shell + auth hardening (6A shell, 6B auth)"
+    status: completed
   - id: p07-editor-core
     content: "Phase 7: Project editor core — Overview, Media, Details, Links & SEO"
     status: pending

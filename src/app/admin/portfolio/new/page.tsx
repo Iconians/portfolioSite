@@ -1,9 +1,17 @@
 import { PortfolioForm } from "@/components/Admin/PortfolioForm";
+import { PageHeader } from "@/components/Admin/layout/PageHeader";
 
 export default function NewPortfolioPage() {
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">Create New Portfolio Item</h1>
+      <PageHeader
+        title="Create Project"
+        description="Add a new portfolio project to the public site."
+        breadcrumbs={[
+          { label: "Portfolio", href: "/admin/portfolio" },
+          { label: "Create" },
+        ]}
+      />
       <PortfolioForm />
     </div>
   );

@@ -108,6 +108,8 @@ export async function getAllPortfolioItems(): Promise<PortfolioItem[]> {
 export async function getPortfolioItemById(
   id: string
 ): Promise<PortfolioItemWithUser | null> {
+  await requireAdmin();
+
   const item = await db.portfolio.findUnique({
     where: { id },
     select: {

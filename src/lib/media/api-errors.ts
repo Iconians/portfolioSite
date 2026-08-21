@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { authApiErrorResponse } from "@/lib/auth/api-response";
 
 const CLIENT_ERROR_PATTERNS = [
   "Invalid file type",
@@ -21,8 +22,9 @@ function isClientError(message: string): boolean {
 }
 
 export function mediaApiError(error: unknown, fallbackMessage: string) {
-  if (error instanceof Error && error.message === "Unauthorized") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const authResponse = authApiErrorResponse(error);
+  if (authResponse) {
+    return authResponse;
   }
 
   if (error instanceof Error && isClientError(error.message)) {

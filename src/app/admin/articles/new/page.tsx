@@ -1,9 +1,17 @@
 import { ArticleEditor } from "@/components/Admin/ArticleEditor";
+import { PageHeader } from "@/components/Admin/layout/PageHeader";
 
 export default function NewArticlePage() {
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">Create New Article</h1>
+      <PageHeader
+        title="Create Article"
+        description="Draft a new blog article for the public site."
+        breadcrumbs={[
+          { label: "Articles", href: "/admin/articles" },
+          { label: "Create" },
+        ]}
+      />
       <ArticleEditor />
     </div>
   );

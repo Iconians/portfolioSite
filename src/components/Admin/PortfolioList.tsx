@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/Admin/shared/EmptyState";
 import { deletePortfolioAction } from "@/lib/actions/portfolio";
 import { toast } from "sonner";
 import type { PortfolioItem } from "@/lib/types/portfolio";
@@ -82,13 +83,13 @@ export function PortfolioList({
           </div>
         </Card>
       ))}
-      {portfolio.length === 0 && (
-        <Card className="p-12 text-center col-span-2">
-          <p className="text-muted-foreground">
-            No portfolio items yet. Create your first item!
-          </p>
-        </Card>
-      )}
+      {portfolio.length === 0 ? (
+        <EmptyState
+          className="col-span-2 p-12 text-center"
+          title="No portfolio projects yet"
+          description="Create your first project to showcase engineering work on the public site."
+        />
+      ) : null}
     </div>
   );
 }

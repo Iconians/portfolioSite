@@ -1,5 +1,6 @@
 import { db } from "@/lib/db/client";
 import { requireAdmin } from "@/lib/permissions";
+import { isAdminRole } from "@/lib/auth/roles";
 import type {
   CreateArticleInput,
   UpdateArticleInput,
@@ -78,6 +79,30 @@ export async function getAllArticlesAdmin(): Promise<Article[]> {
   });
 }
 
+export async function getArticleByIdAdmin(
+  id: string
+): Promise<Article | null> {
+  await requireAdmin();
+  return db.article.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      description: true,
+      date: true,
+      tags: true,
+      featured: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      publishedAt: true,
+      createdBy: true,
+      content: true,
+    },
+  });
+}
+
 // Admin-only mutations (enforce auth)
 export async function createArticle(
   data: CreateArticleInput
@@ -108,7 +133,7 @@ export async function updateArticle(
   if (!article) throw new Error("Article not found");
 
   // Explicit ownership check
-  if (article.createdBy !== user.id && user.role !== "admin") {
+  if (article.createdBy !== user.id && !isAdminRole(user.role)) {
     throw new Error("Forbidden");
   }
 
@@ -135,7 +160,7 @@ export async function deleteArticle(id: string): Promise<void> {
   const article = await db.article.findUnique({ where: { id } });
   if (!article) throw new Error("Article not found");
 
-  if (article.createdBy !== user.id && user.role !== "admin") {
+  if (article.createdBy !== user.id && !isAdminRole(user.role)) {
     throw new Error("Forbidden");
   }
 

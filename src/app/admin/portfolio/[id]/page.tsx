@@ -1,6 +1,7 @@
-import { getAllPortfolioItems } from "@/lib/data/portfolio";
+import { getPortfolioItemById } from "@/lib/data/portfolio";
 import { notFound } from "next/navigation";
 import { PortfolioForm } from "@/components/Admin/PortfolioForm";
+import { PageHeader } from "@/components/Admin/layout/PageHeader";
 
 export default async function EditPortfolioPage({
   params,
@@ -8,8 +9,7 @@ export default async function EditPortfolioPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const portfolio = await getAllPortfolioItems();
-  const item = portfolio.find((p) => p.id === id);
+  const item = await getPortfolioItemById(id);
 
   if (!item) {
     notFound();
@@ -25,12 +25,26 @@ export default async function EditPortfolioPage({
     keyFeatures: item.keyFeatures ?? undefined,
     role: item.role ?? undefined,
     highlights: item.highlights ?? undefined,
-    projectType: (item.projectType ?? undefined) as "" | "saas" | "client" | "engineering" | "personal" | undefined,
+    projectType: (item.projectType ?? undefined) as
+      | ""
+      | "saas"
+      | "client"
+      | "engineering"
+      | "personal"
+      | undefined,
   };
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">Edit Portfolio Item</h1>
+      <PageHeader
+        title="Edit Project"
+        description="Update portfolio project details and hero image."
+        breadcrumbs={[
+          { label: "Portfolio", href: "/admin/portfolio" },
+          { label: "Edit" },
+          { label: item.caption },
+        ]}
+      />
       <PortfolioForm initialData={formData} portfolioId={item.id} />
     </div>
   );

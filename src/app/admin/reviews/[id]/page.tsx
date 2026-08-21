@@ -1,6 +1,7 @@
-import { getAllReviews } from "@/lib/data/reviews";
+import { getReviewById } from "@/lib/data/reviews";
 import { notFound } from "next/navigation";
 import { ReviewForm } from "@/components/Admin/ReviewForm";
+import { PageHeader } from "@/components/Admin/layout/PageHeader";
 
 export default async function EditReviewPage({
   params,
@@ -8,8 +9,7 @@ export default async function EditReviewPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const reviews = await getAllReviews();
-  const review = reviews.find((r) => r.id === id);
+  const review = await getReviewById(id);
 
   if (!review) {
     notFound();
@@ -17,7 +17,15 @@ export default async function EditReviewPage({
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">Edit Review</h1>
+      <PageHeader
+        title="Edit Review"
+        description="Update review content and star rating."
+        breadcrumbs={[
+          { label: "Reviews", href: "/admin/reviews" },
+          { label: "Edit" },
+          { label: review.title },
+        ]}
+      />
       <ReviewForm initialData={review} reviewId={review.id} />
     </div>
   );

@@ -1,6 +1,7 @@
-import { getAllArticlesAdmin } from "@/lib/data/articles";
+import { getArticleByIdAdmin } from "@/lib/data/articles";
 import { notFound } from "next/navigation";
 import { ArticleEditor } from "@/components/Admin/ArticleEditor";
+import { PageHeader } from "@/components/Admin/layout/PageHeader";
 
 export default async function EditArticlePage({
   params,
@@ -8,8 +9,7 @@ export default async function EditArticlePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const articles = await getAllArticlesAdmin();
-  const article = articles.find((a) => a.id === id);
+  const article = await getArticleByIdAdmin(id);
 
   if (!article) {
     notFound();
@@ -17,7 +17,15 @@ export default async function EditArticlePage({
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">Edit Article</h1>
+      <PageHeader
+        title="Edit Article"
+        description="Update article content, metadata, and publish status."
+        breadcrumbs={[
+          { label: "Articles", href: "/admin/articles" },
+          { label: "Edit" },
+          { label: article.title },
+        ]}
+      />
       <ArticleEditor initialArticle={article} />
     </div>
   );

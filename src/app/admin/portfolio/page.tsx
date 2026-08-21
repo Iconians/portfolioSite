@@ -2,6 +2,7 @@ import { getAllPortfolioItems } from "@/lib/data/portfolio";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PortfolioList } from "@/components/Admin/PortfolioList";
+import { PageHeader } from "@/components/Admin/layout/PageHeader";
 
 export default async function PortfolioPage() {
   let portfolio: Awaited<ReturnType<typeof getAllPortfolioItems>> = [];
@@ -21,17 +22,21 @@ export default async function PortfolioPage() {
 
   return (
     <div>
-      {dbError && (
+      {dbError ? (
         <div className="mb-6 rounded-lg border border-amber-500/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-700 dark:text-amber-400">
           {dbError}
         </div>
-      )}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">Portfolio Items</h1>
-        <Link href="/admin/portfolio/new">
-          <Button>Create Portfolio Item</Button>
-        </Link>
-      </div>
+      ) : null}
+
+      <PageHeader
+        title="Portfolio"
+        description="Manage projects and engineering case studies"
+        actions={
+          <Link href="/admin/portfolio/new">
+            <Button>Add Project</Button>
+          </Link>
+        }
+      />
 
       <PortfolioList portfolio={portfolio} />
     </div>
