@@ -9,7 +9,7 @@ import FeaturedArticles from "@/components/FeaturedArticles/FeaturedArticles";
 import { AnimatedSection } from "@/components/Animations/AnimatedSection";
 import { JokeAdviceComponent } from "@/components/JokeAdvice/JokeAdviceComponent";
 import { ReviewComponent } from "@/components/ReviewComponent/ReviewComponent";
-import { getAllPortfolioItems } from "@/lib/data/portfolio";
+import { getPublishedPortfolioItems } from "@/lib/data/portfolio";
 import { getAllArticles } from "@/lib/data/articles";
 import { getAllReviews } from "@/lib/data/reviews";
 
@@ -18,7 +18,7 @@ export const revalidate = 3600; // Revalidate every hour
 
 export default async function Home() {
   const [portfolioItems, articles, reviews] = await Promise.all([
-    getAllPortfolioItems(),
+    getPublishedPortfolioItems(),
     getAllArticles(),
     getAllReviews(),
   ]);

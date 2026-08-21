@@ -35,6 +35,8 @@ export default function BlogGrid({ posts }: { posts: Post[] }) {
             title={post.frontMatter.title}
             description={post.frontMatter.description}
             date={post.frontMatter.date}
+            coverImageUrl={post.frontMatter.coverImageUrl}
+            coverImageAlt={post.frontMatter.coverImageAlt}
           />
         </Link>
       ))}

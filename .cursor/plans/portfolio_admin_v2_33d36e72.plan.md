@@ -37,25 +37,25 @@ todos:
     status: completed
   - id: p12-public-route
     content: "Phase 12: Public /projects/[slug] foundation + homepage CTA"
-    status: pending
+    status: completed
   - id: p13-public-story
     content: "Phase 13: Public engineering story sections"
-    status: pending
+    status: completed
   - id: p14-public-metrics
     content: "Phase 14: Public ProjectMetrics display"
-    status: pending
+    status: completed
   - id: p15-public-evolution
     content: "Phase 15: Public ProjectEvolution timeline"
-    status: pending
+    status: completed
   - id: p16-public-platform
     content: "Phase 16: Public PlatformShowcase"
-    status: pending
+    status: completed
   - id: p17-portfolio-project
     content: "Phase 17: Create portfolio platform project via admin (reference implementation)"
     status: pending
   - id: p18-article-media
     content: "Phase 18: Article coverMediaId + MediaPicker"
-    status: pending
+    status: completed
   - id: p19-legacy-cleanup
     content: "Phase 19: Legacy migration and cleanup"
     status: pending

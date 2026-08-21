@@ -18,6 +18,7 @@ import type { Article } from "@/lib/types/articles";
 import { type CreateArticleInput } from "@/lib/types/articles";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import { ArticleEditorFields } from "./article-editor/ArticleEditorFields";
+import { ArticleEditorCover } from "./article-editor/ArticleEditorCover";
 import { ArticleEditorContent } from "./article-editor/ArticleEditorContent";
 import { ArticleEditorActions } from "./article-editor/ArticleEditorActions";
 import type { ArticleEditorFormData } from "./article-editor/types";
@@ -33,6 +34,15 @@ export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
     () => initialArticle?.content ?? ""
   );
   const [preview, setPreview] = useState<MDXRemoteSerializeResult | null>(null);
+  const [coverMediaId, setCoverMediaId] = useState<string | null>(
+    () => initialArticle?.coverMediaId ?? null
+  );
+  const [coverImageUrl, setCoverImageUrl] = useState(
+    () => initialArticle?.coverMedia?.publicUrl ?? ""
+  );
+  const [coverImageAlt, setCoverImageAlt] = useState(
+    () => initialArticle?.coverMedia?.altText ?? ""
+  );
 
   const {
     register,
@@ -116,6 +126,7 @@ export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
         tags: tagsArray,
         content: currentMdx,
         date: initialArticle?.date || new Date(),
+        coverMediaId,
       };
 
       const result = initialArticle
@@ -152,6 +163,21 @@ export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <ArticleEditorFields register={register} errors={errors} isPending={isPending} />
+      <ArticleEditorCover
+        coverImageUrl={coverImageUrl}
+        coverImageAlt={coverImageAlt}
+        isPending={isPending}
+        onSelectCover={(asset) => {
+          setCoverMediaId(asset.id);
+          setCoverImageUrl(asset.publicUrl);
+          setCoverImageAlt(asset.altText ?? "");
+        }}
+        onClearCover={() => {
+          setCoverMediaId(null);
+          setCoverImageUrl("");
+          setCoverImageAlt("");
+        }}
+      />
       <ArticleEditorContent
         editor={editor}
         preview={preview}

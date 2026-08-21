@@ -44,6 +44,7 @@ model MediaAsset {
 
   portfolioHeroFor Portfolio[] @relation("PortfolioHeroMedia")
   portfolioOgFor   Portfolio[] @relation("PortfolioOgMedia")
+  articleCoversFor Article[] @relation("ArticleCoverMedia")
 
   @@index([createdAt(sort: Desc)], name: "media_assets_created_at_idx")
   @@map("media_assets")
@@ -62,8 +63,10 @@ model Article {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
   publishedAt   DateTime? @map("published_at")
+  coverMediaId  String?   @map("cover_media_id")
   createdBy     String    @map("created_by")
   createdByUser User      @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  coverMedia    MediaAsset? @relation("ArticleCoverMedia", fields: [coverMediaId], references: [id], onDelete: SetNull)
 
   @@index([slug], name: "articles_slug_idx")
   @@index([featured, status], name: "articles_featured_idx")

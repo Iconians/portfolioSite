@@ -20,6 +20,15 @@ export async function listProjectVersions(
   });
 }
 
+export async function listPublicProjectVersions(
+  portfolioId: string
+): Promise<ProjectVersion[]> {
+  return db.projectVersion.findMany({
+    where: { portfolioId },
+    orderBy: [{ sortOrder: "asc" }, { year: "asc" }, { createdAt: "asc" }],
+  });
+}
+
 export async function createProjectVersionRecord(
   portfolioId: string,
   input: ProjectVersionInput

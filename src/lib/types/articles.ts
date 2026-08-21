@@ -9,6 +9,7 @@ export const ArticleSchema = z.object({
   tags: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
+  coverMediaId: z.string().uuid().nullable().optional(),
 });
 
 export const PublishArticleSchema = z.object({
@@ -18,6 +19,12 @@ export const PublishArticleSchema = z.object({
 
 export type CreateArticleInput = z.infer<typeof ArticleSchema>;
 export type UpdateArticleInput = Partial<CreateArticleInput>;
+
+export interface ArticleCoverMediaRecord {
+  id: string;
+  publicUrl: string;
+  altText: string | null;
+}
 
 export interface Article {
   id: string;
@@ -29,6 +36,8 @@ export interface Article {
   tags: string[];
   featured: boolean;
   status: string;
+  coverMediaId: string | null;
+  coverMedia?: ArticleCoverMediaRecord | null;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;

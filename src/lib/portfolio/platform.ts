@@ -44,3 +44,14 @@ export function validatePlatformShowcase(input: {
     platformFeatures,
   };
 }
+
+export function shouldShowPlatformShowcase(input: {
+  showPlatformSection: boolean;
+  platformFeatures: string[];
+}): boolean {
+  if (!input.showPlatformSection) {
+    return false;
+  }
+
+  return normalizePlatformFeatures(input.platformFeatures).length > 0;
+}

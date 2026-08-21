@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
   normalizePlatformFeatures,
+  shouldShowPlatformShowcase,
   validatePlatformShowcase,
 } from "@/lib/portfolio/platform";
 import {
@@ -42,6 +43,35 @@ describe("validatePlatformShowcase", () => {
         platformFeatures: [],
       })
     ).toThrow("Platform showcase requires at least one feature when enabled");
+  });
+});
+
+describe("shouldShowPlatformShowcase", () => {
+  test("returns false when showcase is disabled", () => {
+    expect(
+      shouldShowPlatformShowcase({
+        showPlatformSection: false,
+        platformFeatures: ["Media library & persisted uploads"],
+      })
+    ).toBe(false);
+  });
+
+  test("returns false when enabled without features", () => {
+    expect(
+      shouldShowPlatformShowcase({
+        showPlatformSection: true,
+        platformFeatures: [],
+      })
+    ).toBe(false);
+  });
+
+  test("returns true when enabled with normalized features", () => {
+    expect(
+      shouldShowPlatformShowcase({
+        showPlatformSection: true,
+        platformFeatures: [" Media Library ", "media library"],
+      })
+    ).toBe(true);
   });
 });
 

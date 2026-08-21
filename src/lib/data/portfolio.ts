@@ -83,14 +83,8 @@ function buildExtendedWriteData(input: PortfolioExtendedInput) {
   };
 }
 
-// Public queries
-export async function getAllPortfolioItems(): Promise<PortfolioItem[]> {
-  const items = await db.portfolio.findMany({
-    orderBy: { createdAt: "desc" },
-    select: portfolioItemSelect,
-  });
-
-  return [...items].map(mapPortfolioRecord).sort((a, b) => {
+function sortPortfolioItems(items: PortfolioItem[]): PortfolioItem[] {
+  return [...items].sort((a, b) => {
     const typeOrder = (type: string | null | undefined) => {
       const t = type?.toLowerCase?.() ?? type ?? "";
       if (!t) return PROJECT_TYPE_ORDER.length;
@@ -103,6 +97,37 @@ export async function getAllPortfolioItems(): Promise<PortfolioItem[]> {
     if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
+}
+
+// Public queries
+export async function getAllPortfolioItems(): Promise<PortfolioItem[]> {
+  const items = await db.portfolio.findMany({
+    orderBy: { createdAt: "desc" },
+    select: portfolioItemSelect,
+  });
+
+  return sortPortfolioItems(items.map(mapPortfolioRecord));
+}
+
+export async function getPublishedPortfolioItems(): Promise<PortfolioItem[]> {
+  const items = await db.portfolio.findMany({
+    where: { publishStatus: "published" },
+    orderBy: { createdAt: "desc" },
+    select: portfolioItemSelect,
+  });
+
+  return sortPortfolioItems(items.map(mapPortfolioRecord));
+}
+
+export async function getPublishedPortfolioItemBySlug(
+  slug: string
+): Promise<PortfolioItem | null> {
+  const item = await db.portfolio.findFirst({
+    where: { slug, publishStatus: "published" },
+    select: portfolioItemSelect,
+  });
+
+  return item ? mapPortfolioRecord(item) : null;
 }
 
 export async function getPortfolioItemById(

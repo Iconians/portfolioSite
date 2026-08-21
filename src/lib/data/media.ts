@@ -62,11 +62,12 @@ export async function countPortfolioMediaAssetReferences(
   publicUrl: string
 ): Promise<number> {
   await requireAdmin();
-  const [imgCount, heroCount, ogCount] = await Promise.all([
+  const [imgCount, heroCount, ogCount, articleCoverCount] = await Promise.all([
     db.portfolio.count({ where: { img: publicUrl } }),
     db.portfolio.count({ where: { heroMediaId: mediaAssetId } }),
     db.portfolio.count({ where: { ogMediaId: mediaAssetId } }),
+    db.article.count({ where: { coverMediaId: mediaAssetId } }),
   ]);
 
-  return imgCount + heroCount + ogCount;
+  return imgCount + heroCount + ogCount + articleCoverCount;
 }

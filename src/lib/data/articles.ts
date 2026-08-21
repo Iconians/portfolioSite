@@ -8,7 +8,59 @@ import type {
   ArticleWithUser,
 } from "@/lib/types/articles";
 import { ArticleSchema } from "@/lib/types/articles";
-import { z } from "zod";
+
+const articleCoverMediaSelect = {
+  select: {
+    id: true,
+    publicUrl: true,
+    altText: true,
+  },
+} as const;
+
+const articleListSelect = {
+  id: true,
+  title: true,
+  slug: true,
+  description: true,
+  date: true,
+  tags: true,
+  featured: true,
+  status: true,
+  coverMediaId: true,
+  coverMedia: articleCoverMediaSelect,
+  createdAt: true,
+  updatedAt: true,
+  publishedAt: true,
+  createdBy: true,
+} as const;
+
+function normalizeArticleDate(date: CreateArticleInput["date"]): Date {
+  return date instanceof Date ? date : new Date(date);
+}
+
+function buildArticleWriteData(
+  data: CreateArticleInput | UpdateArticleInput
+): Record<string, unknown> {
+  const validatedData = ArticleSchema.partial().parse(data);
+
+  return {
+    ...(validatedData.title !== undefined && { title: validatedData.title }),
+    ...(validatedData.slug !== undefined && { slug: validatedData.slug }),
+    ...(validatedData.content !== undefined && { content: validatedData.content }),
+    ...(validatedData.description !== undefined && {
+      description: validatedData.description,
+    }),
+    ...(validatedData.tags !== undefined && { tags: validatedData.tags }),
+    ...(validatedData.featured !== undefined && { featured: validatedData.featured }),
+    ...(validatedData.status !== undefined && { status: validatedData.status }),
+    ...(validatedData.coverMediaId !== undefined && {
+      coverMediaId: validatedData.coverMediaId,
+    }),
+    ...(validatedData.date !== undefined && {
+      date: normalizeArticleDate(validatedData.date),
+    }),
+  };
+}
 
 // Public queries (no auth required)
 // Note: content is excluded by default to reduce payload size - only fetch when needed
@@ -19,18 +71,7 @@ export async function getAllArticles(
     where: { status: "published" },
     orderBy: { date: "desc" },
     select: {
-      id: true,
-      title: true,
-      slug: true,
-      description: true,
-      date: true,
-      tags: true,
-      featured: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-      publishedAt: true,
-      createdBy: true,
+      ...articleListSelect,
       ...(includeContent ? { content: true } : {}),
     },
   }) as Promise<Article[]>;
@@ -45,6 +86,13 @@ export async function getArticleBySlug(
       createdByUser: {
         select: { email: true },
       },
+      coverMedia: {
+        select: {
+          id: true,
+          publicUrl: true,
+          altText: true,
+        },
+      },
     },
   });
 
@@ -53,7 +101,7 @@ export async function getArticleBySlug(
     return null;
   }
 
-  return article;
+  return article as ArticleWithUser;
 }
 
 // Admin-only queries
@@ -62,18 +110,7 @@ export async function getAllArticlesAdmin(): Promise<Article[]> {
   return db.article.findMany({
     orderBy: { date: "desc" },
     select: {
-      id: true,
-      title: true,
-      slug: true,
-      description: true,
-      date: true,
-      tags: true,
-      featured: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-      publishedAt: true,
-      createdBy: true,
+      ...articleListSelect,
       content: true,
     },
   });
@@ -86,18 +123,7 @@ export async function getArticleByIdAdmin(
   return db.article.findUnique({
     where: { id },
     select: {
-      id: true,
-      title: true,
-      slug: true,
-      description: true,
-      date: true,
-      tags: true,
-      featured: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-      publishedAt: true,
-      createdBy: true,
+      ...articleListSelect,
       content: true,
     },
   });
@@ -113,12 +139,20 @@ export async function createArticle(
 
   return db.article.create({
     data: {
-      ...validatedData,
-      date:
-        validatedData.date instanceof Date
-          ? validatedData.date
-          : new Date(validatedData.date),
+      title: validatedData.title,
+      slug: validatedData.slug,
+      content: validatedData.content,
+      description: validatedData.description,
+      tags: validatedData.tags,
+      featured: validatedData.featured,
+      status: validatedData.status,
+      coverMediaId: validatedData.coverMediaId ?? null,
+      date: normalizeArticleDate(validatedData.date),
       createdBy: user.id,
+    },
+    select: {
+      ...articleListSelect,
+      content: true,
     },
   });
 }
@@ -137,19 +171,15 @@ export async function updateArticle(
     throw new Error("Forbidden");
   }
 
-  const validatedData = ArticleSchema.partial().parse(data);
-
   return db.article.update({
     where: { id },
     data: {
-      ...validatedData,
+      ...buildArticleWriteData(data),
       updatedAt: new Date(),
-      ...(validatedData.date && {
-        date:
-          validatedData.date instanceof Date
-            ? validatedData.date
-            : new Date(validatedData.date),
-      }),
+    },
+    select: {
+      ...articleListSelect,
+      content: true,
     },
   });
 }
@@ -179,6 +209,10 @@ export async function publishArticle(id: string): Promise<Article> {
       status: "published",
       publishedAt: new Date(),
       updatedAt: new Date(),
+    },
+    select: {
+      ...articleListSelect,
+      content: true,
     },
   });
 }

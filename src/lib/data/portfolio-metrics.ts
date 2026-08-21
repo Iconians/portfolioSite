@@ -20,6 +20,15 @@ export async function listPortfolioMetrics(
   });
 }
 
+export async function listPublicPortfolioMetrics(
+  portfolioId: string
+): Promise<PortfolioMetric[]> {
+  return db.portfolioMetric.findMany({
+    where: { portfolioId },
+    orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
+  });
+}
+
 export async function createPortfolioMetricRecord(
   portfolioId: string,
   input: PortfolioMetricInput

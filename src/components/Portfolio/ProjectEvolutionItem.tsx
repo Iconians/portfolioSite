@@ -9,6 +9,8 @@ export function ProjectEvolutionItem({
   version,
   isLast,
 }: ProjectEvolutionItemProps) {
+  const description = version.description?.trim();
+
   return (
     <li className="relative pb-8 pl-8 last:pb-0">
       {!isLast ? (
@@ -26,8 +28,10 @@ export function ProjectEvolutionItem({
           {version.year} · {version.version}
         </p>
         <h3 className="text-base font-semibold text-foreground">{version.title}</h3>
-        {version.description ? (
-          <p className="text-sm text-muted-foreground">{version.description}</p>
+        {description ? (
+          <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+            {description}
+          </p>
         ) : null}
       </div>
     </li>
