@@ -1,55 +1,85 @@
-import { GalleryLightboxImageViewport } from "@/components/patterns/GalleryLightboxImageViewport";
+"use client";
+
+import { useState } from "react";
+
+import { GalleryLightbox } from "@/components/patterns/GalleryLightbox";
 
 import type { GalleryImage } from "@/design-system/types/gallery";
 import type { Meta, StoryObj } from "@storybook/react";
 
-const dashboardShot: GalleryImage = {
-  url: "/passwordManagerApp.png",
-  alt: "Password manager dashboard overview",
-  caption: "Dashboard with credential list and security summary",
-};
+const images: GalleryImage[] = [
+  {
+    url: "/passwordManagerApp.png",
+    alt: "Password manager dashboard overview",
+    caption: "Dashboard with credential list",
+  },
+  {
+    url: "/ghostmammoth.png",
+    alt: "Mobile navigation shell",
+    caption: "Compact mobile layout",
+  },
+  {
+    url: "/ai_powered.png",
+    alt: "AI-assisted workflow screen",
+  },
+];
 
 const meta = {
-  title: "Patterns/GalleryLightbox",
-  component: GalleryLightboxImageViewport,
+  title: "Patterns/GalleryLightbox (controlled)",
   tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          "Controlled lightbox shell for gallery navigation, zoom modes, and dialog focus trap. Prefer `EngineeringGallery` for the full thumbnail + lightbox pattern.",
+      },
+    },
   },
-  decorators: [
-    (Story) => (
-      <div className="flex h-[min(90dvh,90vh)] w-[min(95vw,100vw)] flex-col gap-2 border border-border bg-background p-2">
-        <Story />
-      </div>
-    ),
-  ],
-} satisfies Meta<typeof GalleryLightboxImageViewport>;
+} satisfies Meta;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const FitToWindow: Story = {
-  args: {
-    image: dashboardShot,
-    viewMode: "fit",
-  },
-};
+function ControlledLightboxDemo({
+  startIndex = 0,
+}: {
+  startIndex?: number;
+}) {
+  const [openIndex, setOpenIndex] = useState<number | null>(startIndex);
 
-export const ActualSize: Story = {
-  args: {
-    image: dashboardShot,
-    viewMode: "actual",
-  },
-};
+  return (
+    <div className="p-4">
+      <p className="mb-4 text-sm text-muted-foreground">
+        Lightbox opens by default for keyboard and zoom testing.
+      </p>
+      <GalleryLightbox
+        images={images}
+        openIndex={openIndex}
+        onOpenIndexChange={setOpenIndex}
+      />
+      {openIndex === null ? (
+        <button
+          type="button"
+          className="text-sm text-primary underline"
+          onClick={() => setOpenIndex(0)}
+        >
+          Reopen lightbox
+        </button>
+      ) : null}
+    </div>
+  );
+}
 
-export const ActualSizeWideScreenshot: Story = {
-  args: {
-    image: {
-      url: "/ai_powered.png",
-      alt: "AI-assisted workflow screen",
-      caption: "Wide dashboard layout for scroll inspection",
+export const OpenByDefault: Story = {
+  render: () => <ControlledLightboxDemo startIndex={0} />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Verify Escape, arrow keys, prev/next controls, and fit/100% toggle while dialog is open.",
+      },
     },
-    viewMode: "actual",
   },
 };

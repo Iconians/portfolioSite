@@ -95,7 +95,7 @@ export const MobileViewport: Story = {
   },
   parameters: {
     viewport: {
-      defaultViewport: "mobile1",
+      defaultViewport: "sm",
     },
   },
 };
@@ -106,7 +106,31 @@ export const DesktopViewport: Story = {
   },
   parameters: {
     viewport: {
-      defaultViewport: "desktop",
+      defaultViewport: "lg",
+    },
+  },
+};
+
+const interactionChecklist =
+  "Manual interaction checklist (no @storybook/test installed):\n" +
+  "1. Click a thumbnail — lightbox opens, focus moves inside dialog.\n" +
+  "2. Next / Previous buttons change image; counter updates (aria-live).\n" +
+  "3. ArrowLeft / ArrowRight keyboard navigation when open.\n" +
+  "4. Escape closes lightbox and restores page focus.\n" +
+  "5. Fit / 100% toggle changes zoom mode without closing.\n" +
+  "6. Dialog close control dismisses lightbox.";
+
+export const LightboxInteraction: Story = {
+  name: "Lightbox interaction (manual)",
+  args: {
+    images: sampleImages.slice(0, 4),
+  },
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        story: interactionChecklist,
+      },
     },
   },
 };

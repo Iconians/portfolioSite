@@ -31,10 +31,10 @@ todos:
     status: completed
   - id: ds10-storybook
     content: "Phase 10: Storybook completion + a11y/interaction coverage"
-    status: pending
+    status: completed
   - id: ds11-docs
     content: "Phase 11: Contributor documentation (usage guidelines)"
-    status: pending
+    status: completed
 isProject: false
 ---
 
