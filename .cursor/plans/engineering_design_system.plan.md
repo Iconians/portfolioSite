@@ -19,10 +19,10 @@ todos:
     status: completed
   - id: ds06-case-study-ia
     content: "Phase 6: Project case study standardization (IA only, no new UI)"
-    status: pending
+    status: completed
   - id: ds07-gallery
     content: "Phase 7: Gallery / Lightbox (dedicated STOP gate)"
-    status: pending
+    status: completed
   - id: ds08-project-migrate
     content: "Phase 8: Project case study migration onto design system"
     status: pending
