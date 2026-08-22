@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { Container } from "@/components/layout/Container";
 import { Navigation } from "@/components/Nav/Navigation";
 import { ProjectDetailHero } from "@/components/Portfolio/ProjectDetailHero";
 import { ProjectEvolution } from "@/components/Portfolio/ProjectEvolution";
@@ -115,7 +116,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
   return (
     <div className={`${projectPageStyles.page} text-left`}>
       <Navigation />
-      <main className={projectPageStyles.main}>
+      <Container as="main" className="py-16">
         {isPreview ? (
           <div className="mb-8">
             <ProjectPreviewBanner publishStatus={project.publishStatus} />
@@ -129,7 +130,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
         <ProjectPlatformShowcase project={project} />
         <ProjectGallery gallery={project.gallery} />
         <ProjectPageFooter project={project} />
-      </main>
+      </Container>
     </div>
   );
 }

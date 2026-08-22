@@ -1,0 +1,60 @@
+/**
+ * Design system semantic tokens (Phase 1).
+ * Stable names for canvas / surface hierarchy. Full contributor docs in Phase 11.
+ *
+ * | Token            | Role                          |
+ * |------------------|-------------------------------|
+ * | --ds-canvas      | Page background (#f5f5f5 light / blue-slate dark) |
+ * | --ds-surface     | Primary cards / panels        |
+ * | --ds-elevated    | Nested surfaces on cards      |
+ * | --ds-border-subtle | Subtle borders              |
+ * | --ds-text-primary| Primary text                  |
+ * | --ds-text-muted  | Secondary / muted text        |
+ */
+
+:root {
+  --ds-canvas: var(--background);
+  --ds-surface: var(--card);
+  --ds-elevated: var(--secondary);
+  --ds-border-subtle: var(--border);
+  --ds-text-primary: var(--foreground);
+  --ds-text-muted: var(--muted-foreground);
+
+  /* Legacy aliases — migrate to semantic tokens in later phases */
+  --site-bg-color: var(--ds-canvas);
+  --bg-color: var(--ds-surface);
+  --text-color: var(--ds-text-primary);
+  --card-inner-bg: var(--ds-elevated);
+  --blog-card-border: var(--ds-border-subtle);
+  --heading-color: var(--ds-text-primary);
+  --text-primary: var(--ds-text-primary);
+  --review-card-bg: var(--ds-surface);
+  --blog-card-bg: var(--ds-surface);
+  --skill-bg: var(--ds-elevated);
+}
+
+.dark {
+  --ds-canvas: var(--background);
+  --ds-surface: var(--card);
+  --ds-elevated: var(--secondary);
+  --ds-border-subtle: var(--border);
+  --ds-text-primary: var(--foreground);
+  --ds-text-muted: var(--muted-foreground);
+
+  --site-bg-color: var(--ds-canvas);
+  --bg-color: var(--ds-surface);
+  --text-color: var(--ds-text-primary);
+  --card-inner-bg: var(--ds-elevated);
+  --blog-card-border: var(--ds-border-subtle);
+  --heading-color: var(--ds-text-primary);
+  --text-primary: var(--ds-text-primary);
+  --review-card-bg: var(--ds-surface);
+  --blog-card-bg: var(--ds-surface);
+  --skill-bg: var(--ds-elevated);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

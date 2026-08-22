@@ -4,13 +4,13 @@ overview: "Lightweight, review-gated design system (v1.3): tokens → primitives
 todos:
   - id: ds01-foundation
     content: "Phase 1: Design tokens, theme cleanup, background consistency"
-    status: pending
+    status: completed
   - id: ds02-primitives
     content: "Phase 2: Core UI primitives + ESLint boundary foundation + Storybook bootstrap"
-    status: pending
+    status: completed
   - id: ds03-layout
     content: "Phase 3: Layout components + ESLint boundaries for layout/typography/patterns"
-    status: pending
+    status: completed
   - id: ds04-typography
     content: "Phase 4: Typography components"
     status: pending

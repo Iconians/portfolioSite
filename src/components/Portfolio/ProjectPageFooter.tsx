@@ -1,8 +1,9 @@
+import { ContentWidth } from "@/components/layout/ContentWidth";
+import { Section } from "@/components/layout/Section";
 import {
   hasProjectActions,
   ProjectActions,
 } from "@/components/Portfolio/ProjectActions";
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 
 import type { PortfolioItem } from "@/lib/types/portfolio";
 
@@ -16,13 +17,16 @@ export function ProjectPageFooter({ project }: ProjectPageFooterProps) {
   }
 
   return (
-    <section
+    <Section
       id="links"
-      aria-labelledby="links-heading"
-      className={`${projectPageStyles.sectionGap} border-t border-border`}
+      labelledBy="links-heading"
+      className="border-t border-border"
     >
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 id="links-heading" className="mb-4 text-xl font-semibold text-[var(--heading-color)]">
+      <ContentWidth width="narrow" className="text-center">
+        <h2
+          id="links-heading"
+          className="mb-4 text-xl font-semibold text-[var(--heading-color)]"
+        >
           Project links
         </h2>
         <ProjectActions
@@ -30,7 +34,7 @@ export function ProjectPageFooter({ project }: ProjectPageFooterProps) {
           variant="inline"
           className="justify-center"
         />
-      </div>
-    </section>
+      </ContentWidth>
+    </Section>
   );
 }

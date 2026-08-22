@@ -1,10 +1,10 @@
-import {
-  projectPageStyles,
-  projectSectionWidthClasses,
-  type ProjectSectionWidth,
-} from "@/lib/portfolio/project-page-styles";
+import { ContentWidth } from "@/components/layout/ContentWidth";
+import { Section } from "@/components/layout/Section";
+import { Surface } from "@/components/layout/Surface";
+import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 import { cn } from "@/lib/utils";
 
+import type { ContentWidthVariant } from "@/components/layout/ContentWidth";
 import type { ReactNode } from "react";
 
 interface ProjectPageSectionProps {
@@ -14,7 +14,7 @@ interface ProjectPageSectionProps {
   children: ReactNode;
   className?: string;
   contentClassName?: string;
-  width?: ProjectSectionWidth;
+  width?: ContentWidthVariant;
   align?: "start" | "center";
   surface?: boolean;
 }
@@ -32,42 +32,52 @@ export function ProjectPageSection({
 }: ProjectPageSectionProps) {
   const headingId = id ? `${id}-heading` : undefined;
 
-  return (
-    <section
-      id={id}
-      aria-labelledby={headingId}
-      className={cn(projectPageStyles.sectionGap, className)}
+  const header = (
+    <div
+      className={cn(
+        projectPageStyles.sectionHeaderGap,
+        "space-y-2",
+        align === "center" && "mx-auto"
+      )}
     >
-      <div
-        className={cn(
-          projectSectionWidthClasses[width],
-          surface && projectPageStyles.sectionElevated,
-          align === "center" && "text-center"
-        )}
-      >
-        <div
+      <h2 id={headingId} className={projectPageStyles.sectionTitle}>
+        {title}
+      </h2>
+      {description ? (
+        <p
           className={cn(
-            projectPageStyles.sectionHeaderGap,
-            "space-y-2",
-            align === "center" && "mx-auto"
+            projectPageStyles.sectionDescription,
+            align === "center" && "mx-auto max-w-2xl"
           )}
         >
-          <h2 id={headingId} className={projectPageStyles.sectionTitle}>
-            {title}
-          </h2>
-          {description ? (
-            <p
-              className={cn(
-                projectPageStyles.sectionDescription,
-                align === "center" && "mx-auto max-w-2xl"
-              )}
-            >
-              {description}
-            </p>
-          ) : null}
-        </div>
-        <div className={contentClassName}>{children}</div>
-      </div>
-    </section>
+          {description}
+        </p>
+      ) : null}
+    </div>
+  );
+
+  const body = <div className={contentClassName}>{children}</div>;
+
+  const sectionContent = surface ? (
+    <Surface variant="elevated">
+      {header}
+      {body}
+    </Surface>
+  ) : (
+    <>
+      {header}
+      {body}
+    </>
+  );
+
+  return (
+    <Section id={id} labelledBy={headingId} className={className}>
+      <ContentWidth
+        width={width}
+        className={align === "center" ? "text-center" : undefined}
+      >
+        {sectionContent}
+      </ContentWidth>
+    </Section>
   );
 }

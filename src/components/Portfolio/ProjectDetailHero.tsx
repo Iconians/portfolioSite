@@ -25,7 +25,7 @@ export function ProjectDetailHero({ project }: ProjectDetailHeroProps) {
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--site-bg-color)]/70 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background/70 to-transparent"
         />
       </div>
       <div className="space-y-4 md:space-y-5">
