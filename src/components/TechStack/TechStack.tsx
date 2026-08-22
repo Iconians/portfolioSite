@@ -1,5 +1,10 @@
 "use client";
 
+import { Section } from "@/components/layout/Section";
+import { Surface } from "@/components/layout/Surface";
+import { Heading } from "@/components/typography/Heading";
+import { Text } from "@/components/typography/Text";
+
 const TECH_STACK = [
   { name: "Next.js", icon: "nextdotjs" },
   { name: "TypeScript", icon: "typescript" },
@@ -14,30 +19,34 @@ const ICON_BASE = "https://cdn.simpleicons.org";
 
 export function TechStack() {
   return (
-    <section id="tech-stack" className="py-12 scroll-mt-20">
-      <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
+    <Section id="tech-stack" className="py-12">
+      <Heading level={2} className="mb-8 text-center text-2xl md:text-3xl">
         Technologies I Work With
-      </h2>
+      </Heading>
       <div className="flex flex-wrap justify-center gap-6 md:gap-8">
         {TECH_STACK.map(({ name, icon }) => (
           <div
             key={icon}
-            className="flex flex-col items-center gap-2 group"
+            className="group flex flex-col items-center gap-2"
             title={name}
           >
-            <div className="p-3 rounded-xl bg-muted/60 border border-border group-hover:border-primary/40 group-hover:bg-muted transition-colors">
+            <Surface
+              variant="inner"
+              className="p-3 transition-colors group-hover:border-primary/40"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- external CDN tech icons */}
               <img
                 src={`${ICON_BASE}/${icon}/737373`}
                 alt=""
-                className="w-8 h-8 md:w-9 md:h-9 object-contain dark:invert dark:brightness-0 dark:opacity-90"
+                className="h-8 w-8 object-contain md:h-9 md:w-9 dark:invert dark:brightness-0 dark:opacity-90"
               />
-            </div>
-            <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+            </Surface>
+            <Text variant="muted" className="text-sm font-medium group-hover:text-foreground">
               {name}
-            </span>
+            </Text>
           </div>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

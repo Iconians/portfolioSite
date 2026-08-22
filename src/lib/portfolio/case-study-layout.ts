@@ -7,8 +7,7 @@
  *
  * Phase 8 duplication inventory (do not fix here):
  * - Summary embeds technology badges; `ProjectTechnologies` exists but is unused on the route
- * - Story subsections (`ProjectStorySection`, `ProjectArchitectureSection`, feature lists)
- * - `projectPageStyles` typography/shell strings still in domain components
+ * - Story subsections use shared typography and Surface primitives
  * - `ProjectGallery` inline grid (Phase 7 lightbox pattern)
  * - Home/reviews section headers outside typography primitives
  *

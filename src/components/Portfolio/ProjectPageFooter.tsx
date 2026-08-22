@@ -4,6 +4,7 @@ import {
   hasProjectActions,
   ProjectActions,
 } from "@/components/Portfolio/ProjectActions";
+import { Heading } from "@/components/typography/Heading";
 
 import type { PortfolioItem } from "@/lib/types/portfolio";
 
@@ -23,12 +24,9 @@ export function ProjectPageFooter({ project }: ProjectPageFooterProps) {
       className="border-t border-border"
     >
       <ContentWidth width="narrow" className="text-center">
-        <h2
-          id="links-heading"
-          className="mb-4 text-xl font-semibold text-[var(--heading-color)]"
-        >
+        <Heading level={3} id="links-heading" className="mb-4 text-xl">
           Project links
-        </h2>
+        </Heading>
         <ProjectActions
           project={project}
           variant="inline"

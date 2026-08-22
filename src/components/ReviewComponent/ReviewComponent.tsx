@@ -1,4 +1,8 @@
+import { Section } from "@/components/layout/Section";
+import { Stack } from "@/components/layout/Stack";
 import { ReviewCard } from "@/components/patterns/ReviewCard";
+import { Heading } from "@/components/typography/Heading";
+import { Text } from "@/components/typography/Text";
 
 import type { Review } from "@/lib/types/reviews";
 
@@ -6,21 +10,21 @@ interface ReviewComponentProps {
   initialReviews: Review[];
 }
 
-export const ReviewComponent = ({ initialReviews }: ReviewComponentProps) => {
+export function ReviewComponent({ initialReviews }: ReviewComponentProps) {
   if (!initialReviews || initialReviews.length === 0) {
     return null;
   }
 
   return (
-    <section id="reviews" className="py-20">
-      <div className="mb-12">
-        <h2 className="mb-4 text-3xl font-bold text-balance md:text-4xl">
+    <Section id="reviews" className="py-20">
+      <Stack gap="sm" className="mb-12">
+        <Heading level={2} className="text-balance">
           Client Reviews
-        </h2>
-        <p className="text-lg text-muted-foreground">
+        </Heading>
+        <Text variant="description">
           What clients say about working with me
-        </p>
-      </div>
+        </Text>
+      </Stack>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {initialReviews.map((item) => (
@@ -32,6 +36,6 @@ export const ReviewComponent = ({ initialReviews }: ReviewComponentProps) => {
           />
         ))}
       </div>
-    </section>
+    </Section>
   );
-};
+}

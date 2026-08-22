@@ -1,9 +1,8 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Section } from "@/components/layout/Section";
+import { Stack } from "@/components/layout/Stack";
+import { Surface } from "@/components/layout/Surface";
+import { Heading } from "@/components/typography/Heading";
+import { Text } from "@/components/typography/Text";
 
 const focusAreas = [
   {
@@ -34,36 +33,36 @@ const focusAreas = [
 
 export function WhatIEnjoyBuilding() {
   return (
-    <section id="what-i-build" className="py-16 scroll-mt-20">
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">
-        What I enjoy building
-      </h2>
-      <p className="text-muted-foreground text-lg mb-6 text-pretty">
-        I enjoy working on software that people rely on every day—not demo
-        projects or one-off experiments. Most of my work falls into four areas:
-      </p>
-      <ul className="space-y-2 list-none mb-10">
+    <Section id="what-i-build" className="py-16">
+      <Stack gap="sm" className="mb-6">
+        <Heading level={2}>What I enjoy building</Heading>
+        <Text variant="description" className="text-pretty">
+          I enjoy working on software that people rely on every day—not demo
+          projects or one-off experiments. Most of my work falls into four areas:
+        </Text>
+      </Stack>
+
+      <ul className="mb-10 list-none space-y-2">
         {focusAreas.map((area) => (
           <li key={area.title} className="flex gap-3 text-muted-foreground">
-            <span className="text-primary font-medium shrink-0">•</span>
+            <span className="shrink-0 font-medium text-primary">•</span>
             <span>{area.intro}</span>
           </li>
         ))}
       </ul>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {focusAreas.map((area) => (
-          <Card key={area.title} className="h-full">
-            <CardHeader>
-              <CardTitle className="text-xl">{area.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground leading-relaxed text-sm">
+          <Surface key={area.title} variant="card" padding="default" className="h-full">
+            <Stack gap="sm">
+              <Heading level={3} className="text-xl">{area.title}</Heading>
+              <Text variant="muted" className="text-sm leading-relaxed">
                 {area.description}
-              </p>
-            </CardContent>
-          </Card>
+              </Text>
+            </Stack>
+          </Surface>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

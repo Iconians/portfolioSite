@@ -2,7 +2,10 @@
 
 import { X } from "lucide-react";
 import dynamic from "next/dynamic";
-import Link from "next/link";
+
+import { Heading } from "@/components/typography/Heading";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/components/ui/link";
 
 const AnimatePresence = dynamic(
   () => import("framer-motion").then((mod) => mod.AnimatePresence),
@@ -21,25 +24,6 @@ interface NavigationMobileProps {
   onClose: () => void;
 }
 
-function CloseButton({ onClose }: { onClose: () => void }) {
-  return (
-    <span
-      onClick={onClose}
-      className="cursor-pointer p-2 text-muted-foreground transition-colors hover:text-primary"
-      aria-label="Close menu"
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          onClose();
-        }
-      }}
-    >
-      <X className="h-6 w-6" />
-    </span>
-  );
-}
-
 function DrawerContent({
   links,
   onClose,
@@ -50,8 +34,16 @@ function DrawerContent({
   return (
     <>
       <div className="flex items-center justify-between border-b border-border bg-background p-6">
-        <h2 className="text-lg font-semibold">Menu</h2>
-        <CloseButton onClose={onClose} />
+        <Heading level={4} className="text-lg">Menu</Heading>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          aria-label="Close menu"
+        >
+          <X className="h-6 w-6" />
+        </Button>
       </div>
       <div className="flex flex-col gap-6 bg-background p-6">
         {links.map(({ href, label }) => (
@@ -59,7 +51,7 @@ function DrawerContent({
             key={href}
             href={href}
             onClick={onClose}
-            className="text-base font-medium text-muted-foreground transition-colors hover:text-primary"
+            className="text-base font-medium text-muted-foreground no-underline hover:text-primary"
           >
             {label}
           </Link>
@@ -84,7 +76,7 @@ export function NavigationMobile({
       <AnimatePresence>
         <>
           <MotionDiv
-            className="fixed inset-0 z-40 block bg-black dark:bg-black min-[469px]:hidden"
+            className="fixed inset-0 z-40 block bg-black min-[469px]:hidden dark:bg-black"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -109,7 +101,7 @@ export function NavigationMobile({
   return (
     <>
       <div
-        className="fixed inset-0 z-40 block bg-black dark:bg-black min-[469px]:hidden"
+        className="fixed inset-0 z-40 block bg-black min-[469px]:hidden dark:bg-black"
         onClick={onClose}
       />
       <div className="fixed top-0 right-0 z-50 h-full w-64 border-l border-border bg-background shadow-xl max-[468px]:block min-[469px]:hidden">

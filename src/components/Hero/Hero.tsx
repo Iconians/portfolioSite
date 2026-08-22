@@ -1,3 +1,7 @@
+import { Container } from "@/components/layout/Container";
+import { Inline } from "@/components/layout/Stack";
+import { Heading } from "@/components/typography/Heading";
+import { Text } from "@/components/typography/Text";
 import { Button } from "@/components/ui/button";
 
 import { TerminalLoader } from "../TerminalLoader/TerminalLoader";
@@ -41,24 +45,27 @@ function GithubIcon({ className }: { className?: string }) {
 
 export function Hero() {
   return (
-    <section className="container mx-auto px-4 py-24 md:py-32 max-w-7xl">
-      <div className="grid md:grid-cols-2 gap-12 items-center">
+    <Container className="py-24 md:py-32">
+      <div className="grid items-center gap-12 md:grid-cols-2">
         <div className="order-2 md:order-1">
-          <h1 className="text-[40px] font-bold mb-4 text-balance leading-tight">
+          <Heading
+            level={1}
+            className="mb-4 text-[40px] leading-tight text-balance"
+          >
             Clayton Cripe
-          </h1>
-          <p className="text-lg text-primary mb-3">Full-Stack Engineer</p>
-          <p className="text-xl font-semibold text-foreground mb-4">
+          </Heading>
+          <Text className="mb-3 text-lg text-primary">Full-Stack Engineer</Text>
+          <Text className="mb-4 text-xl font-semibold text-foreground">
             Building software that solves operational problems—from internal
             business systems to production SaaS platforms.
-          </p>
-          <p className="text-base text-muted-foreground leading-relaxed mb-8 text-pretty">
+          </Text>
+          <Text className="mb-8 text-pretty leading-relaxed">
             I build software that helps businesses operate more efficiently—from
             internal tools and client portals to production SaaS platforms. My
             work focuses on architecture, performance, maintainability, and
             designing systems that continue to evolve as businesses grow.
-          </p>
-          <div className="flex gap-4 items-center">
+          </Text>
+          <Inline gap="md" className="gap-4">
             <Button variant="outline" size="icon" asChild>
               <a
                 href="https://github.com/Iconians"
@@ -79,17 +86,20 @@ export function Hero() {
                 <LinkedInIcon className="h-5 w-5" />
               </a>
             </Button>
-          </div>
+          </Inline>
         </div>
         <div className="order-1 md:order-2">
           <TerminalLoader />
         </div>
       </div>
-      <p className="mt-10 pt-8 border-t border-border text-center text-sm text-muted-foreground md:text-base">
+      <Text
+        variant="muted"
+        className="mt-10 border-t border-border pt-8 text-center md:text-base"
+      >
         Recent work includes production SaaS platforms with multi-tenant
         architecture, Stripe subscription billing, and real-time collaboration
         systems.
-      </p>
-    </section>
+      </Text>
+    </Container>
   );
 }

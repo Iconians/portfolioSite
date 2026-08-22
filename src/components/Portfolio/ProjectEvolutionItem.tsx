@@ -22,9 +22,9 @@ function renderDescription(description: string) {
         {bulletLines.map((line) => (
           <li
             key={line}
-            className="list-inside list-disc text-[0.9375rem] leading-7 text-muted-foreground marker:text-primary/70"
+            className="list-inside list-disc text-muted-foreground marker:text-primary/70"
           >
-            {line.replace(/^[-*•]\s+/, "")}
+            <Text className="inline">{line.replace(/^[-*•]\s+/, "")}</Text>
           </li>
         ))}
       </ul>

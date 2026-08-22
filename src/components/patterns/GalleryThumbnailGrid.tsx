@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
+import { Surface } from "@/components/layout/Surface";
 import { cn } from "@/lib/utils";
 
 import type { GalleryImage } from "@/design-system/types/gallery";
@@ -31,33 +31,32 @@ export function GalleryThumbnailGrid({
         const caption = image.caption?.trim();
 
         return (
-          <figure
-            key={`${image.url}-${index}`}
-            className={cn(projectPageStyles.card, "overflow-hidden")}
-          >
-            <button
-              type="button"
-              className="block w-full cursor-zoom-in text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              onClick={() => onSelect(index)}
-              aria-label={`View image ${index + 1} of ${total}: ${image.alt}`}
-            >
-              <div className="relative min-h-[220px] bg-muted md:min-h-[280px]">
-                <Image
-                  src={image.url}
-                  alt={image.alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-contain object-center"
-                />
-              </div>
-            </button>
-            {caption ? (
-              <figcaption
-                className="border-t border-border/50 px-4 py-3 text-sm text-muted-foreground"
+          <figure key={`${image.url}-${index}`}>
+            <Surface variant="card" className="overflow-hidden">
+              <button
+                type="button"
+                className="block w-full cursor-zoom-in text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                onClick={() => onSelect(index)}
+                aria-label={`View image ${index + 1} of ${total}: ${image.alt}`}
               >
-                {caption}
-              </figcaption>
-            ) : null}
+                <div className="relative min-h-[220px] bg-muted md:min-h-[280px]">
+                  <Image
+                    src={image.url}
+                    alt={image.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-contain object-center"
+                  />
+                </div>
+              </button>
+              {caption ? (
+                <figcaption
+                  className="border-t border-border/50 px-4 py-3 text-sm text-muted-foreground"
+                >
+                  {caption}
+                </figcaption>
+              ) : null}
+            </Surface>
           </figure>
         );
       })}

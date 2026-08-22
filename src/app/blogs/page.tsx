@@ -1,21 +1,25 @@
 import BlogGrid from "@/components/blogWrapper/blogWrapper";
+import { Container } from "@/components/layout/Container";
+import { Section } from "@/components/layout/Section";
+import { Stack } from "@/components/layout/Stack";
 import { Navigation } from "@/components/Nav/Navigation";
+import { Heading } from "@/components/typography/Heading";
 import { getAllPosts } from "@/lib/mdx";
 
 export default async function BlogIndex() {
   const posts = await getAllPosts();
 
   return (
-    <div className="min-h-screen w-full bg-background">
+    <div className="min-h-screen w-full bg-background text-foreground">
       <Navigation />
-      <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
-        <div className="mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-            Engineering Articles
-          </h2>
-        </div>
-        <BlogGrid posts={posts} />
-      </main>
+      <Container as="main" className="py-16">
+        <Section className="py-0">
+          <Stack gap="sm" className="mb-12">
+            <Heading level={2}>Engineering Articles</Heading>
+          </Stack>
+          <BlogGrid posts={posts} />
+        </Section>
+      </Container>
     </div>
   );
 }

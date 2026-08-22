@@ -41,7 +41,7 @@ function MetricCard({
         ) : null}
       </Inline>
       <p
-        className="text-2xl font-semibold tracking-tight text-[var(--heading-color)] md:text-[1.75rem]"
+        className="text-2xl font-semibold tracking-tight text-foreground md:text-[1.75rem]"
       >
         {value}
       </p>

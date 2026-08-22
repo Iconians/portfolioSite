@@ -2,8 +2,8 @@
 import dynamic from "next/dynamic";
 import { MDXRemote , type MDXRemoteSerializeResult } from "next-mdx-remote";
 
-import styles from "./blogPostClient.module.css";
-
+const BLOG_ARTICLE_CLASS =
+  "mx-auto max-w-[900px] px-4 py-6 leading-relaxed sm:px-6 [&_a]:text-primary [&_a]:no-underline hover:[&_a]:underline [&_p]:mb-4 [&_p]:text-[1.1rem] sm:[&_p]:text-base max-sm:[&_*]:max-w-full max-sm:[&_p]:text-[clamp(0.9rem,4vw,1rem)]";
 
 // Dynamically import animated components to prevent SSR issues
 const AnimatedHeading = dynamic(
@@ -65,7 +65,7 @@ const MotionArticleWrapper = dynamic(
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className={styles.blogArticle}
+            className={BLOG_ARTICLE_CLASS}
           >
             {children}
           </mod.motion.article>
@@ -113,7 +113,7 @@ export default function BlogPostClient({
   // Everything loads on the client after hydration
   if (typeof window === "undefined") {
     return (
-      <article className={styles.blogArticle}>
+      <article className={BLOG_ARTICLE_CLASS}>
         {coverHeader}
         <div>Loading content...</div>
       </article>

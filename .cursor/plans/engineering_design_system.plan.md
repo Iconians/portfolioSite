@@ -25,10 +25,10 @@ todos:
     status: completed
   - id: ds08-project-migrate
     content: "Phase 8: Project case study migration onto design system"
-    status: pending
+    status: completed
   - id: ds09-public-migrate
     content: "Phase 9: Public experience migration (all public routes)"
-    status: pending
+    status: completed
   - id: ds10-storybook
     content: "Phase 10: Storybook completion + a11y/interaction coverage"
     status: pending

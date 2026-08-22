@@ -15,7 +15,6 @@ import {
 } from "@/lib/data/portfolio";
 import { listPublicPortfolioMetrics } from "@/lib/data/portfolio-metrics";
 import { listPublicProjectVersions } from "@/lib/data/project-versions";
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 import { buildProjectPageMetadata } from "@/lib/portfolio/public-project";
 
 import type { Metadata } from "next";
@@ -106,7 +105,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
   ]);
 
   return (
-    <div className={`${projectPageStyles.page} text-left`}>
+    <div className="min-h-screen w-full bg-background text-foreground text-left">
       <Navigation />
       <Container as="main" className="py-16">
         <CaseStudyPage

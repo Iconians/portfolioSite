@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import BlogPostClient from "@/components/BlogPostClient/BlogPostClient";
+import { Container } from "@/components/layout/Container";
 import { Navigation } from "@/components/Nav/Navigation";
 import { getPostBySlug } from "@/lib/mdx";
 
@@ -17,11 +18,11 @@ export default async function BlogPost({ params }: BlogPostProps) {
   }
 
   return (
-    <div className="min-h-screen w-full bg-background">
+    <div className="min-h-screen w-full bg-background text-foreground">
       <Navigation />
-      <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
+      <Container as="main" className="py-16">
         <BlogPostClient frontMatter={post.frontMatter} mdxSource={post.mdxSource} />
-      </main>
+      </Container>
     </div>
   );
 }

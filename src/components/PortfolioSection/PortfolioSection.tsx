@@ -1,3 +1,5 @@
+import { Section } from "@/components/layout/Section";
+import { Stack } from "@/components/layout/Stack";
 import { Heading } from "@/components/typography/Heading";
 import { Text } from "@/components/typography/Text";
 
@@ -17,15 +19,15 @@ export default function PortfolioSection({
   }
 
   return (
-    <section id="projects" className="py-16 scroll-mt-20">
-      <Heading level={2} className="mb-4">
-        Featured Projects
-      </Heading>
-      <Text variant="description" className="mb-12">
-        A selection of SaaS platforms, production client work, and
-        engineering-focused projects.
-      </Text>
+    <Section id="projects" className="py-16">
+      <Stack gap="sm" className="mb-12">
+        <Heading level={2}>Featured Projects</Heading>
+        <Text variant="description">
+          A selection of SaaS platforms, production client work, and
+          engineering-focused projects.
+        </Text>
+      </Stack>
       <PortfolioSectionClient portfolioItems={initialItems} />
-    </section>
+    </Section>
   );
 }

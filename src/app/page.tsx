@@ -3,6 +3,7 @@ import { AnimatedSection } from "@/components/Animations/AnimatedSection";
 import { EngineeringPhilosophy } from "@/components/EngineeringPhilosophy/EngineeringPhilosophy";
 import FeaturedArticles from "@/components/FeaturedArticles/FeaturedArticles";
 import { Hero } from "@/components/Hero/Hero";
+import { Container } from "@/components/layout/Container";
 import { Navigation } from "@/components/Nav/Navigation";
 import PortfolioSection from "@/components/PortfolioSection/PortfolioSection";
 import { ReviewComponent } from "@/components/ReviewComponent/ReviewComponent";
@@ -12,8 +13,7 @@ import { getAllArticles } from "@/lib/data/articles";
 import { getPublishedPortfolioItems } from "@/lib/data/portfolio";
 import { getAllReviews } from "@/lib/data/reviews";
 
-// Enable static generation with revalidation for better performance as
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 3600;
 
 export default async function Home() {
   const [portfolioItems, articles, reviews] = await Promise.all([
@@ -27,7 +27,7 @@ export default async function Home() {
       <Hero />
       <Navigation />
 
-      <main className="container mx-auto px-4 py-16 max-w-7xl">
+      <Container as="main" className="py-16">
         <AnimatedSection>
           <EngineeringPhilosophy />
         </AnimatedSection>
@@ -48,12 +48,10 @@ export default async function Home() {
           <FeaturedArticles initialArticles={articles} />
         </AnimatedSection>
 
-        <section id="reviews" className="scroll-mt-20">
-          <AnimatedSection>
-            <ReviewComponent initialReviews={reviews} />
-          </AnimatedSection>
-        </section>
-      </main>
+        <AnimatedSection>
+          <ReviewComponent initialReviews={reviews} />
+        </AnimatedSection>
+      </Container>
     </div>
   );
 }

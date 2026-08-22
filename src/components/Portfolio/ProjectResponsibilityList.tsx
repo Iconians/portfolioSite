@@ -1,5 +1,7 @@
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
-import { cn } from "@/lib/utils";
+import { Surface } from "@/components/layout/Surface";
+import { Heading } from "@/components/typography/Heading";
+import { Label } from "@/components/typography/Label";
+import { Text } from "@/components/typography/Text";
 
 interface ProjectResponsibilityListProps {
   items: string[];
@@ -11,19 +13,15 @@ export function ProjectResponsibilityList({ items }: ProjectResponsibilityListPr
   }
 
   return (
-    <article
-      className={cn(
-        projectPageStyles.cardElevated,
-        projectPageStyles.cardPadding,
-        "flex h-full flex-col space-y-4"
-      )}
+    <Surface
+      variant="elevated"
+      padding="default"
+      className="flex h-full flex-col gap-4"
     >
       <header className="space-y-1">
-        <p className={projectPageStyles.eyebrow}>Ownership</p>
-        <h3 className={projectPageStyles.subsectionTitle}>Responsibilities</h3>
-        <p className={projectPageStyles.sectionDescription}>
-          What I personally designed, built, or owned.
-        </p>
+        <Label>Ownership</Label>
+        <Heading level={3}>Responsibilities</Heading>
+        <Text variant="description">What I personally designed, built, or owned.</Text>
       </header>
       <ul className="space-y-2">
         {items.map((item, index) => (
@@ -35,6 +33,6 @@ export function ProjectResponsibilityList({ items }: ProjectResponsibilityListPr
           </li>
         ))}
       </ul>
-    </article>
+    </Surface>
   );
 }

@@ -1,6 +1,8 @@
 import { ExternalLink, FileText } from "lucide-react";
 
+import { Inline } from "@/components/layout/Stack";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/components/ui/link";
 import { isValidProjectLink } from "@/lib/portfolio/public-project";
 import { cn } from "@/lib/utils";
 
@@ -80,25 +82,24 @@ export function ProjectActions({
 
   if (variant === "inline") {
     return (
-      <div className={cn("flex flex-wrap items-center gap-3", className)}>
+      <Inline gap="sm" className={cn("gap-3", className)}>
         {actions.map((action) => (
-          <a
+          <Link
             key={action.label}
             href={action.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+            external
+            className="gap-2 text-sm text-muted-foreground no-underline hover:text-primary"
           >
             <ActionIcon icon={action.icon} />
             {action.label}
-          </a>
+          </Link>
         ))}
-      </div>
+      </Inline>
     );
   }
 
   return (
-    <div className={cn("flex flex-wrap gap-2 sm:gap-3", className)}>
+    <Inline gap="sm" className={cn("gap-2 sm:gap-3", className)}>
       {actions.map((action) => (
         <Button key={action.label} variant="outline" size="sm" asChild>
           <a href={action.href} target="_blank" rel="noopener noreferrer">
@@ -107,7 +108,7 @@ export function ProjectActions({
           </a>
         </Button>
       ))}
-    </div>
+    </Inline>
   );
 }
 

@@ -3,7 +3,6 @@ import { Section } from "@/components/layout/Section";
 import { Surface } from "@/components/layout/Surface";
 import { Heading } from "@/components/typography/Heading";
 import { Text } from "@/components/typography/Text";
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 import { cn } from "@/lib/utils";
 
 import type { ContentWidthVariant } from "@/components/layout/ContentWidth";
@@ -37,8 +36,7 @@ export function ProjectPageSection({
   const header = (
     <div
       className={cn(
-        projectPageStyles.sectionHeaderGap,
-        "space-y-2",
+        "mb-6 space-y-2 md:mb-8",
         align === "center" && "mx-auto"
       )}
     >

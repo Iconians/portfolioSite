@@ -2,10 +2,10 @@
 
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
-import Link from "next/link";
 
 import { Inline } from "@/components/layout/Stack";
 import { ProjectCard } from "@/components/patterns/ProjectCard";
+import { Link } from "@/components/ui/link";
 import {
   canViewProjectDetail,
   getProjectCardSummary,
@@ -16,6 +16,9 @@ import {
 
 import type { PortfolioItem } from "@/lib/types/portfolio";
 import type { ReactNode } from "react";
+
+const externalLinkClass =
+  "inline-flex items-center gap-1.5 text-sm text-muted-foreground no-underline transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -81,7 +84,7 @@ export function PortfolioSectionClient({
             <Link
               key="detail"
               href={getProjectDetailHref(item.slug!)}
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+              className="text-sm text-muted-foreground no-underline hover:text-primary"
             >
               View project
             </Link>
@@ -101,7 +104,7 @@ export function PortfolioSectionClient({
               href={item.url!}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+              className={externalLinkClass}
             >
               <ExternalLink className="h-3.5 w-3.5 shrink-0" />
               Live site
@@ -122,7 +125,7 @@ export function PortfolioSectionClient({
               href={item.github!}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+              className={externalLinkClass}
             >
               <GithubIcon className="h-3.5 w-3.5 shrink-0" />
               Source code
