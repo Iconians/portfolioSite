@@ -11,7 +11,7 @@ export const projectPageStyles = {
   cardPadding: "p-5 md:p-6",
   panelHighlight:
     "rounded-xl border border-[var(--blog-card-border)] bg-[var(--card-inner-bg)] shadow-sm",
-  sectionTitle: "text-3xl font-bold text-[var(--heading-color)] md:text-4xl",
+  /** Bridge for domain components — migrate to Text in Phase 8. */
   sectionDescription: "text-lg text-muted-foreground",
   subsectionTitle: "text-base font-semibold text-[var(--heading-color)]",
   eyebrow: "text-xs font-medium uppercase tracking-wider text-muted-foreground",

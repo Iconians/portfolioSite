@@ -13,10 +13,10 @@ todos:
     status: completed
   - id: ds04-typography
     content: "Phase 4: Typography components"
-    status: pending
+    status: completed
   - id: ds05-patterns
     content: "Phase 5: Engineering content patterns (metrics, timeline, cards)"
-    status: pending
+    status: completed
   - id: ds06-case-study-ia
     content: "Phase 6: Project case study standardization (IA only, no new UI)"
     status: pending

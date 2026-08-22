@@ -1,6 +1,8 @@
 import { ContentWidth } from "@/components/layout/ContentWidth";
 import { Section } from "@/components/layout/Section";
 import { Surface } from "@/components/layout/Surface";
+import { Heading } from "@/components/typography/Heading";
+import { Text } from "@/components/typography/Text";
 import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 import { cn } from "@/lib/utils";
 
@@ -40,18 +42,16 @@ export function ProjectPageSection({
         align === "center" && "mx-auto"
       )}
     >
-      <h2 id={headingId} className={projectPageStyles.sectionTitle}>
+      <Heading level={2} id={headingId}>
         {title}
-      </h2>
+      </Heading>
       {description ? (
-        <p
-          className={cn(
-            projectPageStyles.sectionDescription,
-            align === "center" && "mx-auto max-w-2xl"
-          )}
+        <Text
+          variant="description"
+          className={cn(align === "center" && "mx-auto max-w-2xl")}
         >
           {description}
-        </p>
+        </Text>
       ) : null}
     </div>
   );

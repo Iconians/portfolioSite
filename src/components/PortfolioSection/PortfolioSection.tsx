@@ -1,3 +1,6 @@
+import { Heading } from "@/components/typography/Heading";
+import { Text } from "@/components/typography/Text";
+
 import { PortfolioSectionClient } from "./PortfolioSectionClient";
 
 import type { PortfolioItem } from "@/lib/types/portfolio";
@@ -15,11 +18,13 @@ export default function PortfolioSection({
 
   return (
     <section id="projects" className="py-16 scroll-mt-20">
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Projects</h2>
-      <p className="text-muted-foreground mb-12 text-lg">
+      <Heading level={2} className="mb-4">
+        Featured Projects
+      </Heading>
+      <Text variant="description" className="mb-12">
         A selection of SaaS platforms, production client work, and
         engineering-focused projects.
-      </p>
+      </Text>
       <PortfolioSectionClient portfolioItems={initialItems} />
     </section>
   );

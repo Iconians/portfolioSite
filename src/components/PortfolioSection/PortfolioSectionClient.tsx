@@ -2,16 +2,10 @@
 
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Inline } from "@/components/layout/Stack";
+import { ProjectCard } from "@/components/patterns/ProjectCard";
 import {
   canViewProjectDetail,
   getProjectCardSummary,
@@ -21,6 +15,7 @@ import {
 } from "@/lib/portfolio/public-project";
 
 import type { PortfolioItem } from "@/lib/types/portfolio";
+import type { ReactNode } from "react";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -69,7 +64,7 @@ export function PortfolioSectionClient({
 }: PortfolioSectionClientProps) {
   return (
     <motion.div
-      className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      className="grid grid-cols-1 gap-6 md:grid-cols-2"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -79,76 +74,76 @@ export function PortfolioSectionClient({
         const hasLiveSite = isValidProjectLink(item.url);
         const hasGithub = isValidProjectLink(item.github);
 
+        const footerLinks: ReactNode[] = [];
+
+        if (showDetailLink) {
+          footerLinks.push(
+            <Link
+              key="detail"
+              href={getProjectDetailHref(item.slug!)}
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              View project
+            </Link>
+          );
+        }
+
+        if (showDetailLink && hasLiveSite) {
+          footerLinks.push(
+            <span key="sep-live" className="text-border">|</span>
+          );
+        }
+
+        if (hasLiveSite) {
+          footerLinks.push(
+            <a
+              key="live"
+              href={item.url!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+              Live site
+            </a>
+          );
+        }
+
+        if (hasLiveSite && hasGithub) {
+          footerLinks.push(
+            <span key="sep-github" className="text-border">|</span>
+          );
+        }
+
+        if (hasGithub) {
+          footerLinks.push(
+            <a
+              key="github"
+              href={item.github!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              <GithubIcon className="h-3.5 w-3.5 shrink-0" />
+              Source code
+            </a>
+          );
+        }
+
         return (
           <motion.div
             key={item.id}
             variants={cardVariants}
             whileHover={{ y: -5 }}
           >
-            <Card className="overflow-hidden group h-full flex flex-col">
-              <div className="relative aspect-video overflow-hidden bg-muted">
-                <Image
-                  width={600}
-                  height={400}
-                  src={item.img}
-                  alt={item.caption}
-                  className="object-cover w-full h-full transition-transform group-hover:scale-105"
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className="text-xl">{item.caption}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 flex-1 flex flex-col">
-                <p className="text-muted-foreground leading-relaxed text-sm">
-                  {getProjectCardSummary(item)}
-                </p>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {uniqueCategories(item.category).map((cat) => (
-                    <Badge key={cat} variant="secondary">
-                      {cat}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="mt-auto flex flex-wrap items-center gap-3 pt-3 border-t border-border">
-                  {showDetailLink && (
-                    <Link
-                      href={getProjectDetailHref(item.slug!)}
-                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      View project
-                    </Link>
-                  )}
-                  {showDetailLink && hasLiveSite && (
-                    <span className="text-border">|</span>
-                  )}
-                  {hasLiveSite && (
-                    <a
-                      href={item.url!}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                      Live site
-                    </a>
-                  )}
-                  {hasLiveSite && hasGithub && (
-                    <span className="text-border">|</span>
-                  )}
-                  {hasGithub && (
-                    <a
-                      href={item.github!}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <GithubIcon className="h-3.5 w-3.5 shrink-0" />
-                      Source code
-                    </a>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <ProjectCard
+              imageUrl={item.img}
+              imageAlt={item.caption}
+              title={item.caption}
+              description={getProjectCardSummary(item)}
+              badges={uniqueCategories(item.category)}
+              footer={<Inline gap="md">{footerLinks}</Inline>}
+            />
           </motion.div>
         );
       })}

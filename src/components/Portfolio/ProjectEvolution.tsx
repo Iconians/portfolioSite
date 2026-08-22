@@ -1,10 +1,10 @@
+import { Timeline } from "@/components/patterns/Timeline";
 import { ProjectEvolutionItem } from "@/components/Portfolio/ProjectEvolutionItem";
 import { ProjectPageSection } from "@/components/Portfolio/ProjectPageSection";
 import {
   hasProjectEvolution,
   sortProjectVersions,
 } from "@/lib/portfolio/project-evolution";
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 
 import type { ProjectVersion } from "@/lib/types/portfolio";
 
@@ -34,7 +34,7 @@ export function ProjectEvolution({
       surface
       className={className}
     >
-      <ol className={projectPageStyles.cardPadding}>
+      <Timeline>
         {sortedVersions.map((version, index) => (
           <ProjectEvolutionItem
             key={version.id}
@@ -42,7 +42,7 @@ export function ProjectEvolution({
             isLast={index === sortedVersions.length - 1}
           />
         ))}
-      </ol>
+      </Timeline>
     </ProjectPageSection>
   );
 }

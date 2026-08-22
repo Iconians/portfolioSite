@@ -1,9 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArticleCard } from "@/components/patterns/ArticleCard";
 
 interface BlogCardProps {
   title: string;
@@ -31,33 +30,13 @@ export default function BlogCard({
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="group h-full cursor-pointer overflow-hidden transition-all hover:border-primary hover:shadow-lg">
-        {coverImageUrl ? (
-          <div className="relative aspect-[16/9] bg-muted">
-            <Image
-              src={coverImageUrl}
-              alt={coverImageAlt || title}
-              fill
-              className="object-cover transition-transform group-hover:scale-105"
-            />
-          </div>
-        ) : null}
-        <CardHeader>
-          <CardTitle className="text-xl transition-colors group-hover:text-primary">
-            {title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {description && (
-            <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
-              {description}
-            </p>
-          )}
-          {date && (
-            <small className="text-xs text-muted-foreground">{date}</small>
-          )}
-        </CardContent>
-      </Card>
+      <ArticleCard
+        title={title}
+        description={description}
+        date={date}
+        coverImageUrl={coverImageUrl}
+        coverImageAlt={coverImageAlt}
+      />
     </motion.div>
   );
 }

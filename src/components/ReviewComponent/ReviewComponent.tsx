@@ -1,6 +1,4 @@
-import { Quote } from "lucide-react";
-
-import { Card } from "@/components/ui/card";
+import { ReviewCard } from "@/components/patterns/ReviewCard";
 
 import type { Review } from "@/lib/types/reviews";
 
@@ -16,32 +14,22 @@ export const ReviewComponent = ({ initialReviews }: ReviewComponentProps) => {
   return (
     <section id="reviews" className="py-20">
       <div className="mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">
+        <h2 className="mb-4 text-3xl font-bold text-balance md:text-4xl">
           Client Reviews
         </h2>
-        <p className="text-muted-foreground text-lg">
+        <p className="text-lg text-muted-foreground">
           What clients say about working with me
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {initialReviews.map((item) => (
-          <Card
+          <ReviewCard
             key={item.id}
-            className="p-6 bg-card/50 backdrop-blur border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5"
-          >
-            <Quote className="w-8 h-8 text-primary/40 mb-4" />
-            <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-            <p className="text-foreground/90 mb-4 leading-relaxed text-sm">
-              {item.content}
-            </p>
-            <div className="flex items-center gap-3 pt-4 border-t border-border/50">
-              <div className="text-yellow-400 text-lg">
-                {"★".repeat(item.stars)}
-                {"☆".repeat(5 - item.stars)}
-              </div>
-            </div>
-          </Card>
+            title={item.title}
+            content={item.content}
+            stars={item.stars}
+          />
         ))}
       </div>
     </section>

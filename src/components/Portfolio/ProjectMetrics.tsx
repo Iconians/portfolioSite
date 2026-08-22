@@ -1,3 +1,4 @@
+import { MetricGrid } from "@/components/patterns/MetricGrid";
 import { ProjectMetricCard } from "@/components/Portfolio/ProjectMetricCard";
 import { ProjectPageSection } from "@/components/Portfolio/ProjectPageSection";
 import {
@@ -26,11 +27,11 @@ export function ProjectMetrics({ metrics }: ProjectMetricsProps) {
       width="wide"
       surface
     >
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3">
+      <MetricGrid>
         {sortedMetrics.map((metric) => (
           <ProjectMetricCard key={metric.id} metric={metric} />
         ))}
-      </div>
+      </MetricGrid>
     </ProjectPageSection>
   );
 }
