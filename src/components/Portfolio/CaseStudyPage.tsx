@@ -1,5 +1,9 @@
 import { Fragment, type ReactNode } from "react";
 
+import {
+  SectionBand,
+  type SectionBandTone,
+} from "@/components/layout/SectionBand";
 import { ProjectDetailHero } from "@/components/Portfolio/ProjectDetailHero";
 import { ProjectEvolution } from "@/components/Portfolio/ProjectEvolution";
 import { ProjectGallery } from "@/components/Portfolio/ProjectGallery";
@@ -23,6 +27,13 @@ interface CaseStudyPageProps {
   versions: ProjectVersion[];
   isPreview: boolean;
 }
+
+const CASE_STUDY_BAND_TONES: Partial<Record<CaseStudySectionKey, SectionBandTone>> = {
+  summary: "surfaceAlt",
+  story: "surfaceAlt",
+  platform: "surfaceAlt",
+  links: "footer",
+};
 
 function renderCaseStudySection(
   key: CaseStudySectionKey,
@@ -75,11 +86,20 @@ export function CaseStudyPage({
 
   return (
     <>
-      {sections.map((section) => (
-        <Fragment key={section.key}>
-          {renderCaseStudySection(section.key, context)}
-        </Fragment>
-      ))}
+      {sections.map((section) => {
+        const content = renderCaseStudySection(section.key, context);
+        const tone = CASE_STUDY_BAND_TONES[section.key];
+
+        if (!tone) {
+          return <Fragment key={section.key}>{content}</Fragment>;
+        }
+
+        return (
+          <SectionBand key={section.key} tone={tone}>
+            {content}
+          </SectionBand>
+        );
+      })}
     </>
   );
 }

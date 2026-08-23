@@ -16,17 +16,18 @@ export function ReviewComponent({ initialReviews }: ReviewComponentProps) {
   }
 
   return (
-    <Section id="reviews" className="py-20">
-      <Stack gap="sm" className="mb-12">
+    <Section id="reviews" className="py-16">
+      <Stack gap="sm" className="mb-10">
+        <Heading variant="eyebrow">VALIDATION</Heading>
         <Heading level={2} className="text-balance">
-          Client Reviews
+          Client feedback
         </Heading>
         <Text variant="description">
-          What clients say about working with me
+          Short quotes from clients—supporting validation, not the headline story.
         </Text>
       </Stack>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {initialReviews.map((item) => (
           <ReviewCard
             key={item.id}

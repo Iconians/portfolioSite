@@ -88,7 +88,7 @@ export function ProjectActions({
             key={action.label}
             href={action.href}
             external
-            className="gap-2 text-sm text-muted-foreground no-underline hover:text-primary"
+            className="gap-2 text-sm text-muted-foreground no-underline hover:text-ds-accent-hover"
           >
             <ActionIcon icon={action.icon} />
             {action.label}
@@ -99,9 +99,14 @@ export function ProjectActions({
   }
 
   return (
-    <Inline gap="sm" className={cn("gap-2 sm:gap-3", className)}>
-      {actions.map((action) => (
-        <Button key={action.label} variant="outline" size="sm" asChild>
+    <Inline gap="sm" className={cn("flex-wrap gap-2 sm:gap-3", className)}>
+      {actions.map((action, index) => (
+        <Button
+          key={action.label}
+          variant={index === 0 ? "default" : "outline"}
+          size="sm"
+          asChild
+        >
           <a href={action.href} target="_blank" rel="noopener noreferrer">
             <ActionIcon icon={action.icon} />
             {action.label}

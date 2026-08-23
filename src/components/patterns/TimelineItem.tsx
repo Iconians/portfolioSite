@@ -25,7 +25,7 @@ function TimelineItem({
   return (
     <li
       data-slot="timeline-item"
-      className={cn("relative pb-7 pl-10 last:pb-0", className)}
+      className={cn("relative pb-8 pl-10 last:pb-0", className)}
     >
       {!isLast ? (
         <span

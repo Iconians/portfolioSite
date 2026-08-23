@@ -1,26 +1,35 @@
 /**
- * Design system semantic tokens (Phase 1).
- * Stable names for canvas / surface hierarchy. Full contributor docs in Phase 11.
+ * Design system semantic tokens — Visual Redesign Phase 1.
+ * Candidate C — Refined Green (theme-tuned dark/light accent family).
  *
- * | Token            | Role                          |
- * |------------------|-------------------------------|
- * | --ds-canvas      | Page background (#f5f5f5 light / blue-slate dark) |
- * | --ds-surface     | Primary cards / panels        |
- * | --ds-elevated    | Nested surfaces on cards      |
- * | --ds-border-subtle | Subtle borders              |
- * | --ds-text-primary| Primary text                  |
- * | --ds-text-muted  | Secondary / muted text        |
+ * Loaded after globals.css; maps interactive shadcn tokens to --ds-accent*.
  */
 
 :root {
+  --ds-accent: oklch(0.42 0.1 152);
+  --ds-accent-hover: oklch(0.38 0.11 152);
+  --ds-accent-muted: oklch(0.88 0.03 152);
+  --ds-accent-foreground: oklch(0.99 0 0);
+  --ds-accent-muted-foreground: oklch(0.3 0.08 152);
+  --ds-focus-ring: oklch(0.42 0.1 152);
+
   --ds-canvas: var(--background);
   --ds-surface: var(--card);
+  --ds-surface-alt: oklch(0.99 0 0);
+  --ds-footer: oklch(0.95 0 0);
   --ds-elevated: var(--secondary);
   --ds-border-subtle: var(--border);
   --ds-text-primary: var(--foreground);
   --ds-text-muted: var(--muted-foreground);
 
-  /* Legacy aliases — migrate to semantic tokens in later phases */
+  --primary: var(--ds-accent);
+  --primary-foreground: var(--ds-accent-foreground);
+  --ring: var(--ds-focus-ring);
+  --sidebar-primary: var(--ds-accent);
+  --sidebar-primary-foreground: var(--ds-accent-foreground);
+  --sidebar-ring: var(--ds-focus-ring);
+
+  /* Legacy aliases — bridge until downstream references are removed */
   --site-bg-color: var(--ds-canvas);
   --bg-color: var(--ds-surface);
   --text-color: var(--ds-text-primary);
@@ -34,12 +43,28 @@
 }
 
 .dark {
+  --ds-accent: oklch(0.8 0.15 134);
+  --ds-accent-hover: oklch(0.85 0.16 134);
+  --ds-accent-muted: oklch(0.7 0.09 134);
+  --ds-accent-foreground: oklch(0.18 0 0);
+  --ds-accent-muted-foreground: oklch(0.18 0 0);
+  --ds-focus-ring: oklch(0.8 0.15 134);
+
   --ds-canvas: var(--background);
   --ds-surface: var(--card);
+  --ds-surface-alt: oklch(0.16 0 0);
+  --ds-footer: oklch(0.14 0 0);
   --ds-elevated: var(--secondary);
   --ds-border-subtle: var(--border);
   --ds-text-primary: var(--foreground);
   --ds-text-muted: var(--muted-foreground);
+
+  --primary: var(--ds-accent);
+  --primary-foreground: var(--ds-accent-foreground);
+  --ring: var(--ds-focus-ring);
+  --sidebar-primary: var(--ds-accent);
+  --sidebar-primary-foreground: var(--ds-accent-foreground);
+  --sidebar-ring: var(--ds-focus-ring);
 
   --site-bg-color: var(--ds-canvas);
   --bg-color: var(--ds-surface);
@@ -56,5 +81,10 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .animate-in,
+  .animate-pulse {
+    animation: none !important;
   }
 }

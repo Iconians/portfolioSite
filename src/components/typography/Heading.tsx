@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils";
 const headingLevelVariants = cva("", {
   variants: {
     level: {
-      1: "text-4xl font-bold tracking-tight text-[var(--heading-color)] md:text-5xl",
-      2: "text-3xl font-bold text-[var(--heading-color)] md:text-4xl",
-      3: "text-base font-semibold text-[var(--heading-color)]",
-      4: "text-sm font-semibold text-[var(--heading-color)]",
-      5: "text-sm font-medium text-[var(--heading-color)]",
-      6: "text-xs font-medium text-[var(--heading-color)]",
+      1: "text-4xl font-bold tracking-tight text-foreground md:text-5xl",
+      2: "text-3xl font-bold text-foreground md:text-4xl",
+      3: "text-base font-semibold text-foreground",
+      4: "text-sm font-semibold text-foreground",
+      5: "text-sm font-medium text-foreground",
+      6: "text-xs font-medium text-foreground",
     },
   },
   defaultVariants: {
@@ -20,7 +20,7 @@ const headingLevelVariants = cva("", {
 });
 
 const eyebrowClasses =
-  "text-xs font-medium uppercase tracking-wider text-muted-foreground";
+  "text-xs font-medium uppercase tracking-wider text-ds-accent";
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -38,8 +38,11 @@ const headingTags: Record<
 
 type HeadingProps = {
   level?: HeadingLevel;
-  variant?: "default" | "eyebrow";
+  variant?: "default" | "eyebrow" | "display";
 } & Omit<React.ComponentProps<"h2">, "color">;
+
+const displayClasses =
+  "text-4xl font-bold tracking-tight text-balance text-foreground md:text-5xl lg:text-[2.75rem] lg:leading-[1.15]";
 
 function Heading({
   className,
@@ -64,7 +67,11 @@ function Heading({
     <Tag
       data-slot="heading"
       data-level={level}
-      className={cn(headingLevelVariants({ level }), className)}
+      data-variant={variant === "display" ? "display" : undefined}
+      className={cn(
+        variant === "display" ? displayClasses : headingLevelVariants({ level }),
+        className
+      )}
       {...props}
     />
   );

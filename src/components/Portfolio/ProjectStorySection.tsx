@@ -1,6 +1,5 @@
 import { Stack } from "@/components/layout/Stack";
 import { Surface } from "@/components/layout/Surface";
-import { Heading } from "@/components/typography/Heading";
 import { Label } from "@/components/typography/Label";
 import { Text } from "@/components/typography/Text";
 import { cn } from "@/lib/utils";
@@ -16,13 +15,15 @@ export function StoryParagraphs({ content }: StoryParagraphsProps) {
     .filter(Boolean);
 
   if (paragraphs.length <= 1) {
-    return <Text className="whitespace-pre-line">{content}</Text>;
+    return <Text variant="muted" className="whitespace-pre-line leading-relaxed">{content}</Text>;
   }
 
   return (
     <Stack gap="sm" className="gap-3">
       {paragraphs.map((paragraph) => (
-        <Text key={paragraph}>{paragraph}</Text>
+        <Text key={paragraph} variant="muted" className="leading-relaxed">
+          {paragraph}
+        </Text>
       ))}
     </Stack>
   );
@@ -44,11 +45,11 @@ export function ProjectStorySection({
   if (variant === "card") {
     return (
       <Surface
-        variant="elevated"
+        variant="card"
         padding="default"
-        className={cn("flex h-full flex-col gap-3", className)}
+        className={cn("flex h-full flex-col gap-3 border-border/80", className)}
       >
-        <Heading level={3}>{title}</Heading>
+        <Label>{title}</Label>
         <StoryParagraphs content={content} />
       </Surface>
     );
@@ -56,9 +57,9 @@ export function ProjectStorySection({
 
   return (
     <article
-      className={cn("space-y-3 border-l-2 border-border/50 pl-4 md:pl-5", className)}
+      className={cn("space-y-3 border-l-2 border-border pl-4 md:pl-5", className)}
     >
-      <Heading level={3}>{title}</Heading>
+      <Label>{title}</Label>
       <StoryParagraphs content={content} />
     </article>
   );
@@ -72,7 +73,7 @@ export function ProjectStoryCallout({
   content: string;
 }) {
   return (
-    <Surface variant="panel" padding="default" className="space-y-3">
+    <Surface variant="panel" padding="default" className="space-y-3 border-border/80">
       <Label>{title}</Label>
       <StoryParagraphs content={content} />
     </Surface>

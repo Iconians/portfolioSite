@@ -4,7 +4,8 @@ Contributor guide for the **engineering portfolio** presentation layer. This doc
 
 **Living catalog:** run `npm run storybook` (port 6006). Storybook covers `ui/`, `layout/`, `typography/`, `patterns/`, and token swatches. Domain components (`Portfolio/`, home sections) are intentionally **not** cataloged.
 
-**Program plan:** `.cursor/plans/engineering_design_system.plan.md`  
+**Program plan:** `.cursor/plans/finished plans/engineering_design_system.plan.md`  
+**Visual redesign (Phases 0–6):** `.cursor/plans/visual_redesign_plan_472cc238.plan.md` — **complete** (see changelog Visual Redesign sections)  
 **API history:** `docs/design-system-changelog.md`  
 **Application architecture (data, actions, Prisma):** `docs/ARCHITECTURE.md`
 
@@ -135,14 +136,19 @@ Do not place these in `ui/`, `layout/`, `typography/`, or `patterns/`:
 | `--ds-border-subtle` | Subtle borders | `--border` |
 | `--ds-text-primary` | Primary text | `--foreground` |
 | `--ds-text-muted` | Secondary text | `--muted-foreground` |
+| `--ds-accent` | Interactive emphasis (Candidate C green) | `--primary` |
+| `--ds-accent-hover` | Primary hover | `--ds-accent-hover` (Tailwind) |
+| `--ds-accent-muted` | Subtle accent surfaces | Tailwind `bg-ds-accent-muted` |
+| `--ds-surface-alt` | Alternating section band | Tailwind `bg-surface-alt` |
+| `--ds-footer` | Footer band | Tailwind `bg-footer` |
 
-Tailwind theme tokens (`bg-background`, `text-muted-foreground`, `border-border`, etc.) are the **primary** authoring surface in components.
+Public routes use **Candidate C (Refined Green)** for accent roles—eyebrows, CTAs, metric chips, platform checkmarks—not full-page hue spread.
 
-### Legacy aliases (still present — do not remove in drive-by changes)
+Tailwind theme tokens (`bg-background`, `text-muted-foreground`, `border-border`, `text-ds-accent`, etc.) are the **primary** authoring surface in components.
 
-Bridged in `tokens.css` for migration compatibility: `--site-bg-color`, `--blog-card-border`, `--card-inner-bg`, `--heading-color`, `--review-card-bg`, `--blog-card-bg`, `--skill-bg`, etc.
+### Legacy aliases (bridges — retained for admin/MDX compatibility)
 
-`Heading` still references `text-[var(--heading-color)]`. Token cleanup is **deferred** to a future visual redesign.
+Bridged in `tokens.css`: `--site-bg-color`, `--blog-card-border`, `--card-inner-bg`, `--heading-color`, `--review-card-bg`, `--blog-card-bg`, `--skill-bg`, etc. Public `Heading` uses `text-foreground` / `text-ds-accent` (eyebrow)—not `--heading-color`. Removing unused aliases is **optional follow-up**; do not delete in drive-by changes without auditing consumers.
 
 ---
 
@@ -156,7 +162,7 @@ shadcn-based, presentation-only. **No** data or action imports.
 | `Dialog` | Modal: focus trap, Escape, scroll lock. Used by gallery lightbox and admin confirm flows |
 | `Link` | Next.js link; external URLs get icon + sr-only “opens in new tab” |
 | `Alert` | Inline banner; `warning` variant for preview banner |
-| `Badge` | Status and technology chips |
+| `Badge` | Status and technology chips; `accentMuted` variant for small neutral chips on public routes |
 | `Card` | shadcn card — **admin forms**; public cards prefer `Surface` + patterns |
 | `Input`, `Textarea`, `Label` | Form fields (admin) |
 | `Tabs` | Tabbed admin UI |
@@ -176,6 +182,7 @@ Server-safe. No hooks.
 |-----------|---------|
 | `Container` | `max-w-7xl` page container; optional `as="main"` |
 | `Section` | Vertical rhythm (`py-12 md:py-14`), `scroll-mt-20`, optional `id` + `labelledBy` |
+| `SectionBand` | Full-bleed section tone wrapper: `canvas`, `surfaceAlt`, `footer` (alternating public-route rhythm) |
 | `Surface` | Variants: `card`, `elevated`, `inner`, `panel`; optional `padding` |
 | `Stack` / `Inline` | Flex gaps: `sm`, `md`, `lg` |
 | `ContentWidth` | `narrow`, `article`, `wide`, `full` max-width presets |
@@ -188,7 +195,7 @@ Distinct from `ui/Label` (form labels).
 
 | Component | Purpose |
 |-----------|---------|
-| `Heading` | Levels 1–6 + `variant="eyebrow"` |
+| `Heading` | Levels 1–6; `variant="eyebrow"`; `variant="display"` for hero/case-study titles |
 | `Text` | `body`, `bodyLarge`, `description`, `muted` |
 | `Label` | Metric eyebrows / uppercase labels |
 | `Caption` | Figcaptions, supporting captions |
@@ -201,10 +208,10 @@ Presentation-only. **≥2 consumers** required to add a new pattern.
 
 | Pattern | Consumers (examples) |
 |---------|----------------------|
-| `MetricGrid` + `MetricCard` | Case study metrics |
+| `MetricGrid` + `MetricCard` | Case study metrics (`MetricCard` optional restrained icon chip) |
 | `Timeline` + `TimelineItem` | Case study evolution |
-| `ProjectCard` | Home portfolio grid |
-| `ArticleCard` | Home featured articles, blog list |
+| `ProjectCard` | Home portfolio grid (optional `eyebrow` slot) |
+| `ArticleCard` | Home featured articles, blog list (`primaryTag`, `readTimeMinutes`) |
 | `ReviewCard` | Home reviews |
 | `EmptyState` | Admin lists (re-exported from patterns) |
 | `EngineeringGallery` | Case study gallery (via `ProjectGallery` adapter) |
@@ -276,9 +283,9 @@ Do **not** reorder sections in `projects/[slug]/page.tsx` directly—the page sh
 | Stay server | Typical client islands |
 |-------------|------------------------|
 | `Container`, `Section`, `Surface`, `Stack`, `Heading`, `Text` | `EngineeringGallery`, `GalleryLightbox`, `Dialog` |
-| `MetricGrid`, `Timeline`, card patterns (static) | `Navigation`, mobile nav, `PortfolioSectionClient` |
-| `CaseStudyPage` shell (server page imports it) | `BlogPostClient`, `AboutContentClient` (animations) |
-| Route `page.tsx` files (except `login`) | Framer Motion wrappers in `Animations/` |
+| `MetricGrid`, `Timeline`, card patterns (static) | `Navigation`, mobile nav, `PortfolioSectionClient`, `BlogGrid` |
+| `CaseStudyPage` shell (server page imports it) | `BlogPostClient` (MDX + animations), gallery/dialog |
+| `AboutContent` (server sections) | Framer Motion wrappers in `Animations/` (`useReducedMotion` gates entry motion) |
 
 **Rule:** `src/app/**/page.tsx` must not use `"use client"` (ESLint). Push interactivity into small client children.
 
@@ -310,7 +317,8 @@ npm run build-storybook  # static output → storybook-static/ (local only; not 
 | Gallery | Descriptive `alt` on every `GalleryImage`; thumbnail `aria-label`; counter `aria-live` |
 | Loading | `Spinner` / `LoadingState` use `role="status"` |
 | External links | sr-only “opens in new tab” on `Link` |
-| Motion | `prefers-reduced-motion` scroll behavior in `tokens.css` |
+| Motion | `prefers-reduced-motion`: `tokens.css` scroll + decorative animation suppression; `useReducedMotion` in client animation islands |
+| Blog tag filters | `aria-pressed` on active filter pill |
 
 Automated a11y addon is **deferred** to a future dependency review.
 
@@ -354,17 +362,23 @@ Full admin shell redesign is **out of scope** for V1.
 
 ---
 
-## Deferred styling / follow-up (not V1)
+## Deferred follow-up (post–visual redesign)
 
-Tracked for future redesign or cleanup—**not** part of the shipped design-system API:
+Items **intentionally retained** after the visual redesign program (Phases 0–6). Not bugs—out of scope or blocked on product/schema work.
 
-- `animations.module.css` (Framer Motion wrappers)
-- `BLOG_ARTICLE_CLASS` prose string in `BlogPostClient`
-- Blog `not-found` and `login` routes (raw layout)
-- `TechStack` external CDN `<img>` icons
-- Legacy CSS variable aliases and global `h1` rules in `globals.css`
-- `ProjectDetailHero` ad hoc title scale
-- Token/visual redesign using the new system
+| Item | Status | Reason |
+|------|--------|--------|
+| Login route shell | Retained | Admin/auth surface; no public redesign scope |
+| Related Articles on case studies | Retained | No schema consumer on project pages (V1 deferral) |
+| Dedicated `ProjectTechnologies` section | Retained | Summary badges sufficient; V1 deferral |
+| Legacy `--ds-*` bridge aliases in `tokens.css` | Retained | Admin/MDX consumers; remove only after audit |
+| `@storybook/addon-a11y` | Retained | Dependency/minimatch review deferred from V1 Phase 10 |
+| `@storybook/test` play functions | Retained | Manual gallery/dialog checklist in Storybook stories |
+| `build-storybook` in CI | Retained | Dev-only catalog; not a production dependency |
+| Admin shell full redesign | Retained | V1 opportunistic primitive reuse only |
+| Resume PDF nav link | Retained | No `public/` resume asset unless added manually |
+
+**Absorbed during visual redesign:** Vite-era `globals.css` rules, TechStack CDN icons → `EngineeringStack`, `BLOG_PROSE_CLASS` → `blog-prose.ts`, `animations.module.css`, blog `not-found` platform shell, `ProjectDetailHero` display heading, `--primary` blue hue → Candidate C accent.
 
 ---
 

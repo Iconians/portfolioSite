@@ -52,11 +52,13 @@ export default function FeaturedArticles({
   }
 
   return (
-    <Section className="py-16">
+    <Section id="writing" className="py-16">
       <Stack gap="sm" className="mb-12">
-        <Heading level={2}>Engineering Articles</Heading>
+        <Heading variant="eyebrow">WRITING</Heading>
+        <Heading level={2}>Engineering articles</Heading>
         <Text variant="description">
-          Latest articles on algorithms, data structures, and web development
+          Technical writing on algorithms, data structures, migrations, and
+          engineering practice.
         </Text>
       </Stack>
 

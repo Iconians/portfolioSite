@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Navigation } from "@/components/Nav/Navigation";
 import { CaseStudyPage } from "@/components/Portfolio/CaseStudyPage";
+import { SiteFooter } from "@/components/SiteFooter/SiteFooter";
 import {
   AuthenticationError,
   AuthorizationError,
@@ -107,14 +108,19 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
   return (
     <div className="min-h-screen w-full bg-background text-foreground text-left">
       <Navigation />
-      <Container as="main" className="py-16">
-        <CaseStudyPage
-          project={project}
-          metrics={metrics}
-          versions={versions}
-          isPreview={isPreview}
-        />
-      </Container>
+
+      <main>
+        <Container className="py-8 md:py-12">
+          <CaseStudyPage
+            project={project}
+            metrics={metrics}
+            versions={versions}
+            isPreview={isPreview}
+          />
+        </Container>
+      </main>
+
+      <SiteFooter />
     </div>
   );
 }

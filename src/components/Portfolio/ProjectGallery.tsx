@@ -36,6 +36,7 @@ export function ProjectGallery({ gallery }: ProjectGalleryProps) {
   return (
     <ProjectPageSection
       id="gallery"
+      eyebrow="MEDIA"
       title="Case study media"
       description="Screenshots and visual evidence from the project."
       width="wide"

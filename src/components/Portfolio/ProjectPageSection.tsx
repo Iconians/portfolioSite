@@ -10,11 +10,13 @@ import type { ReactNode } from "react";
 
 interface ProjectPageSectionProps {
   id?: string;
+  eyebrow?: string;
   title: string;
   description?: string;
   children: ReactNode;
   className?: string;
   contentClassName?: string;
+  headerClassName?: string;
   width?: ContentWidthVariant;
   align?: "start" | "center";
   surface?: boolean;
@@ -22,11 +24,13 @@ interface ProjectPageSectionProps {
 
 export function ProjectPageSection({
   id,
+  eyebrow,
   title,
   description,
   children,
   className,
   contentClassName,
+  headerClassName,
   width = "wide",
   align = "start",
   surface = false,
@@ -37,16 +41,18 @@ export function ProjectPageSection({
     <div
       className={cn(
         "mb-6 space-y-2 md:mb-8",
-        align === "center" && "mx-auto"
+        align === "center" && "mx-auto",
+        headerClassName
       )}
     >
+      {eyebrow ? <Heading variant="eyebrow">{eyebrow}</Heading> : null}
       <Heading level={2} id={headingId}>
         {title}
       </Heading>
       {description ? (
         <Text
           variant="description"
-          className={cn(align === "center" && "mx-auto max-w-2xl")}
+          className={cn(align === "center" && "mx-auto max-w-2xl text-pretty")}
         >
           {description}
         </Text>
@@ -57,7 +63,7 @@ export function ProjectPageSection({
   const body = <div className={contentClassName}>{children}</div>;
 
   const sectionContent = surface ? (
-    <Surface variant="elevated">
+    <Surface variant="elevated" padding="default">
       {header}
       {body}
     </Surface>

@@ -130,3 +130,18 @@ export const ResponsiveLg: Story = {
     ),
   ],
 };
+
+export const SectionBandTones: Story = {
+  name: "SectionBand",
+  render: () => (
+    <div className="w-full max-w-2xl">
+      <div className="bg-background p-4 text-sm text-muted-foreground">Canvas above</div>
+      <div className="w-full bg-surface-alt p-4 text-foreground">
+        Surface-alt full-bleed band
+      </div>
+      <div className="w-full bg-footer p-4 text-foreground">
+        Footer tone band
+      </div>
+    </div>
+  ),
+};

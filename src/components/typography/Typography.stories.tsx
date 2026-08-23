@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Semantic heading scale, body text variants, metric labels, and captions. Uses `--heading-color` bridge token.",
+          "Semantic heading scale, body text variants, metric labels, and captions. Eyebrows use `text-ds-accent`.",
       },
     },
   },
@@ -37,6 +37,15 @@ export const HeadingLevels: Story = {
 export const Eyebrow: Story = {
   name: "Eyebrow",
   render: () => <Heading variant="eyebrow">Case study</Heading>,
+};
+
+export const DisplayHeading: Story = {
+  name: "Display (case study hero)",
+  render: () => (
+    <Heading level={1} variant="display" className="max-w-2xl">
+      Engineering Portfolio Management System
+    </Heading>
+  ),
 };
 
 export const TextVariants: Story = {

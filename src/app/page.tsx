@@ -4,10 +4,13 @@ import { EngineeringPhilosophy } from "@/components/EngineeringPhilosophy/Engine
 import FeaturedArticles from "@/components/FeaturedArticles/FeaturedArticles";
 import { Hero } from "@/components/Hero/Hero";
 import { Container } from "@/components/layout/Container";
+import { SectionBand } from "@/components/layout/SectionBand";
 import { Navigation } from "@/components/Nav/Navigation";
+import { PlatformEvolution } from "@/components/PlatformEvolution/PlatformEvolution";
 import PortfolioSection from "@/components/PortfolioSection/PortfolioSection";
 import { ReviewComponent } from "@/components/ReviewComponent/ReviewComponent";
-import { TechStack } from "@/components/TechStack/TechStack";
+import { SiteFooter } from "@/components/SiteFooter/SiteFooter";
+import { EngineeringStack } from "@/components/TechStack/TechStack";
 import { WhatIEnjoyBuilding } from "@/components/WhatIEnjoyBuilding/WhatIEnjoyBuilding";
 import { getAllArticles } from "@/lib/data/articles";
 import { getPublishedPortfolioItems } from "@/lib/data/portfolio";
@@ -24,34 +27,73 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Hero />
       <Navigation />
 
-      <Container as="main" className="py-16">
-        <AnimatedSection>
-          <EngineeringPhilosophy />
-        </AnimatedSection>
+      <main>
+        <SectionBand tone="canvas">
+          <Container>
+            <Hero />
+          </Container>
+        </SectionBand>
 
-        <AnimatedSection>
-          <TechStack />
-        </AnimatedSection>
+        <SectionBand tone="surfaceAlt">
+          <Container>
+            <AnimatedSection>
+              <EngineeringPhilosophy />
+            </AnimatedSection>
+          </Container>
+        </SectionBand>
 
-        <AnimatedSection>
-          <WhatIEnjoyBuilding />
-        </AnimatedSection>
+        <SectionBand tone="canvas">
+          <Container>
+            <AnimatedSection>
+              <WhatIEnjoyBuilding />
+            </AnimatedSection>
+          </Container>
+        </SectionBand>
 
-        <AnimatedSection>
-          <PortfolioSection initialItems={portfolioItems} />
-        </AnimatedSection>
+        <SectionBand tone="surfaceAlt">
+          <Container>
+            <AnimatedSection>
+              <EngineeringStack />
+            </AnimatedSection>
+          </Container>
+        </SectionBand>
 
-        <AnimatedSection>
-          <FeaturedArticles initialArticles={articles} />
-        </AnimatedSection>
+        <SectionBand tone="canvas">
+          <Container>
+            <AnimatedSection>
+              <PortfolioSection initialItems={portfolioItems} />
+            </AnimatedSection>
+          </Container>
+        </SectionBand>
 
-        <AnimatedSection>
-          <ReviewComponent initialReviews={reviews} />
-        </AnimatedSection>
-      </Container>
+        <SectionBand tone="surfaceAlt">
+          <Container>
+            <AnimatedSection>
+              <PlatformEvolution />
+            </AnimatedSection>
+          </Container>
+        </SectionBand>
+
+        <SectionBand tone="canvas">
+          <Container>
+            <AnimatedSection>
+              <FeaturedArticles initialArticles={articles} />
+            </AnimatedSection>
+          </Container>
+        </SectionBand>
+
+        <SectionBand tone="surfaceAlt">
+          <Container>
+            <AnimatedSection>
+              <ReviewComponent initialReviews={reviews} />
+            </AnimatedSection>
+          </Container>
+        </SectionBand>
+      </main>
+
+      <SiteFooter />
     </div>
   );
 }

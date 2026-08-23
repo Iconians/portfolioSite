@@ -16,7 +16,7 @@ interface ProjectEvolutionProps {
 
 export function ProjectEvolution({
   versions,
-  title = "Timeline",
+  title = "How it evolved",
   className,
 }: ProjectEvolutionProps) {
   if (!hasProjectEvolution(versions)) {
@@ -28,6 +28,7 @@ export function ProjectEvolution({
   return (
     <ProjectPageSection
       id="evolution"
+      eyebrow="EVOLUTION"
       title={title}
       description="Major milestones across the project lifecycle."
       width="wide"

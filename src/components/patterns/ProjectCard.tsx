@@ -13,6 +13,7 @@ interface ProjectCardProps {
   imageAlt: string;
   title: string;
   description: string;
+  eyebrow?: string;
   badges?: string[];
   footer?: ReactNode;
   className?: string;
@@ -23,6 +24,7 @@ function ProjectCard({
   imageAlt,
   title,
   description,
+  eyebrow,
   badges,
   footer,
   className,
@@ -38,10 +40,15 @@ function ProjectCard({
           height={400}
           src={imageUrl}
           alt={imageAlt}
-          className="h-full w-full object-cover transition-transform group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform motion-reduce:transform-none group-hover:scale-105 group-focus-within:scale-105"
         />
       </div>
-      <CardHeader>
+      <CardHeader className="space-y-2">
+        {eyebrow ? (
+          <p className="text-xs font-medium uppercase tracking-wider text-ds-accent">
+            {eyebrow}
+          </p>
+        ) : null}
         <CardTitle className="text-xl">{title}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col">

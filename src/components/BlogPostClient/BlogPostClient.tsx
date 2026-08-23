@@ -1,11 +1,10 @@
 "use client";
+
 import dynamic from "next/dynamic";
-import { MDXRemote , type MDXRemoteSerializeResult } from "next-mdx-remote";
+import { MDXRemote, type MDXRemoteSerializeResult } from "next-mdx-remote";
 
-const BLOG_ARTICLE_CLASS =
-  "mx-auto max-w-[900px] px-4 py-6 leading-relaxed sm:px-6 [&_a]:text-primary [&_a]:no-underline hover:[&_a]:underline [&_p]:mb-4 [&_p]:text-[1.1rem] sm:[&_p]:text-base max-sm:[&_*]:max-w-full max-sm:[&_p]:text-[clamp(0.9rem,4vw,1rem)]";
+import { BLOG_PROSE_CLASS } from "@/lib/articles/blog-prose";
 
-// Dynamically import animated components to prevent SSR issues
 const AnimatedHeading = dynamic(
   () =>
     import("@/components/Animations/AnimateHeading").then(
@@ -51,7 +50,6 @@ const AnimatedCode = dynamic(
   { ssr: false }
 );
 
-// Dynamically import motion wrapper
 const MotionArticleWrapper = dynamic(
   () =>
     import("framer-motion").then((mod) => {
@@ -61,14 +59,14 @@ const MotionArticleWrapper = dynamic(
         children: React.ReactNode;
       }) {
         return (
-          <mod.motion.article
+          <mod.motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className={BLOG_ARTICLE_CLASS}
+            className={BLOG_PROSE_CLASS}
           >
             {children}
-          </mod.motion.article>
+          </mod.motion.div>
         );
       }
       MotionArticleWrapperInner.displayName = "MotionArticleWrapper";
@@ -109,18 +107,15 @@ export default function BlogPostClient({
     </div>
   ) : null;
 
-  // During SSR/static generation, render a simple placeholder
-  // Everything loads on the client after hydration
   if (typeof window === "undefined") {
     return (
-      <article className={BLOG_ARTICLE_CLASS}>
+      <div className={BLOG_PROSE_CLASS}>
         {coverHeader}
-        <div>Loading content...</div>
-      </article>
+        <p className="text-muted-foreground">Loading content...</p>
+      </div>
     );
   }
 
-  // On client, render with all animations
   const content = (
     <>
       {coverHeader}

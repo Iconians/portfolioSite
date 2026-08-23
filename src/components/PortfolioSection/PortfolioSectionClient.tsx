@@ -1,15 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { useSyncExternalStore, useState } from "react";
 
-import { Inline } from "@/components/layout/Stack";
+import { Inline, Stack } from "@/components/layout/Stack";
 import { ProjectCard } from "@/components/patterns/ProjectCard";
+import { Heading } from "@/components/typography/Heading";
+import { Button } from "@/components/ui/button";
 import { Link } from "@/components/ui/link";
+import { useReducedMotion } from "@/lib/motion/use-reduced-motion";
 import {
   canViewProjectDetail,
   getProjectCardSummary,
   getProjectDetailHref,
+  getProjectTypeLabel,
   isValidProjectLink,
   uniqueCategories,
 } from "@/lib/portfolio/public-project";
@@ -17,8 +22,17 @@ import {
 import type { PortfolioItem } from "@/lib/types/portfolio";
 import type { ReactNode } from "react";
 
+function isProjectsMoreHash(): boolean {
+  return window.location.hash === "#projects-more";
+}
+
+function subscribeToHash(onStoreChange: () => void) {
+  window.addEventListener("hashchange", onStoreChange);
+  return () => window.removeEventListener("hashchange", onStoreChange);
+}
+
 const externalLinkClass =
-  "inline-flex items-center gap-1.5 text-sm text-muted-foreground no-underline transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm";
+  "inline-flex items-center gap-1.5 text-sm text-muted-foreground no-underline transition-colors hover:text-ds-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -59,23 +73,18 @@ const cardVariants = {
 };
 
 interface PortfolioSectionClientProps {
-  portfolioItems: PortfolioItem[];
+  featuredItems: PortfolioItem[];
+  remainingItems: PortfolioItem[];
 }
 
-export function PortfolioSectionClient({
-  portfolioItems,
-}: PortfolioSectionClientProps) {
-  return (
-    <motion.div
-      className="grid grid-cols-1 gap-6 md:grid-cols-2"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {portfolioItems.map((item) => {
+function ProjectCardGrid({ items }: { items: PortfolioItem[] }) {
+  const reducedMotion = useReducedMotion();
+
+  const cards = items.map((item) => {
         const showDetailLink = canViewProjectDetail(item);
         const hasLiveSite = isValidProjectLink(item.url);
         const hasGithub = isValidProjectLink(item.github);
+        const projectTypeLabel = getProjectTypeLabel(item.projectType);
 
         const footerLinks: ReactNode[] = [];
 
@@ -84,7 +93,7 @@ export function PortfolioSectionClient({
             <Link
               key="detail"
               href={getProjectDetailHref(item.slug!)}
-              className="text-sm text-muted-foreground no-underline hover:text-primary"
+              className="text-sm text-muted-foreground no-underline hover:text-ds-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
             >
               View project
             </Link>
@@ -133,23 +142,91 @@ export function PortfolioSectionClient({
           );
         }
 
+        const card = (
+          <ProjectCard
+            imageUrl={item.img}
+            imageAlt={item.caption}
+            title={item.caption}
+            description={getProjectCardSummary(item)}
+            eyebrow={projectTypeLabel}
+            badges={uniqueCategories(item.category)}
+            footer={<Inline gap="md">{footerLinks}</Inline>}
+          />
+        );
+
+        if (reducedMotion) {
+          return <div key={item.id}>{card}</div>;
+        }
+
         return (
           <motion.div
             key={item.id}
             variants={cardVariants}
-            whileHover={{ y: -5 }}
+            whileHover={{ y: -4 }}
           >
-            <ProjectCard
-              imageUrl={item.img}
-              imageAlt={item.caption}
-              title={item.caption}
-              description={getProjectCardSummary(item)}
-              badges={uniqueCategories(item.category)}
-              footer={<Inline gap="md">{footerLinks}</Inline>}
-            />
+            {card}
           </motion.div>
         );
-      })}
+      });
+
+  if (reducedMotion) {
+    return (
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">{cards}</div>
+    );
+  }
+
+  return (
+    <motion.div
+      className="grid grid-cols-1 gap-6 md:grid-cols-2"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {cards}
     </motion.div>
+  );
+}
+
+export function PortfolioSectionClient({
+  featuredItems,
+  remainingItems,
+}: PortfolioSectionClientProps) {
+  const [expanded, setExpanded] = useState(false);
+  const hashExpanded = useSyncExternalStore(
+    subscribeToHash,
+    isProjectsMoreHash,
+    () => false
+  );
+  const showRemaining = expanded || hashExpanded;
+
+  return (
+    <Stack gap="lg">
+      <ProjectCardGrid items={featuredItems} />
+
+      {remainingItems.length > 0 && !showRemaining ? (
+        <Inline className="justify-center">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setExpanded(true);
+              window.location.hash = "projects-more";
+            }}
+          >
+            View all projects
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </Inline>
+      ) : null}
+
+      {remainingItems.length > 0 && showRemaining ? (
+        <div id="projects-more" className="scroll-mt-20">
+          <Heading level={3} className="mb-6 text-lg font-semibold">
+            More from the portfolio
+          </Heading>
+          <ProjectCardGrid items={remainingItems} />
+        </div>
+      ) : null}
+    </Stack>
   );
 }

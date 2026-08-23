@@ -1,5 +1,6 @@
 import { MetricCard } from "@/components/patterns/MetricCard";
-import { ProjectMetricIcon } from "@/components/Portfolio/ProjectMetricIcon";
+
+import { ProjectMetricIcon } from "./ProjectMetricIcon";
 
 import type { PortfolioMetric } from "@/lib/types/portfolio";
 

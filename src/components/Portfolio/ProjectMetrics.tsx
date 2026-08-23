@@ -22,8 +22,9 @@ export function ProjectMetrics({ metrics }: ProjectMetricsProps) {
   return (
     <ProjectPageSection
       id="metrics"
+      eyebrow="EVIDENCE"
       title="Metrics"
-      description="Key signals from building and operating the platform."
+      description="Signals from building and operating the system—not vanity counters."
       width="wide"
       surface
     >

@@ -1,40 +1,45 @@
-"use client";
-
 import { X } from "lucide-react";
 import dynamic from "next/dynamic";
 
+import { Stack } from "@/components/layout/Stack";
 import { Heading } from "@/components/typography/Heading";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/components/ui/link";
+import { useReducedMotion } from "@/lib/motion/use-reduced-motion";
 
 const AnimatePresence = dynamic(
   () => import("framer-motion").then((mod) => mod.AnimatePresence),
-  { ssr: false }
+  { ssr: false },
 );
 
 const MotionDiv = dynamic(
   () => import("framer-motion").then((mod) => mod.motion.div),
-  { ssr: false }
+  { ssr: false },
 );
 
 interface NavigationMobileProps {
   isOpen: boolean;
   mounted: boolean;
-  links: { href: string; label: string }[];
+  links: readonly { href: string; label: string }[];
+  contactHref: string;
   onClose: () => void;
 }
 
 function DrawerContent({
   links,
+  contactHref,
   onClose,
 }: {
-  links: { href: string; label: string }[];
+  links: readonly { href: string; label: string }[];
+  contactHref: string;
   onClose: () => void;
 }) {
   return (
     <>
       <div className="flex items-center justify-between border-b border-border bg-background p-6">
-        <Heading level={4} className="text-lg">Menu</Heading>
+        <Heading level={4} className="text-lg">
+          Menu
+        </Heading>
         <Button
           type="button"
           variant="ghost"
@@ -45,18 +50,28 @@ function DrawerContent({
           <X className="h-6 w-6" />
         </Button>
       </div>
-      <div className="flex flex-col gap-6 bg-background p-6">
+      <Stack gap="md" className="bg-background p-6">
         {links.map(({ href, label }) => (
           <Link
             key={href}
             href={href}
             onClick={onClose}
-            className="text-base font-medium text-muted-foreground no-underline hover:text-primary"
+            className="text-base font-medium text-muted-foreground no-underline hover:text-ds-accent-hover"
           >
             {label}
           </Link>
         ))}
-      </div>
+        <Button asChild className="mt-2 w-full">
+          <Link
+            href={contactHref}
+            external
+            onClick={onClose}
+            className="no-underline hover:no-underline"
+          >
+            Get in touch
+          </Link>
+        </Button>
+      </Stack>
     </>
   );
 }
@@ -65,18 +80,21 @@ export function NavigationMobile({
   isOpen,
   mounted,
   links,
+  contactHref,
   onClose,
 }: NavigationMobileProps) {
+  const reducedMotion = useReducedMotion();
+
   if (!isOpen) {
     return null;
   }
 
-  if (mounted && AnimatePresence && MotionDiv) {
+  if (!reducedMotion && mounted && AnimatePresence && MotionDiv) {
     return (
       <AnimatePresence>
         <>
           <MotionDiv
-            className="fixed inset-0 z-40 block bg-black min-[469px]:hidden dark:bg-black"
+            className="fixed inset-0 z-40 block bg-black min-[769px]:hidden dark:bg-black"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -84,14 +102,18 @@ export function NavigationMobile({
             onClick={onClose}
           />
           <MotionDiv
-            className="fixed top-0 right-0 z-50 h-full w-64 border-l border-border bg-background shadow-xl max-[468px]:block min-[469px]:hidden"
+            className="fixed top-0 right-0 z-50 h-full w-64 border-l border-border bg-background shadow-xl max-[768px]:block min-[769px]:hidden"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <DrawerContent links={links} onClose={onClose} />
+            <DrawerContent
+              links={links}
+              contactHref={contactHref}
+              onClose={onClose}
+            />
           </MotionDiv>
         </>
       </AnimatePresence>
@@ -101,11 +123,15 @@ export function NavigationMobile({
   return (
     <>
       <div
-        className="fixed inset-0 z-40 block bg-black min-[469px]:hidden dark:bg-black"
+        className="fixed inset-0 z-40 block bg-black min-[769px]:hidden dark:bg-black"
         onClick={onClose}
       />
-      <div className="fixed top-0 right-0 z-50 h-full w-64 border-l border-border bg-background shadow-xl max-[468px]:block min-[469px]:hidden">
-        <DrawerContent links={links} onClose={onClose} />
+      <div className="fixed top-0 right-0 z-50 h-full w-64 border-l border-border bg-background shadow-xl max-[768px]:block min-[769px]:hidden">
+        <DrawerContent
+          links={links}
+          contactHref={contactHref}
+          onClose={onClose}
+        />
       </div>
     </>
   );

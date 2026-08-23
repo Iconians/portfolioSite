@@ -1,52 +1,77 @@
 "use client";
 
 import { Section } from "@/components/layout/Section";
-import { Surface } from "@/components/layout/Surface";
+import { Inline, Stack } from "@/components/layout/Stack";
 import { Heading } from "@/components/typography/Heading";
 import { Text } from "@/components/typography/Text";
+import { Badge } from "@/components/ui/badge";
 
-const TECH_STACK = [
-  { name: "Next.js", icon: "nextdotjs" },
-  { name: "TypeScript", icon: "typescript" },
-  { name: "PostgreSQL", icon: "postgresql" },
-  { name: "Node.js", icon: "nodedotjs" },
-  { name: "Prisma", icon: "prisma" },
-  { name: "Tailwind CSS", icon: "tailwindcss" },
-  { name: "Stripe", icon: "stripe" },
+const CAPABILITY_GROUPS = [
+  {
+    title: "Frontend / rendering",
+    items: ["Next.js", "React", "TypeScript", "Tailwind CSS", "SSR"],
+  },
+  {
+    title: "Backend / APIs",
+    items: ["Node.js", "REST APIs"],
+  },
+  {
+    title: "Data / persistence",
+    items: ["PostgreSQL", "Prisma", "Neon"],
+  },
+  {
+    title: "Auth / billing",
+    items: ["Authentication", "RBAC", "Stripe"],
+  },
+  {
+    title: "Realtime / async",
+    items: ["Realtime collaboration", "Background jobs", "Email (Resend)"],
+  },
+  {
+    title: "Infrastructure",
+    items: ["Cloud-hosted Postgres", "Object storage (R2)", "CI"],
+  },
+  {
+    title: "Testing / quality",
+    items: ["Playwright", "Lint / CI guardrails"],
+  },
+  {
+    title: "AI-assisted engineering",
+    items: ["AI-assisted workflows in production tooling"],
+  },
 ] as const;
 
-const ICON_BASE = "https://cdn.simpleicons.org";
-
-export function TechStack() {
+export function EngineeringStack() {
   return (
-    <Section id="tech-stack" className="py-12">
-      <Heading level={2} className="mb-8 text-center text-2xl md:text-3xl">
-        Technologies I Work With
-      </Heading>
-      <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-        {TECH_STACK.map(({ name, icon }) => (
-          <div
-            key={icon}
-            className="group flex flex-col items-center gap-2"
-            title={name}
-          >
-            <Surface
-              variant="inner"
-              className="p-3 transition-colors group-hover:border-primary/40"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element -- external CDN tech icons */}
-              <img
-                src={`${ICON_BASE}/${icon}/737373`}
-                alt=""
-                className="h-8 w-8 object-contain md:h-9 md:w-9 dark:invert dark:brightness-0 dark:opacity-90"
-              />
-            </Surface>
-            <Text variant="muted" className="text-sm font-medium group-hover:text-foreground">
-              {name}
-            </Text>
-          </div>
+    <Section id="engineering-stack" className="py-16">
+      <Stack gap="sm" className="mb-10">
+        <Heading variant="eyebrow">STACK</Heading>
+        <Heading level={2}>Engineering stack</Heading>
+        <Text variant="description">
+          Grouped capabilities across the stack—from rendering and APIs to data,
+          auth, realtime systems, and quality guardrails.
+        </Text>
+      </Stack>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        {CAPABILITY_GROUPS.map((group) => (
+          <Stack key={group.title} gap="sm">
+            <Heading level={3} className="text-sm font-semibold uppercase tracking-wide">
+              {group.title}
+            </Heading>
+            <Inline gap="sm" className="flex-wrap">
+              {group.items.map((item) => (
+                <Badge key={item} variant="secondary" className="text-xs">
+                  {item}
+                </Badge>
+              ))}
+            </Inline>
+          </Stack>
         ))}
       </div>
     </Section>
   );
 }
+
+/** @deprecated Use `EngineeringStack` — retained for import compatibility. */
+export const TechStack = EngineeringStack;

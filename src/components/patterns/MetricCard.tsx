@@ -26,27 +26,27 @@ function MetricCard({
   return (
     <Surface
       data-slot="metric-card"
-      variant="inner"
+      variant="card"
       padding="default"
-      className={cn("flex h-full flex-col", className)}
+      className={cn("flex h-full flex-col gap-3 border-border/80", className)}
     >
-      <Inline gap="md" className="mb-4 items-start justify-between">
+      <Inline gap="md" className="items-start justify-between">
         <Label>{label}</Label>
         {icon ? (
           <span
-            className="flex h-8 w-8 shrink-0 items-center justify-center text-primary"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border bg-card text-ds-accent"
           >
             {icon}
           </span>
         ) : null}
       </Inline>
-      <p
-        className="text-2xl font-semibold tracking-tight text-foreground md:text-[1.75rem]"
-      >
+      <p className="text-2xl font-semibold tracking-tight text-foreground md:text-[1.625rem]">
         {value}
       </p>
       {trimmedDescription ? (
-        <Text className="mt-auto pt-3">{trimmedDescription}</Text>
+        <Text variant="muted" className="text-sm leading-relaxed">
+          {trimmedDescription}
+        </Text>
       ) : (
         <span className="mt-auto" aria-hidden />
       )}

@@ -24,9 +24,11 @@ export function PlatformShowcase({
   return (
     <ProjectPageSection
       id="platform"
+      eyebrow="PLATFORM"
       title={title}
-      description="Capabilities demonstrated by this project."
+      description="Engineering capabilities demonstrated by this project."
       width="wide"
+      headerClassName="px-5 md:px-6"
     >
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {normalizedFeatures.map((feature) => (
@@ -34,14 +36,16 @@ export function PlatformShowcase({
             <Surface
               variant="card"
               padding="default"
-              className="flex h-full min-h-[4.5rem] items-start gap-2.5"
+              className="flex h-full min-h-[4.5rem] items-start gap-2.5 border-border/80"
             >
               <span
-                className="flex h-8 w-8 shrink-0 items-center justify-center text-primary"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border bg-card text-ds-accent"
               >
-                <Check className="h-4 w-4" aria-hidden />
+                <Check className="h-3.5 w-3.5" aria-hidden />
               </span>
-              <Text className="pt-1.5 text-foreground">{feature}</Text>
+              <Text className="pt-0.5 text-sm leading-relaxed text-foreground">
+                {feature}
+              </Text>
             </Surface>
           </li>
         ))}

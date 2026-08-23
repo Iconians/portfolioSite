@@ -18,13 +18,10 @@ export function ProjectPageFooter({ project }: ProjectPageFooterProps) {
   }
 
   return (
-    <Section
-      id="links"
-      labelledBy="links-heading"
-      className="border-t border-border"
-    >
+    <Section id="links" labelledBy="links-heading" className="py-16">
       <ContentWidth width="narrow" className="text-center">
-        <Heading level={3} id="links-heading" className="mb-4 text-xl">
+        <Heading variant="eyebrow" className="mb-2">LINKS</Heading>
+        <Heading level={3} id="links-heading" className="mb-6 text-lg font-semibold">
           Project links
         </Heading>
         <ProjectActions

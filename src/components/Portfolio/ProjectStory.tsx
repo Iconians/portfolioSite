@@ -48,6 +48,7 @@ export function ProjectStory({ project }: ProjectStoryProps) {
   return (
     <ProjectPageSection
       id="story"
+      eyebrow="STORY"
       title="Engineering story"
       description="How the platform was scoped, built, and refined."
       width="article"

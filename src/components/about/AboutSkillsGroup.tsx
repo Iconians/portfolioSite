@@ -14,17 +14,21 @@ export function AboutSkillsGroup({
   listKey,
 }: AboutSkillsGroupProps) {
   return (
-    <>
-      <Heading level={3} className="mb-4 text-center text-2xl">
+    <div>
+      <Heading level={3} className="mb-4 text-lg font-semibold">
         {title}
       </Heading>
-      <Inline gap="sm" className="flex-wrap gap-2">
+      <Inline gap="sm" className="flex-wrap">
         {items.map((skill, index) => (
-          <Badge key={`${listKey}-${skill}-${index}`} variant="secondary" className="text-sm">
+          <Badge
+            key={`${listKey}-${skill}-${index}`}
+            variant="secondary"
+            className="text-xs"
+          >
             {skill}
           </Badge>
         ))}
       </Inline>
-    </>
+    </div>
   );
 }

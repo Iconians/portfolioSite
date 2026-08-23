@@ -1,39 +1,18 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
-  --primary-color: #000000;
-  --primary-color-hover: #333333;
-  --button-text-color: #ffffff;
-  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  --accent-color: #ffd700;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-  box-sizing: border-box;
-  max-width: 1280px;
-  margin: 0 auto;
-  text-align: center;
   --radius: 0.625rem;
-  /* Soft off-white canvas (legacy --site-bg-color #f5f5f5) */
+
+  /* Light — neutral canvas and surfaces (Candidate C accent in tokens.css) */
   --background: oklch(0.97 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.1 0 0);
-  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -41,9 +20,9 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -51,160 +30,21 @@
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
 }
 
-*, *::before, *::after {
-  box-sizing: inherit;
-}
-
-a {
-  font-weight: 500;
-  color: darkcyan;
-  text-decoration: none;
-}
-a:hover {
-  color: darkcyan;
-  text-decoration: underline;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-height: 100vh;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  /* padding: 2rem; */
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-.catch-phrase {
-  background-image: url(/mountainpic.jpg);
-  background-repeat: no-repeat;
-  height: 358px;
-  background-size: 100% 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: antiquewhite;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-/* Modern responsive breakpoints */
-@media (max-width: 1350px) {
-  .carouselWrapper, .catch-phrase, .review-wrapper {
-    max-width: 1100px;
-    margin: auto;
-  }  
-}
-
-@media (max-width: 1175px) {
-  .carouselWrapper, .catch-phrase, .review-wrapper {
-    max-width: 900px;
-    margin: auto;
-  }  
-}
-
-@media (max-width: 975px) {
-  .carouselWrapper, .catch-phrase, .review-wrapper {
-    max-width: 700px;
-    margin: auto;
-  }  
-}
-
-@media (max-width: 775px) {
-  .carouselWrapper, .catch-phrase, .review-wrapper {
-    max-width: 500px;
-    margin: auto;
-  }  
-}
-
-@media (max-width: 575px) {
-  .carouselWrapper, .catch-phrase, .review-wrapper {
-    max-width: 95%;
-    margin: auto;
-  }
-
-  /* Fluid typography for mobile */
-  h1 {
-    font-size: clamp(2em, 6vw, 3.2em);
-  }
-}
-
-@media (max-width: 383px) {
-  #root {
-    padding: 0 10px;
-  } 
-
-  header, button, .portfolio-wrapper, .portfolio-cards {
-    max-width: 100%;
-    width: 100%;
-    margin: auto;
-  }
-  .nav-bar {
-    flex-direction: column;
-  }
-
-  .ul-list {
-    margin: auto;
-  }
-
-  /* Even smaller text on very small screens */
-  h1 {
-    font-size: clamp(1.5em, 8vw, 2.5em);
-  }
 }
 
 @theme inline {
@@ -230,6 +70,12 @@ h1 {
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-surface-alt: var(--ds-surface-alt);
+  --color-footer: var(--ds-footer);
+  --color-ds-accent: var(--ds-accent);
+  --color-ds-accent-hover: var(--ds-accent-hover);
+  --color-ds-accent-muted: var(--ds-accent-muted);
+  --color-ds-accent-muted-foreground: var(--ds-accent-muted-foreground);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -246,15 +92,12 @@ h1 {
 }
 
 .dark {
-  /* Portfolio dark — neutral charcoal canvas; blue accent on --primary only */
-  --background: oklch(0.25 0 0);
+  --background: oklch(0.2 0 0);
   --foreground: oklch(0.96 0 0);
   --card: oklch(0.22 0 0);
   --card-foreground: oklch(0.96 0 0);
   --popover: oklch(0.22 0 0);
   --popover-foreground: oklch(0.96 0 0);
-  --primary: oklch(0.62 0.11 235);
-  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.28 0.005 250);
   --secondary-foreground: oklch(0.96 0 0);
   --muted: oklch(0.28 0 0);
@@ -265,7 +108,6 @@ h1 {
   --destructive-foreground: oklch(0.96 0 0);
   --border: oklch(0.35 0 0);
   --input: oklch(0.28 0 0);
-  --ring: oklch(0.62 0.10 235);
   --chart-1: oklch(0.62 0.11 235);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -273,17 +115,9 @@ h1 {
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.22 0 0);
   --sidebar-foreground: oklch(0.96 0 0);
-  --sidebar-primary: oklch(0.62 0.11 235);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.28 0 0);
   --sidebar-accent-foreground: oklch(0.96 0 0);
   --sidebar-border: oklch(0.35 0 0);
-  --sidebar-ring: oklch(0.62 0.10 235);
-
-  --primary-color: #3b82f6;
-  --primary-color-hover: #60a5fa;
-  --button-text-color: #f5f5f5;
-  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 @layer base {

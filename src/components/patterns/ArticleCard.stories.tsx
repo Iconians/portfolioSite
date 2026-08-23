@@ -12,10 +12,12 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const WithMetadata: Story = {
   args: {
     title: "Building resilient APIs",
     description: "Patterns for portfolio-scale services without enterprise overhead.",
     date: "2025-01-15",
+    primaryTag: "TypeScript",
+    readTimeMinutes: 8,
   },
 };

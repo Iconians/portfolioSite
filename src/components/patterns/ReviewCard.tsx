@@ -20,18 +20,18 @@ function ReviewCard({ title, content, stars, className }: ReviewCardProps) {
     <Card
       data-slot="review-card"
       className={cn(
-        "border-border/50 bg-card/50 p-6 backdrop-blur transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5",
+        "border-border/60 bg-card/40 p-4 backdrop-blur transition-colors hover:border-primary/40",
         className
       )}
     >
-      <Quote className="mb-4 h-8 w-8 text-primary/40" aria-hidden />
+      <Quote className="mb-3 h-5 w-5 text-primary/40" aria-hidden />
       <Stack gap="sm">
-        <Heading level={3} className="text-lg">{title}</Heading>
-        <Text className="text-sm leading-relaxed text-foreground/90">
+        <Heading level={3} className="text-base">{title}</Heading>
+        <Text className="text-sm leading-relaxed text-muted-foreground">
           {content}
         </Text>
-        <div className="flex items-center gap-3 border-t border-border/50 pt-4">
-          <div className="text-lg text-yellow-400" aria-label={`${filledStars} out of 5 stars`}>
+        <div className="flex items-center gap-3 border-t border-border/50 pt-3">
+          <div className="text-sm text-yellow-400" aria-label={`${filledStars} out of 5 stars`}>
             {"★".repeat(filledStars)}
             {"☆".repeat(5 - filledStars)}
           </div>

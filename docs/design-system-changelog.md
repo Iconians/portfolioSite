@@ -183,3 +183,140 @@ When you ship a design-system change:
 4. Link to Storybook story if a new pattern or primitive is introduced.
 
 Do not log drive-by CSS cleanup or deferred redesign work here unless it changes the public component API.
+
+---
+
+## Visual Redesign — Phase 1 tokens (Candidate C)
+
+**Added**
+
+- `--ds-accent`, `--ds-accent-hover`, `--ds-accent-muted`, `--ds-accent-foreground`, `--ds-accent-muted-foreground`, `--ds-focus-ring` (theme-tuned Refined Green)
+- `--ds-surface-alt`, `--ds-footer` section rhythm tokens
+- Tailwind theme: `bg-surface-alt`, `bg-footer`, `text-ds-accent`, `bg-ds-accent-muted`, `text-ds-accent-muted-foreground`
+
+**Changed**
+
+- `globals.css` — neutral charcoal/light canvas; removed legacy Vite global overrides (`h1`, `a`, `#root`, carousel rules)
+- `tokens.css` — maps `--primary`, `--ring`, `--sidebar-primary` to `--ds-accent*`; legacy aliases retained as bridges
+- `Heading` — `text-foreground` headings; eyebrow variant uses `text-ds-accent`
+- Philosophy / What I build list markers — neutral muted (not accent)
+
+**Removed**
+
+- `Phase0AccentReview.stories.tsx` (review-only; superseded by `Design System/Tokens` stories)
+
+---
+
+## Visual Redesign — Phase 2 homepage shell
+
+**Added**
+
+- `SectionBand` — full-bleed `canvas` / `surfaceAlt` / `footer` tone wrappers
+- `SiteFooter` — platform footer with nav, social, copyright
+- `PlatformEvolution` — static three-arc evolution narrative
+- `EngineeringStack` — capability groups with `Badge` chips (replaces CDN icon wall)
+- `src/lib/portfolio/home-featured.ts` — `HOME_FEATURED_SLUGS`, `pickHomeFeaturedProjects`
+- `ProjectCard` — optional `eyebrow` slot (project type)
+- `Badge` — `accentMuted` variant (neutral bg + foreground for small-text chips)
+- Tailwind: `text-ds-accent-hover`, `hover:bg-ds-accent-hover`
+
+**Changed**
+
+- Homepage IA — nine sections with alternating rhythm; nav before hero
+- `Navigation` — `> Clayton Cripe` brand, Work/Writing labels, Get in touch CTA
+- `Hero` — senior positioning, View work + Get in touch CTAs
+- `PortfolioSection` — curated four featured projects + expandable remaining portfolio
+- `Button` default hover — `--ds-accent-hover`
+- Token usage demo — skill chip uses accessible secondary pairing (not accent-muted fill)
+
+**Removed**
+
+- SimpleIcons CDN requests from homepage stack section
+- Duplicate bullet list in What I build (cards only)
+
+---
+
+## Visual Redesign — Phase 3 About + blog
+
+**Added**
+
+- `src/lib/content/focus-areas.ts`, `engineering-principles.ts` — shared profile copy (home + About)
+- `src/lib/articles/read-time.ts`, `blog-tags.ts`, `blog-prose.ts` — read time, tag filters, prose tokens
+- `AboutContent` server sections — profile hero, focus, principles, skills, narrative, CTA
+- Blog index tag filter pills (client island); article count in intro
+- `ArticleCard` — `primaryTag`, `readTimeMinutes` metadata slots
+
+**Changed**
+
+- About page — alternating `SectionBand` rhythm, `SiteFooter`, engineering profile IA (no biography wall)
+- Blog index + article pages — platform nav/footer, WRITING eyebrow, `ContentWidth` article body
+- `BlogPostClient` — `BLOG_PROSE_CLASS` from `blog-prose.ts` (replaces inline `BLOG_ARTICLE_CLASS`)
+- `getAllPosts` includes content server-side for read-time computation only
+
+**Removed**
+
+- `AboutContentClient.tsx` — animated paragraph wall replaced by server sections
+
+---
+
+## Visual Redesign — Phase 4 case study presentation
+
+**Added**
+
+- `Heading` — `variant="display"` for case study hero titles
+- `ProjectPageSection` — optional `eyebrow` prop (accent section labels)
+- Case study `SectionBand` rhythm inside `CaseStudyPage` (summary, story, platform, links)
+
+**Changed**
+
+- `ProjectDetailHero` — display heading, project-type eyebrow, primary + outline CTAs
+- `ProjectSummary` — elevated surface card, restrained category badges
+- `ProjectMetrics` / `MetricCard` — evidence-focused border-first cards with label eyebrows and restrained accent icons
+- `ProjectStory` blocks — `Label` eyebrows on scannable story cards
+- `ProjectEvolution` — EVOLUTION eyebrow, “How it evolved” title, timeline spacing
+- `PlatformShowcase` / `ProjectGallery` — section eyebrows, border-first cards
+- `ProjectPageFooter` — LINKS eyebrow, restrained inline actions
+- `projects/[slug]/page.tsx` — `SiteFooter`, container shell (IA order unchanged)
+
+**Changed (Phase 4 review)**
+
+- `MetricCard` — restored optional restrained icons (bordered accent chip) for metric scannability; `metric-icons` extended for Storybook, accessibility, implementation/planned work
+- `PlatformShowcase` — header block inset (`px-5 md:px-6`) aligned with capability card content
+
+---
+
+## Visual Redesign — Phase 5 polish
+
+**Added**
+
+- `src/lib/motion/use-reduced-motion.ts` — SSR-safe `useReducedMotion` hook for client animation islands
+
+**Changed**
+
+- Animation components (`AnimatedSection`, `AnimatedWrapper`, `AnimateHeading`, `AnimatedParagraphs`, `AnimatedCodeClient`) — honor `prefers-reduced-motion`; slightly reduced entry motion on home sections
+- `TerminalLoader` — Candidate C accent tokens (`text-ds-accent`, `bg-ds-accent/15`); static terminal when reduced motion; decorative pulse/entry gated
+- `NavigationMobile` — instant drawer when reduced motion
+- `blogWrapper` — tag filter `aria-pressed`; 44px min touch height on mobile filter pills; focus ring on article links; static grid when reduced motion
+- `BlogCard`, `PortfolioSectionClient` — reduced-motion static cards; subtler hover lift; focus-within parity on card patterns
+- `ArticleCard` / `ProjectCard` — `group-focus-within` affordances; `motion-reduce:transform-none` on image scale
+- `Hero` — subtitle uses `text-ds-accent`
+- `tokens.css` — disables `animate-in` / `animate-pulse` under reduced motion
+- `AnimatedParagraphs` — CSS module migrated to Tailwind utilities
+
+**Removed**
+
+- `animations.module.css` (typography utilities inlined in `AnimatedParagraphs`)
+
+---
+
+## Visual Redesign — Phase 6 validation + documentation
+
+**Changed**
+
+- `docs/design-system.md` — synced with shipped visual redesign: Candidate C tokens, `SectionBand`, `Heading display`, client boundaries, reduced motion, post-redesign deferred table
+- Program acceptance: V1 architecture unchanged; no schema migrations; ESLint boundaries unchanged
+
+**Validation (automated)**
+
+- `npm run lint`, `npx tsc --noEmit`, `npm test`, `npm run build` — pass at program sign-off
+- Storybook dev catalog spot-check (`npm run storybook`); `build-storybook` remains local-only (not CI)

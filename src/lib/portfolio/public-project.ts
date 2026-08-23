@@ -19,6 +19,23 @@ export function getProjectCardSummary(item: PortfolioItem): string {
   return item.summary?.trim() || item.description;
 }
 
+const PROJECT_TYPE_LABELS: Record<string, string> = {
+  saas: "SaaS",
+  client: "Client",
+  engineering: "Engineering",
+  personal: "Personal",
+};
+
+export function getProjectTypeLabel(
+  projectType: string | null | undefined
+): string | undefined {
+  if (!projectType?.trim()) {
+    return undefined;
+  }
+
+  return PROJECT_TYPE_LABELS[projectType] ?? projectType;
+}
+
 export function uniqueCategories(categories: string[]): string[] {
   const seen = new Set<string>();
 
