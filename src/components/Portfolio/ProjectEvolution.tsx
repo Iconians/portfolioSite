@@ -1,10 +1,10 @@
+import { Timeline } from "@/components/patterns/Timeline";
 import { ProjectEvolutionItem } from "@/components/Portfolio/ProjectEvolutionItem";
 import { ProjectPageSection } from "@/components/Portfolio/ProjectPageSection";
 import {
   hasProjectEvolution,
   sortProjectVersions,
 } from "@/lib/portfolio/project-evolution";
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 
 import type { ProjectVersion } from "@/lib/types/portfolio";
 
@@ -16,7 +16,7 @@ interface ProjectEvolutionProps {
 
 export function ProjectEvolution({
   versions,
-  title = "Timeline",
+  title = "How it evolved",
   className,
 }: ProjectEvolutionProps) {
   if (!hasProjectEvolution(versions)) {
@@ -28,13 +28,14 @@ export function ProjectEvolution({
   return (
     <ProjectPageSection
       id="evolution"
+      eyebrow="EVOLUTION"
       title={title}
       description="Major milestones across the project lifecycle."
       width="wide"
       surface
       className={className}
     >
-      <ol className={projectPageStyles.cardPadding}>
+      <Timeline>
         {sortedVersions.map((version, index) => (
           <ProjectEvolutionItem
             key={version.id}
@@ -42,7 +43,7 @@ export function ProjectEvolution({
             isLast={index === sortedVersions.length - 1}
           />
         ))}
-      </ol>
+      </Timeline>
     </ProjectPageSection>
   );
 }

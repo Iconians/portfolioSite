@@ -1,6 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -21,24 +30,27 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
-  if (!open) {
-    return null;
-  }
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="confirm-dialog-title"
-        className="w-full max-w-md rounded-lg border bg-background p-6 shadow-lg"
-      >
-        <h2 id="confirm-dialog-title" className="text-lg font-semibold">
-          {title}
-        </h2>
-        <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-        <div className="mt-6 flex justify-end gap-2">
-          <Button type="button" variant="outline" onClick={onCancel} disabled={loading}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) {
+          onCancel();
+        }
+      }}
+    >
+      <DialogContent showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={loading}
+          >
             Cancel
           </Button>
           <Button
@@ -47,10 +59,17 @@ export function ConfirmDialog({
             onClick={onConfirm}
             disabled={loading}
           >
-            {loading ? "Working..." : confirmLabel}
+            {loading ? (
+              <>
+                <Spinner className="size-4" />
+                Working…
+              </>
+            ) : (
+              confirmLabel
+            )}
           </Button>
-        </div>
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

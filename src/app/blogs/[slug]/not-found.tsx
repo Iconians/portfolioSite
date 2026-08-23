@@ -1,22 +1,35 @@
-import Link from "next/link";
-
+import { Container } from "@/components/layout/Container";
+import { SectionBand } from "@/components/layout/SectionBand";
+import { Stack } from "@/components/layout/Stack";
 import { Navigation } from "@/components/Nav/Navigation";
+import { SiteFooter } from "@/components/SiteFooter/SiteFooter";
+import { Heading } from "@/components/typography/Heading";
+import { Text } from "@/components/typography/Text";
+import { Link } from "@/components/ui/link";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen w-full bg-background">
+    <div className="min-h-screen w-full bg-background text-foreground">
       <Navigation />
-      <main className="container mx-auto px-4 py-16 max-w-7xl w-full">
-        <div className="p-8 text-center">
-          <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
-          <p className="text-muted-foreground mb-6">
-            The blog post you&apos;re looking for doesn&apos;t exist.
-          </p>
-          <Link href="/blogs" className="text-primary hover:underline">
-            ← Back to Blog
-          </Link>
-        </div>
+
+      <main>
+        <SectionBand tone="canvas">
+          <Container className="py-16">
+            <Stack gap="md" className="mx-auto max-w-lg text-center">
+              <Heading level={1}>Article not found</Heading>
+              <Text variant="description">
+                The article you&apos;re looking for doesn&apos;t exist or may have
+                been unpublished.
+              </Text>
+              <Link href="/blogs" className="text-sm">
+                Back to engineering articles
+              </Link>
+            </Stack>
+          </Container>
+        </SectionBand>
       </main>
+
+      <SiteFooter />
     </div>
   );
 }

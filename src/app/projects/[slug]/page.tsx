@@ -1,15 +1,9 @@
 import { notFound } from "next/navigation";
 
+import { Container } from "@/components/layout/Container";
 import { Navigation } from "@/components/Nav/Navigation";
-import { ProjectDetailHero } from "@/components/Portfolio/ProjectDetailHero";
-import { ProjectEvolution } from "@/components/Portfolio/ProjectEvolution";
-import { ProjectGallery } from "@/components/Portfolio/ProjectGallery";
-import { ProjectMetrics } from "@/components/Portfolio/ProjectMetrics";
-import { ProjectPageFooter } from "@/components/Portfolio/ProjectPageFooter";
-import { ProjectPlatformShowcase } from "@/components/Portfolio/ProjectPlatformShowcase";
-import { ProjectPreviewBanner } from "@/components/Portfolio/ProjectPreviewBanner";
-import { ProjectStory } from "@/components/Portfolio/ProjectStory";
-import { ProjectSummary } from "@/components/Portfolio/ProjectSummary";
+import { CaseStudyPage } from "@/components/Portfolio/CaseStudyPage";
+import { SiteFooter } from "@/components/SiteFooter/SiteFooter";
 import {
   AuthenticationError,
   AuthorizationError,
@@ -22,7 +16,6 @@ import {
 } from "@/lib/data/portfolio";
 import { listPublicPortfolioMetrics } from "@/lib/data/portfolio-metrics";
 import { listPublicProjectVersions } from "@/lib/data/project-versions";
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
 import { buildProjectPageMetadata } from "@/lib/portfolio/public-project";
 
 import type { Metadata } from "next";
@@ -113,23 +106,21 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
   ]);
 
   return (
-    <div className={`${projectPageStyles.page} text-left`}>
+    <div className="min-h-screen w-full bg-background text-foreground text-left">
       <Navigation />
-      <main className={projectPageStyles.main}>
-        {isPreview ? (
-          <div className="mb-8">
-            <ProjectPreviewBanner publishStatus={project.publishStatus} />
-          </div>
-        ) : null}
-        <ProjectDetailHero project={project} />
-        <ProjectSummary project={project} />
-        <ProjectMetrics metrics={metrics} />
-        <ProjectStory project={project} />
-        <ProjectEvolution versions={versions} />
-        <ProjectPlatformShowcase project={project} />
-        <ProjectGallery gallery={project.gallery} />
-        <ProjectPageFooter project={project} />
+
+      <main>
+        <Container className="py-8 md:py-12">
+          <CaseStudyPage
+            project={project}
+            metrics={metrics}
+            versions={versions}
+            isPreview={isPreview}
+          />
+        </Container>
       </main>
+
+      <SiteFooter />
     </div>
   );
 }

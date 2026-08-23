@@ -1,6 +1,7 @@
-import { serialize } from "next-mdx-remote/serialize";
-
 import { getArticleCoverImage } from "@/lib/articles/article-cover";
+import { getPrimaryArticleTag } from "@/lib/articles/blog-tags";
+import { serializeArticleMdx } from "@/lib/articles/mdx-serialize";
+import { computeReadTimeMinutes } from "@/lib/articles/read-time";
 import { getAllArticles, getArticleBySlug } from "@/lib/data/articles";
 
 export interface FrontMatter {
@@ -11,6 +12,8 @@ export interface FrontMatter {
   tags?: string[];
   coverImageUrl?: string;
   coverImageAlt?: string;
+  readTimeMinutes?: number;
+  primaryTag?: string;
 }
 
 export const getPostBySlug = async (slug: string) => {
@@ -26,12 +29,7 @@ export const getPostBySlug = async (slug: string) => {
   }
 
   // Serialize MDX with options for better performance
-  const mdxSource = await serialize(article.content, {
-    parseFrontmatter: false, // We already have frontmatter
-    mdxOptions: {
-      development: false,
-    },
-  });
+  const mdxSource = await serializeArticleMdx(article.content);
 
   const cover = getArticleCoverImage(article);
 
@@ -44,17 +42,19 @@ export const getPostBySlug = async (slug: string) => {
       tags: article.tags,
       coverImageUrl: cover?.url,
       coverImageAlt: cover?.alt,
+      readTimeMinutes: computeReadTimeMinutes(article.content),
+      primaryTag: getPrimaryArticleTag(article.tags),
     } as FrontMatter,
     mdxSource,
   };
 };
 
 export const getAllPosts = async () => {
-  // Don't fetch content for list views - only needed when viewing individual articles
-  const articles = await getAllArticles(false);
+  const articles = await getAllArticles(true);
 
   return articles.map((article) => {
     const cover = getArticleCoverImage(article);
+    const content = article.content ?? "";
 
     return {
       slug: article.slug,
@@ -66,6 +66,8 @@ export const getAllPosts = async () => {
         tags: article.tags,
         coverImageUrl: cover?.url,
         coverImageAlt: cover?.alt,
+        readTimeMinutes: computeReadTimeMinutes(content),
+        primaryTag: getPrimaryArticleTag(article.tags),
       } as FrontMatter,
     };
   });

@@ -1,12 +1,14 @@
-# Portfolio
+# Engineering Portfolio Platform
 
-Welcome to my personal portfolio site — a hub for my freelance work, client reviews, and technical articles.
+This repository powers my Engineering Portfolio Platform: a production application for presenting engineering work through structured case studies, project evolution, technical articles, media, metrics, and client feedback, backed by a secured administrative content system.
 
-This site is an **Engineering Portfolio Management System**: portfolio projects, media, articles, reviews, metrics, evolution timelines, and platform showcase content are managed through a secured admin interface and stored in PostgreSQL.
+Rather than treating the portfolio as a collection of static project pages, the platform is designed to model and communicate how software systems are designed, built, and evolved over time.
 
 Live site: [clytoncripe.com](https://www.clytoncripe.com)
 
 Architecture reference: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+
+Design system (presentation layer): [`docs/design-system.md`](docs/design-system.md)
 
 ---
 

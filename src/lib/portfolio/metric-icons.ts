@@ -1,11 +1,14 @@
 import {
+  Accessibility,
   BarChart3,
+  BookOpen,
   Boxes,
   Clock3,
   Code2,
   Database,
   Gauge,
   Layers,
+  ListChecks,
   Rocket,
   ShieldCheck,
   TestTube2,
@@ -15,6 +18,12 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 const METRIC_ICON_RULES: Array<{ pattern: RegExp; icon: LucideIcon }> = [
+  { pattern: /storybook|catalog/i, icon: BookOpen },
+  { pattern: /accessibility|a11y|accessible/i, icon: Accessibility },
+  {
+    pattern: /planned|backlog|roadmap|todo|task|implementation/i,
+    icon: ListChecks,
+  },
   { pattern: /test|coverage|spec/i, icon: TestTube2 },
   { pattern: /user|client|customer/i, icon: Users },
   { pattern: /uptime|latency|performance|speed|ms/i, icon: Gauge },

@@ -81,6 +81,9 @@ const nextConfig: NextConfig = {
   // TS 7 has no JS compiler API; run project-local tsc during build (see TS 6/7 side-by-side setup)
   experimental: {
     useTypeScriptCli: true,
+    instantInsights: {
+      validationLevel: "warning",
+    },
   },
 };
 

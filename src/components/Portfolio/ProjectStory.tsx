@@ -1,3 +1,4 @@
+
 import { ProjectArchitectureSection } from "@/components/Portfolio/ProjectArchitectureSection";
 import { ProjectFeatureList } from "@/components/Portfolio/ProjectFeatureList";
 import { ProjectPageSection } from "@/components/Portfolio/ProjectPageSection";
@@ -6,7 +7,7 @@ import {
   ProjectStoryCallout,
   ProjectStorySection,
 } from "@/components/Portfolio/ProjectStorySection";
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
+import { Label } from "@/components/typography/Label";
 import {
   formatProjectDateRange,
   getProjectStoryListItems,
@@ -47,6 +48,7 @@ export function ProjectStory({ project }: ProjectStoryProps) {
   return (
     <ProjectPageSection
       id="story"
+      eyebrow="STORY"
       title="Engineering story"
       description="How the platform was scoped, built, and refined."
       width="article"
@@ -92,11 +94,9 @@ export function ProjectStory({ project }: ProjectStoryProps) {
         )}
 
         {dateRange ? (
-          <p
-            className={`${projectPageStyles.eyebrow} border-t border-[var(--blog-card-border)] pt-5`}
-          >
+          <Label className="block border-t border-border pt-5">
             Project timeline · {dateRange}
-          </p>
+          </Label>
         ) : null}
       </div>
     </ProjectPageSection>

@@ -1,10 +1,14 @@
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 
+import { Section } from "@/components/layout/Section";
+import { Inline , Stack } from "@/components/layout/Stack";
+import { Heading } from "@/components/typography/Heading";
+import { Text } from "@/components/typography/Text";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/components/ui/link";
 import { getArticleCoverImage } from "@/lib/articles/article-cover";
 
 import BlogCard from "../blog-card/BlogCard";
-import { Button } from "../ui/button";
 
 import type { FrontMatter } from "@/lib/mdx";
 import type { Article } from "@/lib/types/articles";
@@ -48,18 +52,23 @@ export default function FeaturedArticles({
   }
 
   return (
-    <section className="py-16">
-      <div className="mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          Engineering Articles
-        </h2>
-        <p className="text-muted-foreground text-lg">
-          Latest articles on algorithms, data structures, and web development
-        </p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <Section id="writing" className="py-16">
+      <Stack gap="sm" className="mb-12">
+        <Heading variant="eyebrow">WRITING</Heading>
+        <Heading level={2}>Engineering articles</Heading>
+        <Text variant="description">
+          Technical writing on algorithms, data structures, migrations, and
+          engineering practice.
+        </Text>
+      </Stack>
+
+      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {featuredPosts.map((post) => (
-          <Link key={post.slug} href={`/blogs/${post.slug}`}>
+          <Link
+            key={post.slug}
+            href={`/blogs/${post.slug}`}
+            className="no-underline hover:no-underline"
+          >
             <BlogCard
               title={post.frontMatter.title}
               description={post.frontMatter.description}
@@ -70,14 +79,15 @@ export default function FeaturedArticles({
           </Link>
         ))}
       </div>
-      <div className="text-center">
+
+      <Inline className="justify-center">
         <Button variant="outline" asChild>
-          <Link href="/blogs">
+          <Link href="/blogs" className="no-underline hover:no-underline">
             View All Articles
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>
-      </div>
-    </section>
+      </Inline>
+    </Section>
   );
 }

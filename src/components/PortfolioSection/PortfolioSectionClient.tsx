@@ -1,26 +1,38 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { useSyncExternalStore, useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Inline, Stack } from "@/components/layout/Stack";
+import { ProjectCard } from "@/components/patterns/ProjectCard";
+import { Heading } from "@/components/typography/Heading";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/components/ui/link";
+import { useReducedMotion } from "@/lib/motion/use-reduced-motion";
 import {
   canViewProjectDetail,
   getProjectCardSummary,
   getProjectDetailHref,
+  getProjectTypeLabel,
   isValidProjectLink,
   uniqueCategories,
 } from "@/lib/portfolio/public-project";
 
 import type { PortfolioItem } from "@/lib/types/portfolio";
+import type { ReactNode } from "react";
+
+function isProjectsMoreHash(): boolean {
+  return window.location.hash === "#projects-more";
+}
+
+function subscribeToHash(onStoreChange: () => void) {
+  window.addEventListener("hashchange", onStoreChange);
+  return () => window.removeEventListener("hashchange", onStoreChange);
+}
+
+const externalLinkClass =
+  "inline-flex items-center gap-1.5 text-sm text-muted-foreground no-underline transition-colors hover:text-ds-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -61,97 +73,160 @@ const cardVariants = {
 };
 
 interface PortfolioSectionClientProps {
-  portfolioItems: PortfolioItem[];
+  featuredItems: PortfolioItem[];
+  remainingItems: PortfolioItem[];
 }
 
-export function PortfolioSectionClient({
-  portfolioItems,
-}: PortfolioSectionClientProps) {
-  return (
-    <motion.div
-      className="grid grid-cols-1 md:grid-cols-2 gap-6"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {portfolioItems.map((item) => {
+function ProjectCardGrid({ items }: { items: PortfolioItem[] }) {
+  const reducedMotion = useReducedMotion();
+
+  const cards = items.map((item) => {
         const showDetailLink = canViewProjectDetail(item);
         const hasLiveSite = isValidProjectLink(item.url);
         const hasGithub = isValidProjectLink(item.github);
+        const projectTypeLabel = getProjectTypeLabel(item.projectType);
+
+        const footerLinks: ReactNode[] = [];
+
+        if (showDetailLink) {
+          footerLinks.push(
+            <Link
+              key="detail"
+              href={getProjectDetailHref(item.slug!)}
+              className="text-sm text-muted-foreground no-underline hover:text-ds-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
+            >
+              View project
+            </Link>
+          );
+        }
+
+        if (showDetailLink && hasLiveSite) {
+          footerLinks.push(
+            <span key="sep-live" className="text-border">|</span>
+          );
+        }
+
+        if (hasLiveSite) {
+          footerLinks.push(
+            <a
+              key="live"
+              href={item.url!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={externalLinkClass}
+            >
+              <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+              Live site
+            </a>
+          );
+        }
+
+        if (hasLiveSite && hasGithub) {
+          footerLinks.push(
+            <span key="sep-github" className="text-border">|</span>
+          );
+        }
+
+        if (hasGithub) {
+          footerLinks.push(
+            <a
+              key="github"
+              href={item.github!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={externalLinkClass}
+            >
+              <GithubIcon className="h-3.5 w-3.5 shrink-0" />
+              Source code
+            </a>
+          );
+        }
+
+        const card = (
+          <ProjectCard
+            imageUrl={item.img}
+            imageAlt={item.caption}
+            title={item.caption}
+            description={getProjectCardSummary(item)}
+            eyebrow={projectTypeLabel}
+            badges={uniqueCategories(item.category)}
+            footer={<Inline gap="md">{footerLinks}</Inline>}
+          />
+        );
+
+        if (reducedMotion) {
+          return <div key={item.id}>{card}</div>;
+        }
 
         return (
           <motion.div
             key={item.id}
             variants={cardVariants}
-            whileHover={{ y: -5 }}
+            whileHover={{ y: -4 }}
           >
-            <Card className="overflow-hidden group h-full flex flex-col">
-              <div className="relative aspect-video overflow-hidden bg-muted">
-                <Image
-                  width={600}
-                  height={400}
-                  src={item.img}
-                  alt={item.caption}
-                  className="object-cover w-full h-full transition-transform group-hover:scale-105"
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className="text-xl">{item.caption}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 flex-1 flex flex-col">
-                <p className="text-muted-foreground leading-relaxed text-sm">
-                  {getProjectCardSummary(item)}
-                </p>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {uniqueCategories(item.category).map((cat) => (
-                    <Badge key={cat} variant="secondary">
-                      {cat}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="mt-auto flex flex-wrap items-center gap-3 pt-3 border-t border-border">
-                  {showDetailLink && (
-                    <Link
-                      href={getProjectDetailHref(item.slug!)}
-                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      View project
-                    </Link>
-                  )}
-                  {showDetailLink && hasLiveSite && (
-                    <span className="text-border">|</span>
-                  )}
-                  {hasLiveSite && (
-                    <a
-                      href={item.url!}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                      Live site
-                    </a>
-                  )}
-                  {hasLiveSite && hasGithub && (
-                    <span className="text-border">|</span>
-                  )}
-                  {hasGithub && (
-                    <a
-                      href={item.github!}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <GithubIcon className="h-3.5 w-3.5 shrink-0" />
-                      Source code
-                    </a>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            {card}
           </motion.div>
         );
-      })}
+      });
+
+  if (reducedMotion) {
+    return (
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">{cards}</div>
+    );
+  }
+
+  return (
+    <motion.div
+      className="grid grid-cols-1 gap-6 md:grid-cols-2"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {cards}
     </motion.div>
+  );
+}
+
+export function PortfolioSectionClient({
+  featuredItems,
+  remainingItems,
+}: PortfolioSectionClientProps) {
+  const [expanded, setExpanded] = useState(false);
+  const hashExpanded = useSyncExternalStore(
+    subscribeToHash,
+    isProjectsMoreHash,
+    () => false
+  );
+  const showRemaining = expanded || hashExpanded;
+
+  return (
+    <Stack gap="lg">
+      <ProjectCardGrid items={featuredItems} />
+
+      {remainingItems.length > 0 && !showRemaining ? (
+        <Inline className="justify-center">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setExpanded(true);
+              window.location.hash = "projects-more";
+            }}
+          >
+            View all projects
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </Inline>
+      ) : null}
+
+      {remainingItems.length > 0 && showRemaining ? (
+        <div id="projects-more" className="scroll-mt-20">
+          <Heading level={3} className="mb-6 text-lg font-semibold">
+            More from the portfolio
+          </Heading>
+          <ProjectCardGrid items={remainingItems} />
+        </div>
+      ) : null}
+    </Stack>
   );
 }

@@ -1,34 +1,39 @@
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
+import { Stack } from "@/components/layout/Stack";
+import { Surface } from "@/components/layout/Surface";
+import { Label } from "@/components/typography/Label";
+import { Text } from "@/components/typography/Text";
 import { cn } from "@/lib/utils";
 
-interface ProjectStorySectionProps {
-  title: string;
+interface StoryParagraphsProps {
   content: string;
-  variant?: "accent" | "card";
-  className?: string;
 }
 
-function StoryParagraphs({ content }: { content: string }) {
+export function StoryParagraphs({ content }: StoryParagraphsProps) {
   const paragraphs = content
     .split(/\n\s*\n/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
 
   if (paragraphs.length <= 1) {
-    return (
-      <p className={cn(projectPageStyles.body, "whitespace-pre-line")}>{content}</p>
-    );
+    return <Text variant="muted" className="whitespace-pre-line leading-relaxed">{content}</Text>;
   }
 
   return (
-    <div className="space-y-3">
+    <Stack gap="sm" className="gap-3">
       {paragraphs.map((paragraph) => (
-        <p key={paragraph} className={projectPageStyles.body}>
+        <Text key={paragraph} variant="muted" className="leading-relaxed">
           {paragraph}
-        </p>
+        </Text>
       ))}
-    </div>
+    </Stack>
   );
+}
+
+interface ProjectStorySectionProps {
+  title: string;
+  content: string;
+  variant?: "accent" | "card";
+  className?: string;
 }
 
 export function ProjectStorySection({
@@ -39,23 +44,22 @@ export function ProjectStorySection({
 }: ProjectStorySectionProps) {
   if (variant === "card") {
     return (
-      <article
-        className={cn(
-          projectPageStyles.cardElevated,
-          projectPageStyles.cardPadding,
-          "flex h-full flex-col space-y-3",
-          className
-        )}
+      <Surface
+        variant="card"
+        padding="default"
+        className={cn("flex h-full flex-col gap-3 border-border/80", className)}
       >
-        <h3 className={projectPageStyles.subsectionTitle}>{title}</h3>
+        <Label>{title}</Label>
         <StoryParagraphs content={content} />
-      </article>
+      </Surface>
     );
   }
 
   return (
-    <article className={cn("space-y-3 border-l-2 border-border/50 pl-4 md:pl-5", className)}>
-      <h3 className={projectPageStyles.subsectionTitle}>{title}</h3>
+    <article
+      className={cn("space-y-3 border-l-2 border-border pl-4 md:pl-5", className)}
+    >
+      <Label>{title}</Label>
       <StoryParagraphs content={content} />
     </article>
   );
@@ -69,15 +73,9 @@ export function ProjectStoryCallout({
   content: string;
 }) {
   return (
-    <article
-      className={cn(
-        projectPageStyles.panelHighlight,
-        projectPageStyles.cardPadding,
-        "space-y-3"
-      )}
-    >
-      <p className={projectPageStyles.eyebrow}>{title}</p>
+    <Surface variant="panel" padding="default" className="space-y-3 border-border/80">
+      <Label>{title}</Label>
       <StoryParagraphs content={content} />
-    </article>
+    </Surface>
   );
 }

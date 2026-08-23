@@ -31,6 +31,11 @@ export default defineConfig([
        */
       "boundaries/files-single-match": true,
       "boundaries/files": [
+        { category: "design-system", pattern: "src/design-system/**/*" },
+        { category: "ui", pattern: "src/components/ui/**/*" },
+        { category: "layout", pattern: "src/components/layout/**/*" },
+        { category: "typography", pattern: "src/components/typography/**/*" },
+        { category: "patterns", pattern: "src/components/patterns/**/*" },
         { category: "lib-data", pattern: "src/lib/data/**/*" },
         { category: "lib-actions", pattern: "src/lib/actions/**/*" },
         { category: "lib-db", pattern: "src/lib/db/**/*" },
@@ -51,7 +56,7 @@ export default defineConfig([
     },
     rules: {
       /*
-       * Accessibility — CRM baseline. Next core-web-vitals already warns on alt-text + aria-props.
+       * Accessibility — Portfolio baseline. Next core-web-vitals already warns on alt-text + aria-props.
        * Extra jsx-a11y rules (anchor-is-valid, label-has-associated-control, etc.) cannot run
        * at error severity until eslint-plugin-jsx-a11y supports minimatch@10 (repo override).
        */
@@ -134,6 +139,30 @@ export default defineConfig([
         {
           default: "allow",
           policies: [
+            {
+              from: {
+                file: {
+                  categories: [
+                    "design-system",
+                    "ui",
+                    "layout",
+                    "typography",
+                    "patterns",
+                  ],
+                },
+              },
+              disallow: {
+                to: {
+                  file: {
+                    categories: {
+                      anyOf: ["lib-data", "lib-db", "lib-actions"],
+                    },
+                  },
+                },
+              },
+              message:
+                "Design-system layers must not import data, DB, or server actions.",
+            },
             {
               from: { file: { categories: ["components"] } },
               disallow: {
@@ -233,6 +262,91 @@ export default defineConfig([
           skipBlankLines: true,
           skipComments: true,
           IIFEs: true,
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/components/layout/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/lib/data/*", "@/lib/db/*", "@/lib/actions/*"],
+              message:
+                "Layout components must not import data, DB, or server actions.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/components/typography/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/lib/data/*", "@/lib/db/*", "@/lib/actions/*"],
+              message:
+                "Typography components must not import data, DB, or server actions.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/components/patterns/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/lib/data/*", "@/lib/db/*", "@/lib/actions/*"],
+              message:
+                "Patterns must not import data, DB, or server actions.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/components/ui/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/lib/data/*", "@/lib/db/*", "@/lib/actions/*"],
+              message:
+                "UI primitives must not import data, DB, or server actions.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/design-system/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/lib/data/*", "@/lib/db/*", "@/lib/actions/*"],
+              message:
+                "Design-system code must not import data, DB, or server actions.",
+            },
+          ],
         },
       ],
     },
@@ -364,6 +478,25 @@ export default defineConfig([
       "no-nested-ternary": "off",
       complexity: "off",
       "max-params": "off",
+      "boundaries/dependencies": "off",
+    },
+  },
+  {
+    /*
+     * TODO (Phase 10/11): Reconsider disabling boundaries/dependencies for stories —
+     * temporary bootstrap convenience; tighten or scope during Storybook completion pass.
+     */
+    files: ["**/*.stories.{ts,tsx}"],
+    rules: {
+      "max-lines": "off",
+      "max-lines-per-function": "off",
+      "boundaries/dependencies": "off",
+    },
+  },
+  {
+    files: [".storybook/**/*.{ts,tsx}"],
+    rules: {
+      "max-lines": "off",
       "boundaries/dependencies": "off",
     },
   },

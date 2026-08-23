@@ -53,9 +53,7 @@ function serializeNode(node: TipTapNode | string): string {
 
     case "codeBlock":
       const code = node.content?.[0]?.text || "";
-      return `<AnimatedCode>\n  {\`${code
-        .replace(/`/g, "\\`")
-        .replace(/\$/g, "\\$")}\`}\n</AnimatedCode>\n\n`;
+      return `\`\`\`\n${code.replace(/\r\n/g, "\n").replace(/\n$/, "")}\n\`\`\`\n\n`;
 
     case "text":
       let text = node.text || "";

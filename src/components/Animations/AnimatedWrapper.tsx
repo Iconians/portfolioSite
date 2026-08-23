@@ -1,6 +1,7 @@
-"use client";
 import { motion } from "framer-motion";
 import React from "react";
+
+import { useReducedMotion } from "@/lib/motion/use-reduced-motion";
 
 type AnimatedWrapperType = {
   children: React.ReactNode;
@@ -11,6 +12,12 @@ export default function AnimatedWrapper({
   children,
   className,
 }: AnimatedWrapperType) {
+  const reducedMotion = useReducedMotion();
+
+  if (reducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       className={className}
@@ -18,7 +25,7 @@ export default function AnimatedWrapper({
       animate={{ opacity: 1, y: 0 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.35 }}
     >
       {children}
     </motion.div>

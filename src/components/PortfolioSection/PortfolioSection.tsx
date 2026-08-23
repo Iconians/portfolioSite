@@ -1,3 +1,12 @@
+import { Section } from "@/components/layout/Section";
+import { Stack } from "@/components/layout/Stack";
+import { Heading } from "@/components/typography/Heading";
+import { Text } from "@/components/typography/Text";
+import {
+  pickHomeFeaturedProjects,
+  pickRemainingPortfolioProjects,
+} from "@/lib/portfolio/home-featured";
+
 import { PortfolioSectionClient } from "./PortfolioSectionClient";
 
 import type { PortfolioItem } from "@/lib/types/portfolio";
@@ -13,14 +22,27 @@ export default function PortfolioSection({
     return null;
   }
 
+  const featuredItems = pickHomeFeaturedProjects(initialItems);
+  const remainingItems = pickRemainingPortfolioProjects(initialItems, featuredItems);
+
+  if (featuredItems.length === 0) {
+    return null;
+  }
+
   return (
-    <section id="projects" className="py-16 scroll-mt-20">
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Projects</h2>
-      <p className="text-muted-foreground mb-12 text-lg">
-        A selection of SaaS platforms, production client work, and
-        engineering-focused projects.
-      </p>
-      <PortfolioSectionClient portfolioItems={initialItems} />
-    </section>
+    <Section id="projects" className="py-16">
+      <Stack gap="sm" className="mb-12">
+        <Heading variant="eyebrow">WORK</Heading>
+        <Heading level={2}>Featured engineering work</Heading>
+        <Text variant="description">
+          Four systems that demonstrate different engineering concerns—operational
+          workflows, multi-tenant SaaS, realtime domains, and content architecture.
+        </Text>
+      </Stack>
+      <PortfolioSectionClient
+        featuredItems={featuredItems}
+        remainingItems={remainingItems}
+      />
+    </Section>
   );
 }

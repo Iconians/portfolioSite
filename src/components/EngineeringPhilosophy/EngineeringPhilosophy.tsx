@@ -1,57 +1,36 @@
-export function EngineeringPhilosophy() {
-  const principles = [
-    {
-      title: "Server-first architecture",
-      description:
-        "Favoring SSR and backend-driven logic to reduce unnecessary client complexity.",
-    },
-    {
-      title: "Clear ownership of state",
-      description:
-        "Separating UI state from business logic and persistence layers.",
-    },
-    {
-      title: "Relational data modeling",
-      description:
-        "Designing PostgreSQL schemas that reflect real domain relationships rather than quick NoSQL-style patterns.",
-    },
-    {
-      title: "Performance as a feature",
-      description:
-        "Prioritizing fast load times, efficient queries, and minimal client-side overhead.",
-    },
-    {
-      title: "Pragmatic technology choices",
-      description:
-        "Selecting tools that solve the problem well rather than chasing trends.",
-    },
-  ];
+import { Section } from "@/components/layout/Section";
+import { Stack } from "@/components/layout/Stack";
+import { Heading } from "@/components/typography/Heading";
+import { Text } from "@/components/typography/Text";
+import { ENGINEERING_PRINCIPLES } from "@/lib/content/engineering-principles";
 
+export function EngineeringPhilosophy() {
   return (
-    <section id="engineering" className="py-16 scroll-mt-20">
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">
-        Engineering Principles
-      </h2>
-      <p className="text-muted-foreground text-lg mb-8">
-        I approach software development with a strong focus on architecture,
-        performance, and long-term maintainability.
-      </p>
-      <p className="text-foreground mb-6">
-        A few principles guide how I design and build systems:
-      </p>
-      <ul className="space-y-4 list-none">
-        {principles.map((item, index) => (
-          <li key={index} className="flex gap-3">
-            <span className="text-primary font-medium shrink-0">•</span>
-            <span>
-              <strong className="font-semibold text-foreground">
-                {item.title}
-              </strong>
-              <span className="text-muted-foreground"> {item.description}</span>
-            </span>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <Section id="engineering" className="py-16">
+      <div className="grid gap-10 md:grid-cols-2 md:gap-12 lg:gap-16">
+        <Stack gap="sm">
+          <Heading variant="eyebrow">PRINCIPLES</Heading>
+          <Heading level={2}>Engineering principles</Heading>
+          <Text variant="description">
+            How systems are designed: server-first execution, clear state
+            ownership, relational modeling, performance, and pragmatic tooling.
+          </Text>
+        </Stack>
+
+        <ul className="list-none space-y-4">
+          {ENGINEERING_PRINCIPLES.map((item) => (
+            <li key={item.title} className="flex gap-3">
+              <span className="shrink-0 font-medium text-muted-foreground">•</span>
+              <span>
+                <strong className="font-semibold text-foreground">
+                  {item.title}
+                </strong>
+                <span className="text-muted-foreground"> {item.description}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Section>
   );
 }

@@ -1,7 +1,9 @@
 import { Check } from "lucide-react";
 
-import { projectPageStyles } from "@/lib/portfolio/project-page-styles";
-import { cn } from "@/lib/utils";
+import { Surface } from "@/components/layout/Surface";
+import { Heading } from "@/components/typography/Heading";
+import { Label } from "@/components/typography/Label";
+import { Text } from "@/components/typography/Text";
 
 interface ProjectFeatureListProps {
   items: string[];
@@ -13,19 +15,15 @@ export function ProjectFeatureList({ items }: ProjectFeatureListProps) {
   }
 
   return (
-    <article
-      className={cn(
-        projectPageStyles.cardElevated,
-        projectPageStyles.cardPadding,
-        "flex h-full flex-col space-y-4"
-      )}
+    <Surface
+      variant="elevated"
+      padding="default"
+      className="flex h-full flex-col gap-4"
     >
       <header className="space-y-1">
-        <p className={projectPageStyles.eyebrow}>Product</p>
-        <h3 className={projectPageStyles.subsectionTitle}>Features</h3>
-        <p className={projectPageStyles.sectionDescription}>
-          What the product or platform delivers.
-        </p>
+        <Label>Product</Label>
+        <Heading level={3}>Features</Heading>
+        <Text variant="description">What the product or platform delivers.</Text>
       </header>
       <ul className="space-y-2">
         {items.map((item, index) => (
@@ -38,6 +36,6 @@ export function ProjectFeatureList({ items }: ProjectFeatureListProps) {
           </li>
         ))}
       </ul>
-    </article>
+    </Surface>
   );
 }
