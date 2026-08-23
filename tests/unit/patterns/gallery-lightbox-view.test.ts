@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 
 import {
   DEFAULT_GALLERY_LIGHTBOX_VIEW_MODE,
+  getGalleryLightboxZoomToggleButtonText,
   getGalleryLightboxZoomToggleLabel,
   isGalleryLightboxActualSize,
   toggleGalleryLightboxViewMode,
@@ -23,5 +24,10 @@ describe("gallery lightbox view mode", () => {
   test("provides accessible zoom toggle labels", () => {
     expect(getGalleryLightboxZoomToggleLabel("fit")).toBe("View actual size");
     expect(getGalleryLightboxZoomToggleLabel("actual")).toBe("Fit to window");
+  });
+
+  test("provides short toggle button text", () => {
+    expect(getGalleryLightboxZoomToggleButtonText("fit")).toBe("Actual size");
+    expect(getGalleryLightboxZoomToggleButtonText("actual")).toBe("Fit");
   });
 });

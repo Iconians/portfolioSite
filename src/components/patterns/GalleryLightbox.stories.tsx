@@ -78,7 +78,20 @@ export const OpenByDefault: Story = {
     docs: {
       description: {
         story:
-          "Verify Escape, arrow keys, prev/next controls, and fit/100% toggle while dialog is open.",
+          "Verify Escape, arrow keys, prev/next controls, and Fit/Actual size toggle while dialog is open.",
+      },
+    },
+  },
+};
+
+export const MobileHeaderAndFit: Story = {
+  render: () => <ControlledLightboxDemo startIndex={0} />,
+  parameters: {
+    viewport: { defaultViewport: "mobile1" },
+    docs: {
+      description: {
+        story:
+          "Mobile: Actual size toggle sits left of close; fit mode does not scroll; actual size scrolls only when intrinsic pixels exceed the viewport.",
       },
     },
   },
