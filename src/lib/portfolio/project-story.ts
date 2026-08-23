@@ -51,7 +51,11 @@ export function formatProjectDateRange(
     return `Started ${formatProjectDate(startDate)}`;
   }
 
-  return `Completed ${formatProjectDate(endDate!)}`;
+  if (endDate) {
+    return `Completed ${formatProjectDate(endDate)}`;
+  }
+
+  return null;
 }
 
 export function getProjectStorySections(

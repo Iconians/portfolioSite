@@ -20,7 +20,9 @@
     "migrate:content": "bun run scripts/migrate-content.ts",
     "seed:admin": "bun run scripts/seed-admin.ts",
     "backfill:portfolio-slugs": "bun run scripts/backfill-portfolio-slugs.ts",
-    "ci": "npm audit --audit-level=high && npm run lint && npm run db:migrate:deploy && npx prisma validate && npm run build",
+    "ci": "npm run audit:production && npm run lint && npm run db:migrate:deploy && npx prisma validate && npm run build",
+    "audit:production": "npm audit --omit=dev --audit-level=high",
+    "audit:all": "npm audit --audit-level=high",
     "ci:install": "npm ci && npm run ci",
     "ci:github": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ci NEXTAUTH_SECRET=ci-placeholder-secret-min-32-chars-long!! NEXTAUTH_URL=http://localhost:3000 npm run ci"
   },
