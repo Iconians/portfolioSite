@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { serialize } from "next-mdx-remote/serialize";
 
+import { serializeArticleMdx } from "@/lib/articles/mdx-serialize";
 import { getArticleBySlug } from "@/lib/data/articles";
 
 export async function GET(
@@ -15,13 +15,7 @@ export async function GET(
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
 
-    // Serialize MDX content
-    const mdxSource = await serialize(article.content, {
-      parseFrontmatter: false,
-      mdxOptions: {
-        development: false,
-      },
-    });
+    const mdxSource = await serializeArticleMdx(article.content);
 
     return NextResponse.json({
       article: {

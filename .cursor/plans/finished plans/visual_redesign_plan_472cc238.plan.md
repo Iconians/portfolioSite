@@ -28,7 +28,7 @@ isProject: false
 
 # Engineering Portfolio Platform — Visual Redesign Plan
 
-**Status:** Visual redesign program complete (Phases 0–6). V1 design system foundation unchanged.
+**Status:** **Approved and closed** (Phases 0–6, sign-off 2026-08-22). V1 design system foundation unchanged. Deferred items remain documented for future product iteration—not program scope.
 
 **Foundation:** [docs/design-system.md](docs/design-system.md) (V1 complete). This plan **extends** tokens/variants and **redesigns** domain presentation—it does not replace layers or introduce parallel component systems.
 

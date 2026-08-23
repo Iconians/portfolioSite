@@ -1,7 +1,6 @@
-import { serialize } from "next-mdx-remote/serialize";
-
 import { getArticleCoverImage } from "@/lib/articles/article-cover";
 import { getPrimaryArticleTag } from "@/lib/articles/blog-tags";
+import { serializeArticleMdx } from "@/lib/articles/mdx-serialize";
 import { computeReadTimeMinutes } from "@/lib/articles/read-time";
 import { getAllArticles, getArticleBySlug } from "@/lib/data/articles";
 
@@ -30,12 +29,7 @@ export const getPostBySlug = async (slug: string) => {
   }
 
   // Serialize MDX with options for better performance
-  const mdxSource = await serialize(article.content, {
-    parseFrontmatter: false, // We already have frontmatter
-    mdxOptions: {
-      development: false,
-    },
-  });
+  const mdxSource = await serializeArticleMdx(article.content);
 
   const cover = getArticleCoverImage(article);
 

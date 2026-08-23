@@ -1,79 +1,52 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
 import { MDXRemote, type MDXRemoteSerializeResult } from "next-mdx-remote";
 
+import AnimatedList, {
+  AnimatedListItem,
+} from "@/components/Animations/AnimatedList";
+import AnimatedParagraph from "@/components/Animations/AnimatedParagraphs";
+import AnimatedWrapper from "@/components/Animations/AnimatedWrapper";
+import AnimatedHeading from "@/components/Animations/AnimateHeading";
 import { BLOG_PROSE_CLASS } from "@/lib/articles/blog-prose";
+import { useReducedMotion } from "@/lib/motion/use-reduced-motion";
 
-const AnimatedHeading = dynamic(
-  () =>
-    import("@/components/Animations/AnimateHeading").then(
-      (mod) => mod.default
-    ),
-  { ssr: false }
-);
+import {
+  AnimatedCode,
+  MdxCodeBlock,
+  MdxPre,
+} from "./MdxCodeBlock";
 
-const AnimatedList = dynamic(
-  () =>
-    import("@/components/Animations/AnimatedList").then(
-      (mod) => mod.default
-    ),
-  { ssr: false }
-);
+const mdxComponents = {
+  AnimatedHeading,
+  AnimatedList,
+  AnimatedListItem,
+  AnimatedWrapper,
+  AnimatedParagraph,
+  AnimatedCode,
+  code: MdxCodeBlock,
+  pre: MdxPre,
+};
 
-const AnimatedListItem = dynamic(
-  () =>
-    import("@/components/Animations/AnimatedList").then(
-      (mod) => mod.AnimatedListItem
-    ),
-  { ssr: false }
-);
+function ArticleProseWrapper({ children }: { children: React.ReactNode }) {
+  const reducedMotion = useReducedMotion();
 
-const AnimatedParagraph = dynamic(
-  () =>
-    import("@/components/Animations/AnimatedParagraphs").then(
-      (mod) => mod.default
-    ),
-  { ssr: false }
-);
+  if (reducedMotion) {
+    return <div className={BLOG_PROSE_CLASS}>{children}</div>;
+  }
 
-const AnimatedWrapper = dynamic(
-  () =>
-    import("@/components/Animations/AnimatedWrapper").then(
-      (mod) => mod.default
-    ),
-  { ssr: false }
-);
-
-const AnimatedCode = dynamic(
-  () => import("../Animations/AnimatedCode").then((mod) => mod.AnimatedCode),
-  { ssr: false }
-);
-
-const MotionArticleWrapper = dynamic(
-  () =>
-    import("framer-motion").then((mod) => {
-      function MotionArticleWrapperInner({
-        children,
-      }: {
-        children: React.ReactNode;
-      }) {
-        return (
-          <mod.motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className={BLOG_PROSE_CLASS}
-          >
-            {children}
-          </mod.motion.div>
-        );
-      }
-      MotionArticleWrapperInner.displayName = "MotionArticleWrapper";
-      return MotionArticleWrapperInner;
-    }),
-  { ssr: false }
-);
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className={BLOG_PROSE_CLASS}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 interface FrontMatter {
   title: string;
@@ -107,31 +80,10 @@ export default function BlogPostClient({
     </div>
   ) : null;
 
-  if (typeof window === "undefined") {
-    return (
-      <div className={BLOG_PROSE_CLASS}>
-        {coverHeader}
-        <p className="text-muted-foreground">Loading content...</p>
-      </div>
-    );
-  }
-
-  const content = (
-    <>
+  return (
+    <ArticleProseWrapper>
       {coverHeader}
-      <MDXRemote
-        {...mdxSource}
-        components={{
-          AnimatedHeading,
-          AnimatedList,
-          AnimatedListItem,
-          AnimatedWrapper,
-          AnimatedParagraph,
-          AnimatedCode,
-        }}
-      />
-    </>
+      <MDXRemote {...mdxSource} components={mdxComponents} />
+    </ArticleProseWrapper>
   );
-
-  return <MotionArticleWrapper>{content}</MotionArticleWrapper>;
 }

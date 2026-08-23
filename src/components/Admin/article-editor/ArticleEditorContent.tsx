@@ -1,13 +1,17 @@
 import { EditorContent } from "@tiptap/react";
 import { MDXRemote } from "next-mdx-remote";
 
-import { AnimatedCode } from "@/components/Animations/AnimatedCode";
 import AnimatedList, {
   AnimatedListItem,
 } from "@/components/Animations/AnimatedList";
 import AnimatedParagraph from "@/components/Animations/AnimatedParagraphs";
 import AnimatedWrapper from "@/components/Animations/AnimatedWrapper";
 import AnimatedHeading from "@/components/Animations/AnimateHeading";
+import {
+  AnimatedCode,
+  MdxCodeBlock,
+  MdxPre,
+} from "@/components/BlogPostClient/MdxCodeBlock";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
@@ -50,6 +54,8 @@ export function ArticleEditorContent({
                   AnimatedListItem,
                   AnimatedCode,
                   AnimatedWrapper,
+                  code: MdxCodeBlock,
+                  pre: MdxPre,
                 }}
               />
             ) : (

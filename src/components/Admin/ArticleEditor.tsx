@@ -4,7 +4,6 @@ import CodeBlock from "@tiptap/extension-code-block";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useRouter } from "next/navigation";
-import { serialize } from "next-mdx-remote/serialize";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -14,6 +13,7 @@ import {
   updateArticleAction,
   publishArticleAction,
 } from "@/lib/actions/articles";
+import { serializeArticleMdx } from "@/lib/articles/mdx-serialize";
 
 import { ArticleEditorActions } from "./article-editor/ArticleEditorActions";
 import { ArticleEditorContent } from "./article-editor/ArticleEditorContent";
@@ -88,7 +88,7 @@ export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
       toast.error("No content to preview");
       return;
     }
-    const serialized = await serialize(currentMdx);
+    const serialized = await serializeArticleMdx(currentMdx);
     setPreview(serialized);
   };
 

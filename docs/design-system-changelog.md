@@ -186,7 +186,25 @@ Do not log drive-by CSS cleanup or deferred redesign work here unless it changes
 
 ---
 
-## Visual Redesign — Phase 1 tokens (Candidate C)
+## MDX code block rendering fix
+
+**Added**
+
+- `src/lib/articles/mdx-code.ts` — `normalizeMdxCodeBlocks()` converts legacy `<AnimatedCode>{`...`}</AnimatedCode>` to fenced blocks before compile
+- `src/lib/articles/mdx-serialize.ts` — shared `serializeArticleMdx()` for blog + admin preview
+- `src/components/BlogPostClient/MdxCodeBlock.tsx` — Prism-backed block renderer + inline `code`; `MdxPre` forces block layout for fenced output
+- `tests/unit/articles/mdx-code.test.ts` — normalization + serialize regression coverage
+
+**Changed**
+
+- `BlogPostClient`, article API route, `ArticleEditor` preview, `mdx.ts` — use `serializeArticleMdx`
+- Admin `mdxSerializer` — emits fenced code blocks instead of broken `AnimatedCode` template children
+
+**Removed**
+
+- Dynamic `ssr: false` `AnimatedCode` import path (empty compiled props in production)
+
+---
 
 **Added**
 
