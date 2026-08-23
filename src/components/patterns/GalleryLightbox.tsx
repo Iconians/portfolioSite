@@ -5,12 +5,14 @@ import { useCallback, useState, type KeyboardEvent } from "react";
 import { getAdjacentGalleryIndex } from "@/components/patterns/engineering-gallery-navigation";
 import {
   DEFAULT_GALLERY_LIGHTBOX_VIEW_MODE,
+  isGalleryLightboxActualSize,
   type GalleryLightboxViewMode,
 } from "@/components/patterns/gallery-lightbox-view";
 import { GalleryLightboxHeader } from "@/components/patterns/GalleryLightboxHeader";
 import { GalleryLightboxImageViewport } from "@/components/patterns/GalleryLightboxImageViewport";
 import { GalleryLightboxNavigation } from "@/components/patterns/GalleryLightboxNavigation";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 import type { GalleryImage } from "@/design-system/types/gallery";
 
@@ -86,6 +88,7 @@ export function GalleryLightbox({
   }
 
   const captionId = current.caption ? "gallery-lightbox-caption" : undefined;
+  const isActualSize = isGalleryLightboxActualSize(viewMode);
 
   return (
     <Dialog
@@ -98,7 +101,12 @@ export function GalleryLightbox({
       }}
     >
       <DialogContent
-        className="flex h-[min(90dvh,90vh)] w-[min(95vw,100vw)] max-w-[95vw] flex-col gap-2 border-border/60 p-2 sm:gap-2 sm:p-3"
+        className={cn(
+          "flex w-[min(95vw,100vw)] max-w-[95vw] flex-col gap-2 border-border/60 py-2 pl-2 pr-12 sm:gap-2 sm:py-3 sm:pl-3 sm:pr-14",
+          isActualSize
+            ? "h-[min(90dvh,90vh)]"
+            : "h-auto max-h-[min(90dvh,90vh)]"
+        )}
         onKeyDown={handleKeyDown}
         aria-describedby={captionId}
       >

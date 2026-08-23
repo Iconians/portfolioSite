@@ -1,12 +1,9 @@
 "use client";
 
-import Image from "next/image";
-
 import {
   isGalleryLightboxActualSize,
   type GalleryLightboxViewMode,
 } from "@/components/patterns/gallery-lightbox-view";
-import { cn } from "@/lib/utils";
 
 import type { GalleryImage } from "@/design-system/types/gallery";
 
@@ -21,37 +18,39 @@ export function GalleryLightboxImageViewport({
 }: GalleryLightboxImageViewportProps) {
   const isActualSize = isGalleryLightboxActualSize(viewMode);
 
-  return (
-    <div
-      data-slot="gallery-lightbox-viewport"
-      className={cn(
-        "min-h-0 flex-1 rounded-lg bg-muted",
-        isActualSize
-          ? "overflow-auto"
-          : "flex items-center justify-center overflow-hidden"
-      )}
-    >
-      {isActualSize ? (
-        // Intrinsic dimensions are required for pixel-accurate UI inspection in actual-size mode.
-        // eslint-disable-next-line @next/next/no-img-element -- next/image constrains max dimensions in 100% mode
+  if (isActualSize) {
+    return (
+      <div
+        data-slot="gallery-lightbox-viewport"
+        className="min-h-0 flex-1 overflow-auto rounded-lg bg-muted"
+      >
+        {/* Intrinsic pixels — scroll only when dimensions exceed the viewport. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- actual-size requires native intrinsic dimensions */}
         <img
           src={image.url}
           alt={image.alt}
-          className="block h-auto w-auto max-w-none"
           decoding="async"
+          draggable={false}
+          className="block h-auto w-auto max-w-none shrink-0"
         />
-      ) : (
-        <div className="relative h-full w-full min-h-[12rem]">
-          <Image
-            src={image.url}
-            alt={image.alt}
-            fill
-            sizes="95vw"
-            className="object-contain object-center"
-            priority
-          />
-        </div>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      data-slot="gallery-lightbox-viewport"
+      className="h-fit w-full shrink-0 overflow-hidden rounded-lg bg-muted"
+    >
+      {/* Fit: width-driven at all breakpoints — viewport height follows rendered image. */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- fit uses intrinsic aspect ratio via w-full h-auto */}
+      <img
+        src={image.url}
+        alt={image.alt}
+        decoding="async"
+        draggable={false}
+        className="block h-auto w-full max-h-[min(58dvh,65vh)] sm:max-h-[min(75dvh,82vh)]"
+      />
     </div>
   );
 }

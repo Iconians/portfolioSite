@@ -1,4 +1,5 @@
 import {
+  getGalleryLightboxZoomToggleButtonText,
   getGalleryLightboxZoomToggleLabel,
   isGalleryLightboxActualSize,
   toggleGalleryLightboxViewMode,
@@ -21,7 +22,7 @@ export function GalleryLightboxHeader({
   onViewModeChange,
 }: GalleryLightboxHeaderProps) {
   return (
-    <div className="flex shrink-0 items-start justify-between gap-2">
+    <div className="flex shrink-0 items-start gap-3">
       <div className="min-w-0 flex-1 space-y-0.5">
         <DialogTitle className="text-sm font-medium leading-snug line-clamp-2">
           {image.alt}
@@ -49,7 +50,7 @@ export function GalleryLightboxHeader({
         aria-label={getGalleryLightboxZoomToggleLabel(viewMode)}
         onClick={() => onViewModeChange(toggleGalleryLightboxViewMode(viewMode))}
       >
-        {isGalleryLightboxActualSize(viewMode) ? "Fit" : "100%"}
+        {getGalleryLightboxZoomToggleButtonText(viewMode)}
       </Button>
     </div>
   );
