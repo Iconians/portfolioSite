@@ -27,5 +27,5 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Audit for high/critical vulnerabilities
-        run: npm audit --audit-level=high
+      - name: Audit production dependencies (high/critical)
+        run: npm run audit:production

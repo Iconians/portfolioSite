@@ -44,14 +44,19 @@ interface ProjectActionsProps {
 function buildProjectActions(project: PortfolioItem): ProjectActionLink[] {
   const actions: ProjectActionLink[] = [];
 
-  if (isValidProjectLink(project.url)) {
-    actions.push({ href: project.url!, label: "Live site", icon: "live" });
+  const liveUrl = project.url;
+  if (isValidProjectLink(liveUrl)) {
+    actions.push({ href: liveUrl, label: "Live site", icon: "live" });
   }
-  if (isValidProjectLink(project.github)) {
-    actions.push({ href: project.github!, label: "Source code", icon: "github" });
+
+  const githubUrl = project.github;
+  if (isValidProjectLink(githubUrl)) {
+    actions.push({ href: githubUrl, label: "Source code", icon: "github" });
   }
-  if (isValidProjectLink(project.docs)) {
-    actions.push({ href: project.docs!, label: "Documentation", icon: "docs" });
+
+  const docsUrl = project.docs;
+  if (isValidProjectLink(docsUrl)) {
+    actions.push({ href: docsUrl, label: "Documentation", icon: "docs" });
   }
 
   return actions;

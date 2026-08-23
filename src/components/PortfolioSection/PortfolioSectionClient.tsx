@@ -81,18 +81,21 @@ function ProjectCardGrid({ items }: { items: PortfolioItem[] }) {
   const reducedMotion = useReducedMotion();
 
   const cards = items.map((item) => {
+        const slug = item.slug?.trim();
         const showDetailLink = canViewProjectDetail(item);
-        const hasLiveSite = isValidProjectLink(item.url);
-        const hasGithub = isValidProjectLink(item.github);
+        const liveUrl = item.url;
+        const githubUrl = item.github;
+        const hasLiveSite = isValidProjectLink(liveUrl);
+        const hasGithub = isValidProjectLink(githubUrl);
         const projectTypeLabel = getProjectTypeLabel(item.projectType);
 
         const footerLinks: ReactNode[] = [];
 
-        if (showDetailLink) {
+        if (showDetailLink && slug) {
           footerLinks.push(
             <Link
               key="detail"
-              href={getProjectDetailHref(item.slug!)}
+              href={getProjectDetailHref(slug)}
               className="text-sm text-muted-foreground no-underline hover:text-ds-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
             >
               View project
@@ -100,7 +103,7 @@ function ProjectCardGrid({ items }: { items: PortfolioItem[] }) {
           );
         }
 
-        if (showDetailLink && hasLiveSite) {
+        if (showDetailLink && slug && hasLiveSite) {
           footerLinks.push(
             <span key="sep-live" className="text-border">|</span>
           );
@@ -110,7 +113,7 @@ function ProjectCardGrid({ items }: { items: PortfolioItem[] }) {
           footerLinks.push(
             <a
               key="live"
-              href={item.url!}
+              href={liveUrl}
               target="_blank"
               rel="noopener noreferrer"
               className={externalLinkClass}
@@ -131,7 +134,7 @@ function ProjectCardGrid({ items }: { items: PortfolioItem[] }) {
           footerLinks.push(
             <a
               key="github"
-              href={item.github!}
+              href={githubUrl}
               target="_blank"
               rel="noopener noreferrer"
               className={externalLinkClass}
