@@ -3,23 +3,39 @@ import { test, expect, describe, beforeAll, afterAll } from "bun:test";
 import { getAllArticles } from "@/lib/data/articles";
 import { db } from "@/lib/db/client";
 
-// Note: These tests require a test database
-// Set TEST_DATABASE_URL in .env for running tests
+const testDatabaseUrl = process.env.TEST_DATABASE_URL?.trim();
+const shouldRunArticleIntegrationTests = Boolean(testDatabaseUrl);
+
+// Opt-in integration tests: set TEST_DATABASE_URL to a reachable Postgres database.
+// Do not rely on developer DATABASE_URL or PROJECT_READ_SOURCE from .env.
 
 describe("Article Data Access", () => {
-  beforeAll(async () => {
-    // Setup test database if needed
+  const previousDatabaseUrl = process.env.DATABASE_URL;
+
+  beforeAll(() => {
+    if (!shouldRunArticleIntegrationTests || !testDatabaseUrl) {
+      return;
+    }
+    process.env.DATABASE_URL = testDatabaseUrl;
   });
 
   afterAll(async () => {
-    // Cleanup test database if needed
-    await db.$disconnect();
+    if (shouldRunArticleIntegrationTests) {
+      await db.$disconnect();
+    }
+
+    if (previousDatabaseUrl === undefined) {
+      delete process.env.DATABASE_URL;
+    } else {
+      process.env.DATABASE_URL = previousDatabaseUrl;
+    }
   });
 
-  test("should get all published articles", async () => {
+  const articleIntegrationTest = shouldRunArticleIntegrationTests ? test : test.skip;
+
+  articleIntegrationTest("should get all published articles", async () => {
     const articles = await getAllArticles();
     expect(Array.isArray(articles)).toBe(true);
-    // All articles should be published
     articles.forEach((article) => {
       expect(article.status).toBe("published");
     });

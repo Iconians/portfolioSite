@@ -1,5 +1,7 @@
 import { createHash } from "crypto";
 
+import { rewritePublicAssetUrlIfConfigured } from "@/lib/storage/public-asset-url";
+
 import type {
   PlatformApiCaseStudyDetail,
   PlatformApiContentItem,
@@ -81,7 +83,7 @@ function mapGallery(
   return media
     .filter((item) => item.role === "gallery")
     .map((item) => ({
-      url: item.public_url,
+      url: rewritePublicAssetUrlIfConfigured(item.public_url),
       alt: item.alt_text ?? undefined,
       caption: item.caption ?? undefined,
     }));
@@ -161,7 +163,7 @@ function buildPortfolioItemFromDetail(detail: PlatformApiCaseStudyDetail): Portf
 
   return {
     id: portfolioId,
-    img: hero?.public_url ?? "",
+    img: rewritePublicAssetUrlIfConfigured(hero?.public_url ?? ""),
     caption: detail.title,
     description: story.description,
     category: (detail.categories ?? []).map((item) => item.name),

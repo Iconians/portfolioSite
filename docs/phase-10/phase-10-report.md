@@ -387,3 +387,106 @@ revalidation. ETags still apply on cache miss/revalidate cycles. No redesign req
 Reproduced failure with `PROJECT_READ_SOURCE=platform-api` before fix; build passes after.
 
 **No deployment performed by agent.**
+
+---
+
+## 19. Production Media URL Fix (2026-09-04)
+
+**Status:** **PRODUCTION READ CUTOVER — CODE READY / OPERATOR DEPLOYMENT PENDING**
+
+### Failure observed
+
+Project images broken after Platform API read cutover. Platform API `public_url`
+values still use `*.r2.dev` hostnames while production `S3_PUBLIC_URL_BASE` targets
+`https://media.devlaunchsystems.com`.
+
+### Root causes
+
+1. **`next.config.ts` remotePatterns** — derived only from `S3_PUBLIC_URL_BASE` at build
+   time. Values without `https://` failed URL parsing silently, producing **no** image host
+   allowlist entry.
+2. **Hostname mismatch** — Platform API returns `pub-….r2.dev` URLs; production env
+   configured for `media.devlaunchsystems.com` only. `next/image` rejected the API host.
+3. **No production hard-coded `.r2.dev` validation** in application code — only docs/tests
+   used R2 examples.
+
+### Fix
+
+- `src/lib/storage/public-asset-url.ts` — normalize base URL (add `https://` when
+  omitted), parse remotePatterns, optional `S3_PUBLIC_URL_BASE_EXTRA`, rewrite `*.r2.dev`
+  URLs to configured base (path-preserving)
+- `next.config.ts` — use shared remote pattern helper
+- `src/lib/storage/config.ts` — normalize `S3_PUBLIC_URL_BASE` for uploads
+- `platform-api-mapper.ts` — rewrite hero/gallery `public_url` values through configured base
+
+### Validation
+
+Local tests cover custom domain acceptance, R2 rewrite, extra host allowlist, and mapper
+integration. Production build passes with Platform API + media env configuration.
+
+**No deployment performed by agent.**
+
+### Temporary compatibility boundary (not long-term ownership)
+
+The Portfolio mapper rewrite of historical `*.r2.dev` URLs onto `S3_PUBLIC_URL_BASE` is a
+**Phase 10 migration/cutover compatibility layer only**. It is not the intended long-term
+shared-media ownership model.
+
+**Intended long-term architecture:**
+
+```
+Engineering Portfolio (management/editor UI)
+  → READ + WRITE client (Phase 11+)
+  → DevLaunch Platform API (authoritative shared project/case-study + media metadata)
+  → Platform database + Platform-managed media location
+  → Cloudflare R2 / https://media.devlaunchsystems.com
+```
+
+- **Phase 10:** public shared project **reads** move to Platform API; Portfolio admin/write
+  paths remain Portfolio-local; mapper rewrite bridges historical API `public_url` values.
+- **Phase 11 (not started):** shared project/case-study **writes** and media operations move
+  through Platform API; Portfolio remains the editor UI; Platform API owns authoritative
+  shared state and canonical media information.
+
+`S3_PUBLIC_URL_BASE_EXTRA` is **optional** and intended for development/transitional hosts.
+It is **not** required for normal production operation when the mapper rewrite and
+`S3_PUBLIC_URL_BASE=https://media.devlaunchsystems.com` are configured correctly.
+
+### Future Platform API media contract (document only — decide in Platform API repo)
+
+Before removing the Portfolio compatibility rewrite, the Platform API media contract
+should be reviewed. Options to evaluate there (not chosen in this repository):
+
+- **Option A:** persist canonical public URLs such as `https://media.devlaunchsystems.com/<key>`
+- **Option B (preferred if consistent with schema):** persist authoritative object identity/key
+  and construct/expose canonical URLs via Platform configuration
+  (`R2_PUBLIC_BASE_URL=https://media.devlaunchsystems.com`)
+
+Goal: consumers receive canonical media information directly from Platform API rather than
+each consumer independently translating storage-specific historical URLs.
+
+---
+
+## 20. Test Isolation Cleanup (2026-09-04)
+
+### Failures reproduced
+
+| Test | Root cause | Classification |
+|------|------------|----------------|
+| `resolveProjectReadSource > defaults to database when unset` | Test passed `{ projectReadSource: undefined }`, but implementation uses `options?.projectReadSource ?? process.env.PROJECT_READ_SOURCE`; `undefined` falls through to developer `.env` where `PROJECT_READ_SOURCE=platform-api` was set | Test isolation defect — not a production bug |
+| `Article Data Access > should get all published articles` | Integration test hit `DATABASE_URL` from `.env` without opt-in; fails with Prisma `P1001` when database is unreachable (sandbox/network) or when run without explicit test DB configuration | Test isolation defect — not article production behavior |
+
+Developer `.env` values leaked into tests. Provider singleton caching did **not** contribute
+to either failure (`resetProjectReadProviderForTests()` was already used in provider-selection
+tests; config test does not use the singleton).
+
+### Fixes
+
+- `tests/unit/project-read/config.test.ts` — save/restore `PROJECT_READ_SOURCE`; call
+  `resolveProjectReadSource()` without options for the unset case; add explicit env-read test.
+- `src/__tests__/data/articles.test.ts` — opt-in via `TEST_DATABASE_URL`; skip integration
+  test when unset; restore `DATABASE_URL` after run.
+
+**No production behavior changed during test cleanup.**
+
+**No Phase 11 implementation occurred during this task.**

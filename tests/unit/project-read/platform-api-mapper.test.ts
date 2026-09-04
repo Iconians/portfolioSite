@@ -70,4 +70,27 @@ describe("mapPlatformApiDetail", () => {
     expect(mapped.metrics[0]?.portfolioId).toBe(mapped.project.id);
     expect(mapped.versions[0]?.portfolioId).toBe(mapped.project.id);
   });
+
+  test("rewrites R2 media URLs to configured public asset base", () => {
+    const previous = process.env.S3_PUBLIC_URL_BASE;
+    process.env.S3_PUBLIC_URL_BASE = "https://media.devlaunchsystems.com";
+
+    const mapped = mapPlatformApiDetail({
+      ...detail,
+      media: [
+        {
+          role: "hero",
+          public_url:
+            "https://pub-49ca821aa6ed4a4ba63fe0776a63274e.r2.dev/portfolio/projects/heroes/a.png",
+          alt_text: "Hero",
+        },
+      ],
+    });
+
+    expect(mapped.project.img).toBe(
+      "https://media.devlaunchsystems.com/portfolio/projects/heroes/a.png"
+    );
+
+    process.env.S3_PUBLIC_URL_BASE = previous;
+  });
 });

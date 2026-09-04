@@ -55,8 +55,20 @@
 | Variable | Value |
 |----------|-------|
 | `S3_PUBLIC_URL_BASE` | `https://media.devlaunchsystems.com` |
+| `S3_PUBLIC_URL_BASE_EXTRA` (optional) | `https://pub-xxxx.r2.dev` during R2 → custom-domain transition |
 
 Also ensure existing production storage vars remain set as today: `STORAGE_PROVIDER=s3`, `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`.
+
+**Media URL note (2026-09-04):** Platform API `public_url` values may still reference
+historical `*.r2.dev` hostnames from Phase 9 migration. Portfolio applies a **temporary
+Phase 10 compatibility rewrite** to `S3_PUBLIC_URL_BASE` (path-preserving). This is not the
+long-term shared-media ownership model — Phase 11 will move shared writes/media through
+Platform API, which should eventually expose canonical media URLs (contract TBD in Platform
+API repository).
+
+Protocol-less values like `media.devlaunchsystems.com` are normalized to `https://`.
+`S3_PUBLIC_URL_BASE_EXTRA` is **optional** (dev/transitional hosts only) and is **not**
+required for normal production when the mapper rewrite and custom media domain are configured.
 
 **Service credentials:** not required for anonymous public Platform API reads.
 
