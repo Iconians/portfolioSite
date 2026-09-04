@@ -1,5 +1,7 @@
 import path from "path";
 
+import { normalizePublicUrlBase } from "./public-asset-url";
+
 import type { LocalStorageConfig, S3StorageConfig } from "./types";
 
 function requireEnv(name: string): string {
@@ -27,7 +29,7 @@ export function loadS3StorageConfig(): S3StorageConfig {
   const region = requireEnv("S3_REGION");
   const accessKeyId = requireEnv("S3_ACCESS_KEY_ID");
   const secretAccessKey = requireEnv("S3_SECRET_ACCESS_KEY");
-  const publicUrlBase = requireEnv("S3_PUBLIC_URL_BASE").replace(/\/$/, "");
+  const publicUrlBase = normalizePublicUrlBase(requireEnv("S3_PUBLIC_URL_BASE"));
 
   return {
     endpoint,

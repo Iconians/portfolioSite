@@ -11,10 +11,30 @@ import {
 
 describe("resolveProjectReadSource", () => {
   test("defaults to database when unset", () => {
-    expect(resolveProjectReadSource({ projectReadSource: undefined })).toBe(
-      "database"
-    );
+    const previousSource = process.env.PROJECT_READ_SOURCE;
+    delete process.env.PROJECT_READ_SOURCE;
+
+    expect(resolveProjectReadSource()).toBe("database");
     expect(resolveProjectReadSource({ projectReadSource: "" })).toBe("database");
+
+    if (previousSource === undefined) {
+      delete process.env.PROJECT_READ_SOURCE;
+    } else {
+      process.env.PROJECT_READ_SOURCE = previousSource;
+    }
+  });
+
+  test("reads PROJECT_READ_SOURCE from environment when no option is passed", () => {
+    const previousSource = process.env.PROJECT_READ_SOURCE;
+    process.env.PROJECT_READ_SOURCE = "platform-api";
+
+    expect(resolveProjectReadSource()).toBe("platform-api");
+
+    if (previousSource === undefined) {
+      delete process.env.PROJECT_READ_SOURCE;
+    } else {
+      process.env.PROJECT_READ_SOURCE = previousSource;
+    }
   });
 
   test("uses database when explicitly set in production", () => {

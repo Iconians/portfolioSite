@@ -1,32 +1,12 @@
 import path from "path";
 
+import { getPublicAssetRemotePatternsFromEnv } from "./src/lib/storage/public-asset-url";
+
 import type { NextConfig } from "next";
 
 const projectRoot = __dirname;
 
-function getPublicAssetRemotePattern():
-  | {
-      protocol: "http" | "https";
-      hostname: string;
-    }
-  | undefined {
-  const publicUrlBase = process.env.S3_PUBLIC_URL_BASE?.trim();
-  if (!publicUrlBase) {
-    return undefined;
-  }
-
-  try {
-    const url = new URL(publicUrlBase);
-    return {
-      protocol: url.protocol === "http:" ? "http" : "https",
-      hostname: url.hostname,
-    };
-  } catch {
-    return undefined;
-  }
-}
-
-const publicAssetRemotePattern = getPublicAssetRemotePattern();
+const publicAssetRemotePatterns = getPublicAssetRemotePatternsFromEnv();
 
 const nextConfig: NextConfig = {
   webpack: (config, { isServer, dev }) => {
@@ -71,7 +51,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "img.shields.io",
       },
-      ...(publicAssetRemotePattern ? [publicAssetRemotePattern] : []),
+      ...(publicAssetRemotePatterns.length > 0 ? publicAssetRemotePatterns : []),
     ],
   },
   // Ensure Prisma client is not bundled (server-side only)
