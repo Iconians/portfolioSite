@@ -39,6 +39,7 @@ interface ProjectEditorProps {
   initialMetrics?: PortfolioMetric[];
   initialVersions?: ProjectVersion[];
   portfolioId?: string;
+  writeSource?: "database" | "platform-api";
   onSuccess?: () => void;
 }
 
@@ -58,6 +59,7 @@ export function ProjectEditor({
   initialMetrics = [],
   initialVersions = [],
   portfolioId,
+  writeSource = "database",
   onSuccess,
 }: ProjectEditorProps) {
   const router = useRouter();
@@ -190,7 +192,10 @@ export function ProjectEditor({
         </TabsList>
 
         <TabsContent value="overview">
-          <OverviewSection {...sectionProps} />
+          <OverviewSection
+            {...sectionProps}
+            slugReadOnly={writeSource === "platform-api" && Boolean(portfolioId)}
+          />
         </TabsContent>
 
         <TabsContent value="media">

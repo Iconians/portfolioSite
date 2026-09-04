@@ -2,12 +2,34 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { PageHeader } from "@/components/Admin/layout/PageHeader";
+import { AdminProjectLoadErrorState } from "@/components/Admin/portfolio/AdminProjectLoadErrorState";
 import { ProjectEditor } from "@/components/Admin/portfolio/ProjectEditor";
 import { Button } from "@/components/ui/button";
-import { getMediaAssetById } from "@/lib/data/media";
-import { getPortfolioItemById } from "@/lib/data/portfolio";
-import { listMetricsForPortfolio, listVersionsForPortfolio } from "@/lib/portfolio/portfolio.service";
-import { mapPortfolioItemToEditorValues } from "@/lib/portfolio/project-editor";
+import { loadAdminProjectEditorState } from "@/lib/project-write/admin-project-load";
+import { AdminProjectLoadError } from "@/lib/project-write/admin-project-load-error";
+import { getProjectWriteSource } from "@/lib/project-write/config";
+import {
+  PlatformApiAdminNetworkError,
+  PlatformApiAdminResponseError,
+} from "@/lib/project-write/errors";
+
+import type { AdminProjectEditorLoadResult } from "@/lib/project-write/platform-admin-mapper";
+
+function formatAdminLoadError(error: unknown): string {
+  if (error instanceof AdminProjectLoadError) {
+    return error.message;
+  }
+  if (error instanceof PlatformApiAdminResponseError) {
+    return error.detail ?? error.message;
+  }
+  if (error instanceof PlatformApiAdminNetworkError) {
+    return "Platform API admin request failed. Check connectivity and configuration.";
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Failed to load project from Platform API.";
+}
 
 export default async function EditPortfolioPage({
   params,
@@ -15,20 +37,38 @@ export default async function EditPortfolioPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const item = await getPortfolioItemById(id);
 
-  if (!item) {
+  let loaded: AdminProjectEditorLoadResult | undefined;
+  let loadError: unknown;
+
+  try {
+    loaded = await loadAdminProjectEditorState(id);
+  } catch (error) {
+    if (error instanceof AdminProjectLoadError && error.message === "Portfolio project not found") {
+      notFound();
+    }
+    loadError = error;
+  }
+
+  if (loadError) {
+    return (
+      <div>
+        <PageHeader
+          title="Edit Project"
+          description="Unable to load project editor state."
+          breadcrumbs={[
+            { label: "Portfolio", href: "/admin/portfolio" },
+            { label: "Edit" },
+          ]}
+        />
+        <AdminProjectLoadErrorState message={formatAdminLoadError(loadError)} />
+      </div>
+    );
+  }
+
+  if (!loaded) {
     notFound();
   }
-
-  let initialOgImageUrl = "";
-  if (item.ogMediaId) {
-    const ogMedia = await getMediaAssetById(item.ogMediaId);
-    initialOgImageUrl = ogMedia?.publicUrl ?? "";
-  }
-
-  const initialMetrics = await listMetricsForPortfolio(item.id);
-  const initialVersions = await listVersionsForPortfolio(item.id);
 
   return (
     <div>
@@ -38,12 +78,16 @@ export default async function EditPortfolioPage({
         breadcrumbs={[
           { label: "Portfolio", href: "/admin/portfolio" },
           { label: "Edit" },
-          { label: item.caption },
+          { label: loaded.caption },
         ]}
         actions={
-          item.slug ? (
+          loaded.slug ? (
             <Button variant="outline" size="sm" asChild>
-              <Link href={`/projects/${item.slug}?preview=1`} target="_blank" rel="noopener noreferrer">
+              <Link
+                href={`/projects/${loaded.slug}?preview=1`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Preview project
               </Link>
             </Button>
@@ -51,11 +95,12 @@ export default async function EditPortfolioPage({
         }
       />
       <ProjectEditor
-        portfolioId={item.id}
-        initialValues={mapPortfolioItemToEditorValues(item)}
-        initialOgImageUrl={initialOgImageUrl}
-        initialMetrics={initialMetrics}
-        initialVersions={initialVersions}
+        portfolioId={loaded.portfolioLocalId}
+        writeSource={getProjectWriteSource()}
+        initialValues={loaded.initialValues}
+        initialOgImageUrl={loaded.initialOgImageUrl}
+        initialMetrics={loaded.initialMetrics}
+        initialVersions={loaded.initialVersions}
       />
     </div>
   );

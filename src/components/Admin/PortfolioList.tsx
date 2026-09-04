@@ -16,10 +16,12 @@ import type { PortfolioItem } from "@/lib/types/portfolio";
 
 interface PortfolioListProps {
   portfolio: PortfolioItem[];
+  disableDelete?: boolean;
 }
 
 export function PortfolioList({
   portfolio: initialPortfolio,
+  disableDelete = false,
 }: PortfolioListProps) {
   const [portfolio, setPortfolio] = useState(initialPortfolio);
   const [isPending, startTransition] = useTransition();
@@ -79,7 +81,12 @@ export function PortfolioList({
               variant="destructive"
               size="sm"
               onClick={() => handleDelete(item.id)}
-              disabled={isPending}
+              disabled={isPending || disableDelete}
+              title={
+                disableDelete
+                  ? "Delete is disabled while Platform write source is active."
+                  : undefined
+              }
             >
               Delete
             </Button>

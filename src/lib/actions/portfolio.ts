@@ -10,6 +10,9 @@ import {
 } from "@/lib/data/portfolio";
 import { logAdminAction } from "@/lib/logger";
 import { requireAdmin } from "@/lib/permissions";
+import { getProjectWriteSource } from "@/lib/project-write/config";
+import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
+import { updatePortfolioProjectViaPlatform } from "@/lib/project-write/platform-project-update";
 
 import type { ActionResult } from "@/lib/types/actions";
 import type {
@@ -60,6 +63,23 @@ export async function updatePortfolioAction(
 ): Promise<ActionResult<Awaited<ReturnType<typeof updatePortfolioItem>>>> {
   try {
     const user = await requireAdmin();
+
+    if (getProjectWriteSource() === "platform-api") {
+      const item = await updatePortfolioProjectViaPlatform(
+        id,
+        data as CreatePortfolioInput,
+        extended ?? {}
+      );
+      await logAdminAction(user.id, "update", "portfolio", id, {
+        caption: item.caption,
+        writeSource: "platform-api",
+      }).catch(() => {});
+      revalidatePath("/");
+      revalidatePath("/admin/portfolio");
+      revalidatePath(`/admin/portfolio/${id}`);
+      return { success: true, data: item };
+    }
+
     const item = await updatePortfolioItem(id, data, extended);
     await logAdminAction(user.id, "update", "portfolio", item.id, {
       caption: item.caption,
@@ -67,6 +87,9 @@ export async function updatePortfolioAction(
     revalidatePath("/");
     return { success: true, data: item };
   } catch (error) {
+    if (getProjectWriteSource() === "platform-api") {
+      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
+    }
     return { success: false, error: toUserMessage(error) };
   }
 }
@@ -76,6 +99,15 @@ export async function deletePortfolioAction(
 ): Promise<ActionResult<void>> {
   try {
     const user = await requireAdmin();
+
+    if (getProjectWriteSource() === "platform-api") {
+      return {
+        success: false,
+        error:
+          "Project delete is disabled while PROJECT_WRITE_SOURCE=platform-api. Platform archive/delete is deferred to a later milestone.",
+      };
+    }
+
     await deletePortfolioItem(id);
     await logAdminAction(user.id, "delete", "portfolio", id).catch(() => {});
     revalidatePath("/");

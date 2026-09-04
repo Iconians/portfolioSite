@@ -9,6 +9,10 @@ import {
 
 import type { ProjectEditorSectionProps } from "./types";
 
+interface OverviewSectionProps extends ProjectEditorSectionProps {
+  slugReadOnly?: boolean;
+}
+
 const selectClassName =
   "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring";
 
@@ -16,7 +20,8 @@ export function OverviewSection({
   register,
   errors,
   isPending,
-}: ProjectEditorSectionProps) {
+  slugReadOnly = false,
+}: OverviewSectionProps) {
   return (
     <FormSection
       title="Overview"
@@ -135,10 +140,14 @@ export function OverviewSection({
 
       <FormField
         label="Slug"
-        description="Leave blank to auto-generate from title."
+        description={
+          slugReadOnly
+            ? "Platform slug is immutable after create."
+            : "Leave blank to auto-generate from title."
+        }
         error={errors.slug?.message}
       >
-        <Input id="slug" {...register("slug")} disabled={isPending} />
+        <Input id="slug" {...register("slug")} disabled={isPending || slugReadOnly} />
       </FormField>
     </FormSection>
   );
