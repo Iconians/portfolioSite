@@ -327,3 +327,19 @@ A separate operator review was completed after Phase 9 production migration fini
 - Royal Canine `sunset` → `active`: **Option A recommended** (no public UI impact)
 - **Recommendation: READY FOR PRODUCTION READ CUTOVER** (data/integration) pending operator authorization + code/env/deploy steps
 - **Cutover not performed**
+
+---
+
+## 17. Code Preparation Audit (2026-09-04)
+
+**Status:** **PRODUCTION READ CUTOVER — CODE READY / OPERATOR DEPLOYMENT PENDING**
+
+Repository-side preparation is complete:
+
+- Production `NODE_ENV` database lock removed (`src/lib/project-read/config.ts`)
+- 22 project-read unit tests pass; full suite 153 pass; build pass
+- Incorrect `vercel.json` env injection from prior agent attempt reverted locally (operator must not use tracked config for production env)
+- Operator configures `PROJECT_READ_SOURCE`, `DEVLAUNCH_PLATFORM_API_URL`, and `S3_PUBLIC_URL_BASE` in Vercel dashboard
+- Deployment via GitHub → Vercel only; agent does not deploy
+
+See `docs/phase-10/production-read-cutover-readiness.md` §0 for operator procedure.

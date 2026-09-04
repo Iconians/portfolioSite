@@ -1,9 +1,5 @@
 {
   "framework": "nextjs",
   "installCommand": "npm ci",
-  "buildCommand": "npm run build",
-  "env": {
-    "PROJECT_READ_SOURCE": "platform-api",
-    "DEVLAUNCH_PLATFORM_API_URL": "https://api.devlaunchsystems.com"
-  }
+  "buildCommand": "npm run build"
 }

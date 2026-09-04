@@ -1,9 +1,80 @@
 # Phase 10 — Production Read Cutover Readiness Review
 
-**Date:** 2026-09-03  
-**Status:** REVIEW COMPLETE — **NO CUTOVER PERFORMED**  
+**Date:** 2026-09-03 (readiness review); **2026-09-04** (code preparation audit)  
+**Status:** **PRODUCTION READ CUTOVER — CODE READY / OPERATOR DEPLOYMENT PENDING**  
 **Production Platform API:** `https://api.devlaunchsystems.com`  
 **Phase 9 production migration:** complete (reconciliation + idempotency passed)
+
+---
+
+## 0. Operational Boundary (Authoritative)
+
+### Agent / repository responsibilities
+
+1. Prepare provider-selection code (`src/lib/project-read/`)
+2. Add/update unit tests
+3. Run local tests, lint, type check, and production build
+4. Document required operator environment variables
+5. Document GitHub → Vercel deployment procedure
+6. **Stop** — do not deploy, push, merge, or modify Vercel
+
+### Operator responsibilities
+
+1. Review repository changes on `site-updates` (commits `f2012f9` + follow-up corrections)
+2. Configure **Vercel Production** environment variables (see §0b)
+3. Update `S3_PUBLIC_URL_BASE` for `https://media.devlaunchsystems.com` when planned
+4. Commit/merge through the normal GitHub workflow
+5. Allow the Vercel GitHub integration to deploy
+6. Verify deployment succeeded (Vercel dashboard + post-cutover checklist §9)
+7. Report deployment result for post-cutover validation
+
+### 0a. Audit of prior agent attempt (2026-09-04)
+
+| Action | Classification | Notes |
+|--------|----------------|-------|
+| Phase 10 provider code + tests + docs | **A/B/C** — intended | Committed `f2012f9` |
+| `vercel.json` `env` block for cutover | **D** — incorrect | Committed `7172859`; **reverted locally** — operator must not use tracked `vercel.json` for production secrets/config |
+| `vercel` CLI login attempt | **D** — out of scope | No credentials stored; no `.vercel/` directory |
+| `git push origin site-updates` | **D** — unauthorized boundary | Two commits pushed; operator should review before treating as deployed |
+| Package/workflow changes | **None** | No dependency or GitHub Actions changes |
+| Secrets in tracked files | **None found** | Only example URLs in `.env.example` / docs |
+
+**Do not** commit production environment values into `vercel.json`. Configure them in the Vercel dashboard.
+
+### 0b. Operator-required Vercel Production environment variables
+
+**Read-provider cutover (new):**
+
+| Variable | Value |
+|----------|-------|
+| `PROJECT_READ_SOURCE` | `platform-api` |
+| `DEVLAUNCH_PLATFORM_API_URL` | `https://api.devlaunchsystems.com` |
+
+**Existing Portfolio media public URL (update when planned):**
+
+| Variable | Value |
+|----------|-------|
+| `S3_PUBLIC_URL_BASE` | `https://media.devlaunchsystems.com` |
+
+Also ensure existing production storage vars remain set as today: `STORAGE_PROVIDER=s3`, `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`.
+
+**Service credentials:** not required for anonymous public Platform API reads.
+
+### 0c. Deployment path (repository evidence)
+
+```
+repository code → GitHub branch → operator review/merge → Vercel Git integration deploy
+```
+
+| Evidence | Finding |
+|----------|---------|
+| `README.md` §Deployment | Vercel; operator sets env vars |
+| `.github/workflows/ci.yml` | CI on `main` + PRs only — **verify/lint/build, no deploy** |
+| `.github/dependabot.yml` | `target-branch: site-updates` |
+| Live production content | Matches `site-updates` features (e.g. `engineering-portfolio-management-system` featured slug) |
+| GitHub commit status (push to `site-updates`) | Vercel deployment check reported |
+
+**Established:** Vercel watches the GitHub repository and deploys from the branch connected in the Vercel project (production content aligns with `site-updates`). **Not established in-repo:** whether `main` or `site-updates` is the Vercel production branch — confirm in Vercel project settings.
 
 ---
 
@@ -11,19 +82,17 @@
 
 ### Implementation (`src/lib/project-read/config.ts`)
 
-```typescript
-if (nodeEnv === "production") {
-  return "database";
-}
-```
+The production `NODE_ENV` hard lock has been **removed** in repository code (`f2012f9`).
 
-**Actual behavior today:**
+**Actual behavior (repository code):**
 
 | Aspect | Behavior |
 |--------|----------|
-| Production (`NODE_ENV=production`) | **Always `database`** — hardcoded lock; ignores `PROJECT_READ_SOURCE` |
-| Non-production | `PROJECT_READ_SOURCE=platform-api` + `DEVLAUNCH_PLATFORM_API_URL` enables API provider |
-| Missing/invalid env | Falls back to `database` |
+| `PROJECT_READ_SOURCE` unset or `database` | **database** (safe default) |
+| `PROJECT_READ_SOURCE=platform-api` + valid `DEVLAUNCH_PLATFORM_API_URL` | **platform-api** |
+| `PROJECT_READ_SOURCE=platform-api` + missing/invalid API URL | **`ProjectReadConfigurationError`** — no DB fallback |
+| Invalid `PROJECT_READ_SOURCE` value | Falls safe to **database** |
+| `NODE_ENV=production` alone | **Does not override** provider selection |
 | API URL alone | Does **not** enable API reads |
 
 ### Factory (`src/lib/project-read/index.ts`)
@@ -167,23 +236,24 @@ Admin, draft preview, `/api/portfolio`, and all writes bypass the provider by de
 |--------|------------------|
 | Rendering | **SSR** (dynamic routes `ƒ`) — not SSG/`generateStaticParams` for projects |
 | Revalidation | `export const revalidate = 3600` on homepage + project pages (ISR, 1 hour) |
-| Provider selection | Runtime env + code lock |
+| Provider selection | Runtime env via Vercel dashboard (not `vercel.json`) |
 | Platform API ETags | In-memory per provider instance only; **not durable across Vercel serverless invocations** |
 | Fetch cache | `cache: "no-store"` on API client |
 | Stale DB content after cutover | Up to **3600s** until ISR revalidation unless on-demand revalidate or redeploy |
 
-### Cutover operational steps (when authorized)
+### Cutover operational steps (operator)
 
-1. **Code:** Remove or gate the `NODE_ENV === "production"` database lock (authorized PR)
-2. **Vercel env:** Set `PROJECT_READ_SOURCE=platform-api`, `DEVLAUNCH_PLATFORM_API_URL=https://api.devlaunchsystems.com`
-3. **Redeploy** Portfolio production
-4. **Verify** immediately (see §9)
-5. **Optional:** Trigger revalidation or wait ≤1h for ISR expiry
+1. **Review** provider-selection code on `site-updates` (`f2012f9`; revert `7172859` `vercel.json` env block if still present)
+2. **Vercel Production env:** set `PROJECT_READ_SOURCE=platform-api`, `DEVLAUNCH_PLATFORM_API_URL=https://api.devlaunchsystems.com`
+3. **Media URL (when planned):** set `S3_PUBLIC_URL_BASE=https://media.devlaunchsystems.com`
+4. **Merge/deploy** through normal GitHub → Vercel workflow
+5. **Verify** immediately (see §9)
+6. **Optional:** wait ≤1h for ISR expiry on cached pages
 
-### Rollback operational steps
+### Rollback operational steps (operator)
 
-1. **Code:** Restore production database lock **OR** set `PROJECT_READ_SOURCE=database`
-2. **Redeploy**
+1. Set `PROJECT_READ_SOURCE=database` in Vercel Production **OR** remove the variable (defaults to database)
+2. **Redeploy** via Vercel Git integration
 3. **Verify** homepage + 7 project pages
 4. Portfolio Neon data **unchanged** during API-read operation (reads only)
 
@@ -277,12 +347,13 @@ This review does **not** authorize:
 
 ## 11. Remaining Blockers
 
-| # | Blocker | Type |
-|---|---------|------|
-| 1 | Production `NODE_ENV` hard lock prevents API provider | **Execution prerequisite** (authorized code change) |
-| 2 | Explicit operator authorization for cutover | **Governance** |
-| 3 | Vercel env + redeploy | **Operational** |
-| 4 | ISR up-to-1h stale window | **Operational awareness** |
+| # | Blocker | Type | Status |
+|---|---------|------|--------|
+| 1 | Production `NODE_ENV` hard lock | Code | **Resolved** in `f2012f9` |
+| 2 | Operator authorization for cutover | Governance | **Authorized** |
+| 3 | Vercel Production env + deploy | **Operator** | **Pending** |
+| 4 | ISR up-to-1h stale window | Operational awareness | Unchanged |
+| 5 | Revert incorrect `vercel.json` env commit (`7172859`) | Repository | **Local fix ready** — operator review |
 
 **Data/parity blockers:** none for current public UI.
 
@@ -290,22 +361,20 @@ This review does **not** authorize:
 
 ## 12. Recommendation
 
-### **READY FOR PRODUCTION READ CUTOVER** (data + integration perspective)
+### **PRODUCTION READ CUTOVER — CODE READY / OPERATOR DEPLOYMENT PENDING**
 
-Conditions:
+Repository code and tests are ready. Production cutover is **not complete** until the operator:
 
-- Live production API matches Portfolio Neon on all visitor-visible dimensions (7/35/48, slugs, captions, summaries, metrics, milestones, media URLs, story fields)
-- Known gaps are acceptable or Portfolio-local
-- Royal Canine lifecycle: accept Option A (no visitor impact)
-- Cutover requires **authorized code change** to lift production database lock + Vercel env + redeploy
-- No service credential needed for reads
+- configures Vercel Production environment variables
+- deploys through the normal GitHub → Vercel workflow
+- completes post-cutover validation (§9)
 
-### **NOT AUTHORIZED by this document**
+**Royal Canine:** accept Option A (`sunset` → `active` V1 normalization; no public UI impact).
 
-Production read cutover remains **blocked until explicit operator authorization** and execution of the cutover procedure in §6.
+**Do NOT mark PRODUCTION READ CUTOVER COMPLETE** until operator deployment and validation succeed.
 
 ---
 
 ## Platform API Plan Status Note
 
-Production Platform API data migration (Phase 9) is **complete**. Engineering Portfolio production read-cutover readiness review is **complete**. Production read cutover is **not executed**.
+Production Platform API data migration (Phase 9) is **complete**. Engineering Portfolio read-provider code is **ready**. Production read cutover execution remains **operator-pending**.
