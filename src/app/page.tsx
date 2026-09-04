@@ -13,8 +13,8 @@ import { SiteFooter } from "@/components/SiteFooter/SiteFooter";
 import { EngineeringStack } from "@/components/TechStack/TechStack";
 import { WhatIEnjoyBuilding } from "@/components/WhatIEnjoyBuilding/WhatIEnjoyBuilding";
 import { getAllArticles } from "@/lib/data/articles";
-import { getPublishedPortfolioItems } from "@/lib/data/portfolio";
 import { getAllReviews } from "@/lib/data/reviews";
+import { getPublishedPortfolioItems } from "@/lib/project-read";
 
 export const revalidate = 3600;
 

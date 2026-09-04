@@ -12,11 +12,9 @@ import { requireAdminUser } from "@/lib/auth/session";
 import { getMediaPublicUrlById } from "@/lib/data/media";
 import {
   getPortfolioItemBySlug,
-  getPublishedPortfolioItemBySlug,
 } from "@/lib/data/portfolio";
-import { listPublicPortfolioMetrics } from "@/lib/data/portfolio-metrics";
-import { listPublicProjectVersions } from "@/lib/data/project-versions";
 import { buildProjectPageMetadata } from "@/lib/portfolio/public-project";
+import { getProjectReadProvider } from "@/lib/project-read";
 
 import type { Metadata } from "next";
 
@@ -42,9 +40,15 @@ async function resolveOgImageUrl(project: {
 }
 
 async function loadProjectForPage(slug: string, previewRequested: boolean) {
-  const published = await getPublishedPortfolioItemBySlug(slug);
-  if (published) {
-    return { project: published, isPreview: false };
+  const provider = getProjectReadProvider();
+  const publishedDetail = await provider.getPublishedProjectDetail(slug);
+  if (publishedDetail) {
+    return {
+      project: publishedDetail.project,
+      metrics: publishedDetail.metrics,
+      versions: publishedDetail.versions,
+      isPreview: false,
+    };
   }
 
   if (!previewRequested) {
@@ -66,7 +70,14 @@ async function loadProjectForPage(slug: string, previewRequested: boolean) {
     return null;
   }
 
-  return { project: draft, isPreview: true };
+  const { listPublicPortfolioMetrics } = await import("@/lib/data/portfolio-metrics");
+  const { listPublicProjectVersions } = await import("@/lib/data/project-versions");
+  const [metrics, versions] = await Promise.all([
+    listPublicPortfolioMetrics(draft.id),
+    listPublicProjectVersions(draft.id),
+  ]);
+
+  return { project: draft, metrics, versions, isPreview: true };
 }
 
 export async function generateMetadata({
@@ -98,12 +109,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
     notFound();
   }
 
-  const { project, isPreview } = loaded;
-
-  const [metrics, versions] = await Promise.all([
-    listPublicPortfolioMetrics(project.id),
-    listPublicProjectVersions(project.id),
-  ]);
+  const { project, metrics, versions, isPreview } = loaded;
 
   return (
     <div className="min-h-screen w-full bg-background text-foreground text-left">
