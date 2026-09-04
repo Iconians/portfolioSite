@@ -12,6 +12,9 @@ import type { PlatformApiAdminCaseStudyDetail } from "@/lib/project-write/platfo
 const PLATFORM_UUID = "00000000-0000-4000-8000-000000000001";
 const PORTFOLIO_LOCAL_UUID = "11111111-1111-4111-8111-111111111111";
 
+const PLATFORM_METRIC_UUID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+const PLATFORM_MILESTONE_UUID = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
+
 const detail: PlatformApiAdminCaseStudyDetail = {
   id: PLATFORM_UUID,
   slug: "tournament-registration-event-management-system",
@@ -29,13 +32,24 @@ const detail: PlatformApiAdminCaseStudyDetail = {
     { kind: "capability", text: "Payments" },
   ],
   links: [{ link_type: "live", url: "https://example.com" }],
-  metrics: [{ label: "Teams", value: "40+", description: "Managed teams" }],
+  metrics: [
+    {
+      id: PLATFORM_METRIC_UUID,
+      label: "Teams",
+      value: "40+",
+      description: "Managed teams",
+      show_on_business: true,
+      sort_order: 0,
+    },
+  ],
   milestones: [
     {
+      id: PLATFORM_MILESTONE_UUID,
       year: 2026,
       version: "v1",
       title: "Launch",
       description: null,
+      sort_order: 0,
     },
   ],
 };
@@ -48,6 +62,7 @@ const media = [
     public_url: "https://cdn.example/hero.png",
     role: "hero",
     alt_text: "Hero",
+    upload_status: "confirmed",
     sort_order: 0,
   },
   {
@@ -57,6 +72,7 @@ const media = [
     public_url: "https://cdn.example/og.png",
     role: "og",
     alt_text: "OG",
+    upload_status: "confirmed",
     sort_order: 1,
   },
   {
@@ -67,7 +83,7 @@ const media = [
     role: "gallery",
     alt_text: "Gallery",
     caption: "Ops",
-    sort_order: 2,
+    upload_status: "confirmed",
   },
 ];
 
@@ -89,24 +105,41 @@ describe("mapPlatformAdminDetailToEditorLoad", () => {
     expect(loaded.initialValues.responsibilities).toEqual(["Full-stack delivery"]);
     expect(loaded.initialValues.platformFeatures).toEqual(["Payments"]);
     expect(loaded.initialMetrics.length).toBe(1);
+    expect(loaded.initialMetrics[0]?.id).toBe(PLATFORM_METRIC_UUID);
     expect(loaded.initialMetrics[0]?.portfolioId).toBe(PORTFOLIO_LOCAL_UUID);
     expect(loaded.initialVersions.length).toBe(1);
+    expect(loaded.initialVersions[0]?.id).toBe(PLATFORM_MILESTONE_UUID);
     expect(loaded.initialVersions[0]?.portfolioId).toBe(PORTFOLIO_LOCAL_UUID);
   });
 
-  test("without mutationCompat, mutation-bound media IDs remain unset", () => {
+  test("preserves real Platform child UUIDs instead of synthetic public-read IDs", () => {
     const loaded = mapPlatformAdminDetailToEditorLoad({
       detail,
       media,
       portfolioLocalId: PORTFOLIO_LOCAL_UUID,
     });
 
-    expect(loaded.initialValues.heroMediaId).toBeNull();
-    expect(loaded.initialValues.ogMediaId).toBeNull();
-    expect(loaded.initialOgImageUrl).toBe("https://cdn.example/og.png");
+    expect(loaded.initialMetrics[0]?.id).toBe(PLATFORM_METRIC_UUID);
+    expect(loaded.initialVersions[0]?.id).toBe(PLATFORM_MILESTONE_UUID);
+    expect(loaded.initialMetrics[0]?.id).not.toBe(PORTFOLIO_LOCAL_UUID);
+    expect(loaded.initialVersions[0]?.id).not.toBe(PLATFORM_UUID);
   });
 
-  test("with mutationCompat, local media IDs are preserved for Prisma writes", () => {
+  test("maps Platform media UUIDs for hero, OG, and gallery", () => {
+    const loaded = mapPlatformAdminDetailToEditorLoad({
+      detail,
+      media,
+      portfolioLocalId: PORTFOLIO_LOCAL_UUID,
+    });
+
+    expect(loaded.initialValues.heroMediaId).toBe("media-hero-platform");
+    expect(loaded.initialValues.ogMediaId).toBe("media-og-platform");
+    expect(loaded.initialValues.gallery[0]?.mediaId).toBe("media-gallery-platform");
+    expect(loaded.initialOgImageUrl).toBe("https://cdn.example/og.png");
+    expect(loaded.initialValues.heroMediaId).not.toBe(PORTFOLIO_LOCAL_UUID);
+  });
+
+  test("does not overlay Prisma mutationCompat media IDs in platform load", () => {
     const loaded = mapPlatformAdminDetailToEditorLoad({
       detail,
       media,
@@ -123,15 +156,10 @@ describe("mapPlatformAdminDetailToEditorLoad", () => {
       },
     });
 
-    expect(loaded.initialValues.heroMediaId).toBe("22222222-2222-4222-8222-222222222222");
-    expect(loaded.initialValues.ogMediaId).toBe("33333333-3333-4333-8333-333333333333");
-    expect(loaded.initialValues.gallery[0]?.mediaId).toBe(
-      "44444444-4444-4444-8444-444444444444"
-    );
-    expect(loaded.initialValues.img).toBe("https://cdn.example/hero.png");
-    expect(loaded.mutationCompat?.heroMediaId).toBe(
-      "22222222-2222-4222-8222-222222222222"
-    );
+    expect(loaded.initialValues.heroMediaId).toBe("media-hero-platform");
+    expect(loaded.initialValues.ogMediaId).toBe("media-og-platform");
+    expect(loaded.initialValues.gallery[0]?.mediaId).toBe("media-gallery-platform");
+    expect(loaded.mutationCompat).toBeUndefined();
   });
 
   test("maps lifecycle and publish status explicitly", () => {
@@ -148,6 +176,8 @@ describe("mapPlatformAdminDetailToEditorLoad", () => {
     });
     expect(loaded.initialValues.lifecycleStatus).toBe("active");
     expect(loaded.initialValues.publishStatus).toBe("draft");
+    expect(loaded.platformLifecycleState?.publishStatus).toBe("draft");
+    expect(loaded.platformLifecycleState?.isArchived).toBe(false);
   });
 
   test("rewrites historical R2 media URLs for admin display", () => {

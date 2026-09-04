@@ -7,10 +7,9 @@ import type { PlatformApiAdminCaseStudyDetail } from "@/lib/project-write/platfo
 
 const PLATFORM_UUID = "00000000-0000-4000-8000-000000000001";
 const PORTFOLIO_LOCAL_UUID = "11111111-1111-4111-8111-111111111111";
-const LOCAL_HERO_MEDIA_ID = "22222222-2222-4222-8222-222222222222";
-const LOCAL_OG_MEDIA_ID = "33333333-3333-4333-8333-333333333333";
-const LOCAL_GALLERY_MEDIA_ID = "44444444-4444-4444-8444-444444444444";
-const PLATFORM_GALLERY_MEDIA_ID = "55555555-5555-4555-8555-555555555555";
+const PLATFORM_HERO_MEDIA_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+const PLATFORM_OG_MEDIA_ID = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
+const PLATFORM_GALLERY_MEDIA_ID = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
 
 const detail: PlatformApiAdminCaseStudyDetail = {
   id: PLATFORM_UUID,
@@ -25,32 +24,27 @@ const detail: PlatformApiAdminCaseStudyDetail = {
   technologies: [{ name: "PostgreSQL" }],
   content_items: [],
   links: [],
-  metrics: [{ label: "Users", value: "100+", description: null }],
-  milestones: [
-    {
-      year: 2026,
-      version: "v1",
-      title: "Launch",
-      description: null,
-    },
-  ],
+  metrics: [],
+  milestones: [],
 };
 
 const media = [
   {
-    id: "media-hero-platform",
+    id: PLATFORM_HERO_MEDIA_ID,
     case_study_id: PLATFORM_UUID,
     storage_key: "portfolio/projects/heroes/a.png",
     public_url: "https://cdn.example/hero.png",
     role: "hero",
+    upload_status: "confirmed",
     sort_order: 0,
   },
   {
-    id: "media-og-platform",
+    id: PLATFORM_OG_MEDIA_ID,
     case_study_id: PLATFORM_UUID,
     storage_key: "portfolio/projects/og/b.png",
     public_url: "https://cdn.example/og.png",
     role: "og",
+    upload_status: "confirmed",
     sort_order: 1,
   },
   {
@@ -59,57 +53,38 @@ const media = [
     storage_key: "portfolio/projects/gallery/c.png",
     public_url: "https://cdn.example/gallery.png",
     role: "gallery",
+    upload_status: "confirmed",
     sort_order: 2,
   },
 ];
 
-const mutationCompat = {
-  heroMediaId: LOCAL_HERO_MEDIA_ID,
-  ogMediaId: LOCAL_OG_MEDIA_ID,
-  gallery: [
-    {
-      mediaId: LOCAL_GALLERY_MEDIA_ID,
-      url: "https://cdn.local/gallery.png",
-      alt: "Local gallery",
-    },
-  ],
-};
-
-describe("platform-api transitional Prisma write safety", () => {
-  test("unrelated scalar save preserves local media mutation IDs from mutationCompat", () => {
+describe("platform-api media write safety", () => {
+  test("platform admin load uses Platform media UUIDs for hero, OG, and gallery", () => {
     const loaded = mapPlatformAdminDetailToEditorLoad({
       detail,
       media,
       portfolioLocalId: PORTFOLIO_LOCAL_UUID,
-      mutationCompat,
     });
 
-    const { extended } = splitProjectEditorPayload({
-      ...loaded.initialValues,
-      caption: "Updated caption only",
-    });
-
-    expect(extended.heroMediaId).toBe(LOCAL_HERO_MEDIA_ID);
-    expect(extended.ogMediaId).toBe(LOCAL_OG_MEDIA_ID);
-    expect(extended.gallery?.[0]?.mediaId).toBe(LOCAL_GALLERY_MEDIA_ID);
-    expect(extended.gallery?.[0]?.mediaId).not.toBe(PLATFORM_GALLERY_MEDIA_ID);
-    expect(extended.heroMediaId).not.toBe(PLATFORM_UUID);
+    expect(loaded.initialValues.heroMediaId).toBe(PLATFORM_HERO_MEDIA_ID);
+    expect(loaded.initialValues.ogMediaId).toBe(PLATFORM_OG_MEDIA_ID);
+    expect(loaded.initialValues.gallery[0]?.mediaId).toBe(PLATFORM_GALLERY_MEDIA_ID);
+    expect(loaded.mutationCompat).toBeUndefined();
   });
 
-  test("platform display URLs remain authoritative while mutation IDs stay local", () => {
+  test("platform display URLs remain authoritative from Platform media", () => {
     const loaded = mapPlatformAdminDetailToEditorLoad({
       detail,
       media,
       portfolioLocalId: PORTFOLIO_LOCAL_UUID,
-      mutationCompat,
     });
 
     expect(loaded.initialValues.img).toBe("https://cdn.example/hero.png");
     expect(loaded.initialOgImageUrl).toBe("https://cdn.example/og.png");
-    expect(loaded.initialValues.gallery[0]?.url).toBe("https://cdn.local/gallery.png");
+    expect(loaded.initialValues.gallery[0]?.url).toBe("https://cdn.example/gallery.png");
   });
 
-  test("without mutationCompat, mutation-bound media IDs remain unset", () => {
+  test("split payload preserves Platform media UUIDs in editor state", () => {
     const loaded = mapPlatformAdminDetailToEditorLoad({
       detail,
       media,
@@ -121,25 +96,10 @@ describe("platform-api transitional Prisma write safety", () => {
       caption: "Updated caption only",
     });
 
-    expect(extended.heroMediaId).toBeNull();
-    expect(extended.ogMediaId).toBeNull();
-    expect(extended.gallery?.every((item) => item.mediaId === undefined)).toBe(true);
-  });
-
-  test("split payload never includes Platform case-study UUID in Prisma FK fields", () => {
-    const loaded = mapPlatformAdminDetailToEditorLoad({
-      detail,
-      media,
-      portfolioLocalId: PORTFOLIO_LOCAL_UUID,
-      mutationCompat,
-    });
-
-    const { extended } = splitProjectEditorPayload(loaded.initialValues);
-
+    expect(extended.heroMediaId).toBe(PLATFORM_HERO_MEDIA_ID);
+    expect(extended.ogMediaId).toBe(PLATFORM_OG_MEDIA_ID);
+    expect(extended.gallery?.[0]?.mediaId).toBe(PLATFORM_GALLERY_MEDIA_ID);
+    expect(extended.heroMediaId).not.toBe(PORTFOLIO_LOCAL_UUID);
     expect(extended.heroMediaId).not.toBe(PLATFORM_UUID);
-    expect(extended.ogMediaId).not.toBe(PLATFORM_UUID);
-    expect(
-      extended.gallery?.every((item) => item.mediaId !== PLATFORM_GALLERY_MEDIA_ID)
-    ).toBe(true);
   });
 });

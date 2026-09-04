@@ -5,11 +5,14 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
+import { ConfirmDialog } from "@/components/Admin/shared/ConfirmDialog";
 import { EmptyState } from "@/components/Admin/shared/EmptyState";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { deletePortfolioAction } from "@/lib/actions/portfolio";
+import { archivePortfolioProjectAction } from "@/lib/actions/portfolio-lifecycle";
+import { PLATFORM_HARD_DELETE_UNAVAILABLE_MESSAGE } from "@/lib/project-write/platform-lifecycle-policy";
 
 
 import type { PortfolioItem } from "@/lib/types/portfolio";
@@ -17,14 +20,17 @@ import type { PortfolioItem } from "@/lib/types/portfolio";
 interface PortfolioListProps {
   portfolio: PortfolioItem[];
   disableDelete?: boolean;
+  enablePlatformArchive?: boolean;
 }
 
 export function PortfolioList({
   portfolio: initialPortfolio,
   disableDelete = false,
+  enablePlatformArchive = false,
 }: PortfolioListProps) {
   const [portfolio, setPortfolio] = useState(initialPortfolio);
   const [isPending, startTransition] = useTransition();
+  const [archiveTarget, setArchiveTarget] = useState<PortfolioItem | null>(null);
 
   const handleDelete = (id: string) => {
     if (!confirm("Are you sure you want to delete this portfolio item?"))
@@ -37,6 +43,23 @@ export function PortfolioList({
         toast.success("Portfolio item deleted");
       } else {
         toast.error(result.error);
+      }
+    });
+  };
+
+  const handleArchive = () => {
+    if (!archiveTarget) {
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await archivePortfolioProjectAction(archiveTarget.id);
+      if (result.success) {
+        setPortfolio((prev) => prev.filter((item) => item.id !== archiveTarget.id));
+        setArchiveTarget(null);
+        toast.success("Project archived");
+      } else {
+        toast.error(result.error ?? "Failed to archive project");
       }
     });
   };
@@ -80,15 +103,17 @@ export function PortfolioList({
             <Button
               variant="destructive"
               size="sm"
-              onClick={() => handleDelete(item.id)}
-              disabled={isPending || disableDelete}
-              title={
-                disableDelete
-                  ? "Delete is disabled while Platform write source is active."
-                  : undefined
-              }
+              onClick={() => {
+                if (enablePlatformArchive) {
+                  setArchiveTarget(item);
+                  return;
+                }
+                handleDelete(item.id);
+              }}
+              disabled={isPending || (disableDelete && !enablePlatformArchive)}
+              title={disableDelete && !enablePlatformArchive ? PLATFORM_HARD_DELETE_UNAVAILABLE_MESSAGE : undefined}
             >
-              Delete
+              {enablePlatformArchive ? "Archive" : "Delete"}
             </Button>
           </div>
         </Card>
@@ -98,6 +123,18 @@ export function PortfolioList({
           className="col-span-2 p-12 text-center"
           title="No portfolio projects yet"
           description="Create your first project to showcase engineering work on the public site."
+        />
+      ) : null}
+
+      {archiveTarget ? (
+        <ConfirmDialog
+          open={Boolean(archiveTarget)}
+          title="Archive project"
+          description={`Archive "${archiveTarget.caption}"? This is irreversible in Platform API V1. Archived projects are hidden from public reads even if still marked published.`}
+          confirmLabel="Archive project"
+          loading={isPending}
+          onCancel={() => setArchiveTarget(null)}
+          onConfirm={handleArchive}
         />
       ) : null}
     </div>

@@ -9,9 +9,11 @@ import {
 describe("getProjectWriteProvider", () => {
   test("defaults to database provider", () => {
     resetProjectWriteProviderForTests();
+    const previousRead = process.env.PROJECT_READ_SOURCE;
     const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     const previousToken = process.env.DEVLAUNCH_PLATFORM_API_TOKEN;
+    delete process.env.PROJECT_READ_SOURCE;
     delete process.env.PROJECT_WRITE_SOURCE;
     delete process.env.DEVLAUNCH_PLATFORM_API_URL;
     delete process.env.DEVLAUNCH_PLATFORM_API_TOKEN;
@@ -20,6 +22,7 @@ describe("getProjectWriteProvider", () => {
     expect(provider.source).toBe("database");
     expect("client" in provider).toBe(false);
 
+    process.env.PROJECT_READ_SOURCE = previousRead;
     process.env.PROJECT_WRITE_SOURCE = previousWrite;
     process.env.DEVLAUNCH_PLATFORM_API_URL = previousUrl;
     process.env.DEVLAUNCH_PLATFORM_API_TOKEN = previousToken;
@@ -28,9 +31,11 @@ describe("getProjectWriteProvider", () => {
 
   test("selects platform-api when explicitly configured", () => {
     resetProjectWriteProviderForTests();
+    const previousRead = process.env.PROJECT_READ_SOURCE;
     const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     const previousToken = process.env.DEVLAUNCH_PLATFORM_API_TOKEN;
+    process.env.PROJECT_READ_SOURCE = "platform-api";
     process.env.PROJECT_WRITE_SOURCE = "platform-api";
     process.env.DEVLAUNCH_PLATFORM_API_URL = "https://api.devlaunchsystems.com";
     process.env.DEVLAUNCH_PLATFORM_API_TOKEN = "test-token";
@@ -41,6 +46,7 @@ describe("getProjectWriteProvider", () => {
       expect(provider.client.constructor.name).toBe("PlatformApiAdminClient");
     }
 
+    process.env.PROJECT_READ_SOURCE = previousRead;
     process.env.PROJECT_WRITE_SOURCE = previousWrite;
     process.env.DEVLAUNCH_PLATFORM_API_URL = previousUrl;
     process.env.DEVLAUNCH_PLATFORM_API_TOKEN = previousToken;
@@ -49,9 +55,11 @@ describe("getProjectWriteProvider", () => {
 
   test("fails clearly when platform-api is selected without API URL", () => {
     resetProjectWriteProviderForTests();
+    const previousRead = process.env.PROJECT_READ_SOURCE;
     const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     const previousToken = process.env.DEVLAUNCH_PLATFORM_API_TOKEN;
+    process.env.PROJECT_READ_SOURCE = "platform-api";
     process.env.PROJECT_WRITE_SOURCE = "platform-api";
     delete process.env.DEVLAUNCH_PLATFORM_API_URL;
     process.env.DEVLAUNCH_PLATFORM_API_TOKEN = "test-token";
@@ -65,6 +73,7 @@ describe("getProjectWriteProvider", () => {
     }
     expect(threw).toBe(true);
 
+    process.env.PROJECT_READ_SOURCE = previousRead;
     process.env.PROJECT_WRITE_SOURCE = previousWrite;
     process.env.DEVLAUNCH_PLATFORM_API_URL = previousUrl;
     process.env.DEVLAUNCH_PLATFORM_API_TOKEN = previousToken;
@@ -73,9 +82,11 @@ describe("getProjectWriteProvider", () => {
 
   test("fails clearly when platform-api is selected without token", () => {
     resetProjectWriteProviderForTests();
+    const previousRead = process.env.PROJECT_READ_SOURCE;
     const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     const previousToken = process.env.DEVLAUNCH_PLATFORM_API_TOKEN;
+    process.env.PROJECT_READ_SOURCE = "platform-api";
     process.env.PROJECT_WRITE_SOURCE = "platform-api";
     process.env.DEVLAUNCH_PLATFORM_API_URL = "https://api.devlaunchsystems.com";
     delete process.env.DEVLAUNCH_PLATFORM_API_TOKEN;
@@ -89,6 +100,7 @@ describe("getProjectWriteProvider", () => {
     }
     expect(threw).toBe(true);
 
+    process.env.PROJECT_READ_SOURCE = previousRead;
     process.env.PROJECT_WRITE_SOURCE = previousWrite;
     process.env.DEVLAUNCH_PLATFORM_API_URL = previousUrl;
     process.env.DEVLAUNCH_PLATFORM_API_TOKEN = previousToken;

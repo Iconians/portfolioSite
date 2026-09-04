@@ -14,9 +14,11 @@ import type { PortfolioMetric } from "@/lib/types/portfolio";
 
 
 interface MetricRowProps {
+  portfolioId: string;
   metric: PortfolioMetric;
   isFirst: boolean;
   isLast: boolean;
+  disableReorder?: boolean;
   onUpdated: (metric: PortfolioMetric) => void;
   onDelete: (metricId: string) => Promise<void>;
   onReorder: (
@@ -26,9 +28,11 @@ interface MetricRowProps {
 }
 
 export function MetricRow({
+  portfolioId,
   metric,
   isFirst,
   isLast,
+  disableReorder = false,
   onUpdated,
   onDelete,
   onReorder,
@@ -45,7 +49,7 @@ export function MetricRow({
         label,
         value,
         description: description.trim() ? description : undefined,
-      });
+      }, portfolioId);
 
       if (result.success) {
         onUpdated(result.data);
@@ -102,22 +106,26 @@ export function MetricRow({
           <Button type="button" disabled={isPending} onClick={handleSave}>
             {isPending ? "Saving..." : "Save metric"}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={isPending || isFirst}
-            onClick={() => handleReorder("up")}
-          >
-            Move up
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={isPending || isLast}
-            onClick={() => handleReorder("down")}
-          >
-            Move down
-          </Button>
+          {!disableReorder ? (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isPending || isFirst}
+                onClick={() => handleReorder("up")}
+              >
+                Move up
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isPending || isLast}
+                onClick={() => handleReorder("down")}
+              >
+                Move down
+              </Button>
+            </>
+          ) : null}
           <Button
             type="button"
             variant="destructive"

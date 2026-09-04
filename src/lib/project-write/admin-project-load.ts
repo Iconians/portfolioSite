@@ -85,30 +85,12 @@ async function loadAdminProjectEditorStateFromPlatform(
   );
   const detail = await provider.client.getCaseStudyById(platformCaseStudyId);
   const media = await provider.client.listMedia({ caseStudyId: platformCaseStudyId });
-  const mutationCompat = {
-    heroMediaId: bridge.heroMediaId,
-    ogMediaId: bridge.ogMediaId,
-    gallery: bridge.gallery,
-  };
 
-  const [initialMetrics, initialVersions] = await Promise.all([
-    listMetricsForPortfolio(portfolioLocalId),
-    listVersionsForPortfolio(portfolioLocalId),
-  ]);
-
-  const mapped = mapPlatformAdminDetailToEditorLoad({
+  return mapPlatformAdminDetailToEditorLoad({
     detail,
     media: media.items,
     portfolioLocalId,
-    mutationCompat,
   });
-
-  return {
-    ...mapped,
-    initialMetrics,
-    initialVersions,
-    mutationCompat,
-  };
 }
 
 export async function loadAdminProjectPreviewBySlug(

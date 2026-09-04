@@ -2,6 +2,7 @@ import {
   getPlatformApiBaseUrl,
   getPlatformApiTimeoutMs,
 } from "@/lib/project-read/config";
+import { getCoherentProjectSourceConfiguration } from "@/lib/project-source/coherence";
 
 import { ProjectWriteConfigurationError } from "./errors";
 
@@ -36,7 +37,7 @@ export function resolveProjectWriteSource(options?: {
 }
 
 export function getProjectWriteSource(): ProjectWriteSource {
-  return resolveProjectWriteSource();
+  return getCoherentProjectSourceConfiguration().writeSource;
 }
 
 export function getPlatformApiAdminToken(): string | null {

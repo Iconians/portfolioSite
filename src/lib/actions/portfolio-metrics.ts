@@ -12,6 +12,18 @@ import {
   reorderPortfolioMetric,
   updatePortfolioMetric,
 } from "@/lib/portfolio/portfolio.service";
+import { getProjectWriteSource } from "@/lib/project-write/config";
+import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
+import { assertPlatformChildReorderAllowed } from "@/lib/project-write/platform-child-reorder-policy";
+import {
+  createPortfolioMetricViaPlatform,
+  deletePortfolioMetricViaPlatform,
+  updatePortfolioMetricViaPlatform,
+} from "@/lib/project-write/platform-metric-write";
+import {
+  revalidateAdminProjectPaths,
+  invalidatePublicProjectCacheForPortfolioId,
+} from "@/lib/project-write/public-project-cache";
 import {
   PortfolioMetricInputSchema,
   PortfolioMetricUpdateSchema,
@@ -32,10 +44,15 @@ function toUserMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Something went wrong.";
 }
 
-function revalidatePortfolioPaths(portfolioId: string) {
+function revalidateDatabasePortfolioPaths(portfolioId: string) {
   revalidatePath("/admin/portfolio");
   revalidatePath(`/admin/portfolio/${portfolioId}`);
   revalidatePath("/");
+}
+
+async function revalidatePlatformPortfolioPaths(portfolioId: string) {
+  revalidateAdminProjectPaths(portfolioId);
+  await invalidatePublicProjectCacheForPortfolioId(portfolioId, "content");
 }
 
 export async function createPortfolioMetricAction(
@@ -45,33 +62,68 @@ export async function createPortfolioMetricAction(
   try {
     const user = await requireAdmin();
     const data = PortfolioMetricInputSchema.parse(input);
+
+    if (getProjectWriteSource() === "platform-api") {
+      const metric = await createPortfolioMetricViaPlatform(portfolioId, data);
+      await logAdminAction(user.id, "create", "portfolio_metric", metric.id, {
+        portfolioId,
+        label: metric.label,
+        writeSource: "platform-api",
+      }).catch(() => {});
+      await revalidatePlatformPortfolioPaths(portfolioId);
+      return { success: true, data: metric };
+    }
+
     const metric = await createPortfolioMetric(portfolioId, data);
     await logAdminAction(user.id, "create", "portfolio_metric", metric.id, {
       portfolioId,
       label: metric.label,
     }).catch(() => {});
-    revalidatePortfolioPaths(portfolioId);
+    revalidateDatabasePortfolioPaths(portfolioId);
     return { success: true, data: metric };
   } catch (error) {
+    if (getProjectWriteSource() === "platform-api") {
+      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
+    }
     return { success: false, error: toUserMessage(error) };
   }
 }
 
 export async function updatePortfolioMetricAction(
   metricId: string,
-  input: PortfolioMetricUpdate
+  input: PortfolioMetricUpdate,
+  portfolioId: string
 ): Promise<ActionResult<PortfolioMetric>> {
   try {
     const user = await requireAdmin();
     const data = PortfolioMetricUpdateSchema.parse(input);
+
+    if (getProjectWriteSource() === "platform-api") {
+      const metric = await updatePortfolioMetricViaPlatform(
+        portfolioId,
+        metricId,
+        data
+      );
+      await logAdminAction(user.id, "update", "portfolio_metric", metric.id, {
+        portfolioId,
+        label: metric.label,
+        writeSource: "platform-api",
+      }).catch(() => {});
+      await revalidatePlatformPortfolioPaths(portfolioId);
+      return { success: true, data: metric };
+    }
+
     const metric = await updatePortfolioMetric(metricId, data);
     await logAdminAction(user.id, "update", "portfolio_metric", metric.id, {
       portfolioId: metric.portfolioId,
       label: metric.label,
     }).catch(() => {});
-    revalidatePortfolioPaths(metric.portfolioId);
+    revalidateDatabasePortfolioPaths(metric.portfolioId);
     return { success: true, data: metric };
   } catch (error) {
+    if (getProjectWriteSource() === "platform-api") {
+      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
+    }
     return { success: false, error: toUserMessage(error) };
   }
 }
@@ -82,6 +134,17 @@ export async function deletePortfolioMetricAction(
 ): Promise<ActionResult<void>> {
   try {
     const user = await requireAdmin();
+
+    if (getProjectWriteSource() === "platform-api") {
+      await deletePortfolioMetricViaPlatform(portfolioId, metricId);
+      await logAdminAction(user.id, "delete", "portfolio_metric", metricId, {
+        portfolioId,
+        writeSource: "platform-api",
+      }).catch(() => {});
+      await revalidatePlatformPortfolioPaths(portfolioId);
+      return { success: true, data: undefined };
+    }
+
     const metric = await getPortfolioMetricById(metricId);
     if (!metric || metric.portfolioId !== portfolioId) {
       throw new Error("Portfolio metric not found");
@@ -90,9 +153,12 @@ export async function deletePortfolioMetricAction(
     await logAdminAction(user.id, "delete", "portfolio_metric", metricId, {
       portfolioId,
     }).catch(() => {});
-    revalidatePortfolioPaths(portfolioId);
+    revalidateDatabasePortfolioPaths(portfolioId);
     return { success: true, data: undefined };
   } catch (error) {
+    if (getProjectWriteSource() === "platform-api") {
+      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
+    }
     return { success: false, error: toUserMessage(error) };
   }
 }
@@ -104,14 +170,21 @@ export async function reorderPortfolioMetricAction(
 ): Promise<ActionResult<PortfolioMetric[]>> {
   try {
     await requireAdmin();
+
+    const writeSource = getProjectWriteSource();
+    assertPlatformChildReorderAllowed(writeSource);
+
     const metric = await getPortfolioMetricById(metricId);
     if (!metric || metric.portfolioId !== portfolioId) {
       throw new Error("Portfolio metric not found");
     }
     const metrics = await reorderPortfolioMetric(metricId, direction);
-    revalidatePortfolioPaths(portfolioId);
+    revalidateDatabasePortfolioPaths(portfolioId);
     return { success: true, data: metrics };
   } catch (error) {
+    if (getProjectWriteSource() === "platform-api") {
+      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
+    }
     return { success: false, error: toUserMessage(error) };
   }
 }

@@ -406,10 +406,146 @@ describe("PlatformApiAdminClient", () => {
       expect(error.detail).toBe("Unknown field rejected");
     }
   });
+
+  test("creates metric under Platform case-study UUID", async () => {
+    const metricId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    let requestedUrl = "";
+    const client = createClient(
+      mockFetch(async (input) => {
+        requestedUrl = String(input);
+        return new Response(
+          JSON.stringify({
+            id: metricId,
+            label: "Uptime",
+            value: "99.9%",
+            description: null,
+            show_on_business: true,
+            sort_order: 0,
+          }),
+          { status: 201 }
+        );
+      })
+    );
+
+    const result = await client.createMetric(PLATFORM_CASE_STUDY_ID, {
+      label: "Uptime",
+      value: "99.9%",
+    });
+
+    expect(requestedUrl).toBe(
+      `https://api.devlaunchsystems.com/api/v1/admin/case-studies/${PLATFORM_CASE_STUDY_ID}/metrics`
+    );
+    expect(result.id).toBe(metricId);
+  });
+
+  test("deletes metric with 204 no-content", async () => {
+    const metricId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    let requestedUrl = "";
+    const client = createClient(
+      mockFetch(async (input) => {
+        requestedUrl = String(input);
+        return new Response(null, { status: 204 });
+      })
+    );
+
+    await client.deleteMetric(metricId);
+    expect(requestedUrl).toBe(
+      `https://api.devlaunchsystems.com/api/v1/admin/metrics/${metricId}`
+    );
+  });
+  test("presigns case-study media with Bearer authorization", async () => {
+    const mediaId = "00000000-0000-4000-8000-000000000010";
+    let requestedUrl = "";
+    let requestInit: RequestInit | undefined;
+    const client = createClient(
+      mockFetch(async (input, init) => {
+        requestedUrl = String(input);
+        requestInit = init;
+        return new Response(
+          JSON.stringify({
+            media_id: mediaId,
+            storage_key: "portfolio/projects/heroes/a.png",
+            upload_url: "https://r2.example/upload",
+            upload_headers: { "Content-Type": "image/png" },
+            public_url: "https://cdn.example/hero.png",
+            expires_in: 900,
+          }),
+          { status: 200 }
+        );
+      })
+    );
+
+    const result = await client.presignCaseStudyMedia(PLATFORM_CASE_STUDY_ID, {
+      filename: "hero.png",
+      mime_type: "image/png",
+      size_bytes: 1024,
+      role: "hero",
+    });
+
+    expect(requestedUrl).toBe(
+      `https://api.devlaunchsystems.com/api/v1/admin/case-studies/${PLATFORM_CASE_STUDY_ID}/media/presign`
+    );
+    expect(requestInit?.method).toBe("POST");
+    expect(requestInit?.headers).toEqual({
+      Authorization: `Bearer ${FAKE_TOKEN}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    });
+    assertTokenNotLeaked(JSON.stringify(result));
+    expect(result.storage_key).toBe("portfolio/projects/heroes/a.png");
+  });
+
+  test("registers case-study media and returns Platform UUID", async () => {
+    const mediaId = "00000000-0000-4000-8000-000000000010";
+    let requestedUrl = "";
+    const client = createClient(
+      mockFetch(async (input) => {
+        requestedUrl = String(input);
+        return new Response(
+          JSON.stringify({
+            id: mediaId,
+            case_study_id: PLATFORM_CASE_STUDY_ID,
+            storage_key: "portfolio/projects/heroes/a.png",
+            public_url: "https://cdn.example/hero.png",
+            role: "hero",
+            audience: "public",
+            sort_order: 0,
+            upload_status: "confirmed",
+          }),
+          { status: 201 }
+        );
+      })
+    );
+
+    const result = await client.registerCaseStudyMedia(PLATFORM_CASE_STUDY_ID, {
+      storage_key: "portfolio/projects/heroes/a.png",
+    });
+
+    expect(requestedUrl).toBe(
+      `https://api.devlaunchsystems.com/api/v1/admin/case-studies/${PLATFORM_CASE_STUDY_ID}/media`
+    );
+    expect(result.id).toBe(mediaId);
+  });
+
+  test("deletes media metadata with 204 no-content", async () => {
+    const mediaId = "00000000-0000-4000-8000-000000000010";
+    let requestedUrl = "";
+    const client = createClient(
+      mockFetch(async (input) => {
+        requestedUrl = String(input);
+        return new Response(null, { status: 204 });
+      })
+    );
+
+    await client.deleteCaseStudyMedia(mediaId);
+    expect(requestedUrl).toBe(
+      `https://api.devlaunchsystems.com/api/v1/admin/media/${mediaId}`
+    );
+  });
 });
 
 describe("admin client surface", () => {
-  test("exposes M3-safe admin read and case-study patch helpers", () => {
+  test("exposes M4/M5/M6 admin read, patch, child CRUD, lifecycle, and media helpers", () => {
     const client = new PlatformApiAdminClient({
       baseUrl: "https://api.devlaunchsystems.com",
       token: FAKE_TOKEN,
@@ -417,10 +553,22 @@ describe("admin client surface", () => {
     expect(typeof client.listCaseStudies).toBe("function");
     expect(typeof client.getCaseStudyById).toBe("function");
     expect(typeof client.listMedia).toBe("function");
+    expect(typeof client.presignCaseStudyMedia).toBe("function");
+    expect(typeof client.registerCaseStudyMedia).toBe("function");
+    expect(typeof client.updateCaseStudyMedia).toBe("function");
+    expect(typeof client.deleteCaseStudyMedia).toBe("function");
     expect(typeof client.updateCaseStudy).toBe("function");
+    expect(typeof client.createMetric).toBe("function");
+    expect(typeof client.updateMetric).toBe("function");
+    expect(typeof client.deleteMetric).toBe("function");
+    expect(typeof client.createMilestone).toBe("function");
+    expect(typeof client.updateMilestone).toBe("function");
+    expect(typeof client.deleteMilestone).toBe("function");
+    expect(typeof client.publishCaseStudy).toBe("function");
+    expect(typeof client.unpublishCaseStudy).toBe("function");
+    expect(typeof client.archiveCaseStudy).toBe("function");
     expect("getCaseStudy" in client).toBe(false);
     expect("createCaseStudy" in client).toBe(false);
-    expect("publishCaseStudy" in client).toBe(false);
     expect("createMedia" in client).toBe(false);
     expect("updateMedia" in client).toBe(false);
   });

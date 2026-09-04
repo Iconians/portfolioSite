@@ -24,9 +24,29 @@ const detail: PlatformApiAdminCaseStudyDetail = {
     { kind: "feature", text: "Auth" },
   ],
   links: [{ link_type: "live", url: "https://example.com", label: null }],
-  metrics: [{ label: "Users", value: "100+", description: null }],
-  milestones: [{ year: 2026, version: "v1", title: "Launch", description: null }],
+  metrics: [
+    {
+      id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      label: "Users",
+      value: "100+",
+      description: null,
+      show_on_business: true,
+      sort_order: 0,
+    },
+  ],
+  milestones: [
+    {
+      id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      year: 2026,
+      version: "v1",
+      title: "Launch",
+      description: null,
+      sort_order: 0,
+    },
+  ],
 };
+
+const PLATFORM_HERO_MEDIA_ID = "dddddddd-dddd-4ddd-8ddd-dddddddddddd";
 
 describe("M3 Platform PATCH payload safety", () => {
   test("editor scalar save builds PATCH without deferred media or lifecycle fields", () => {
@@ -34,25 +54,16 @@ describe("M3 Platform PATCH payload safety", () => {
       detail,
       media: [
         {
-          id: "media-hero",
+          id: PLATFORM_HERO_MEDIA_ID,
           case_study_id: PLATFORM_UUID,
           storage_key: "hero.png",
           public_url: "https://cdn.example/hero.png",
           role: "hero",
+          upload_status: "confirmed",
           sort_order: 0,
         },
       ],
       portfolioLocalId: PORTFOLIO_LOCAL_UUID,
-      mutationCompat: {
-        heroMediaId: "22222222-2222-4222-8222-222222222222",
-        ogMediaId: "33333333-3333-4333-8333-333333333333",
-        gallery: [
-          {
-            mediaId: "44444444-4444-4444-8444-444444444444",
-            url: "https://cdn.local/gallery.png",
-          },
-        ],
-      },
     });
 
     const { legacy, extended } = splitProjectEditorPayload({
@@ -74,7 +85,7 @@ describe("M3 Platform PATCH payload safety", () => {
     expect("og_media_id" in patch).toBe(false);
     expect("metrics" in patch).toBe(false);
     expect("milestones" in patch).toBe(false);
-    expect(extended.heroMediaId).toBe("22222222-2222-4222-8222-222222222222");
+    expect(extended.heroMediaId).toBe(PLATFORM_HERO_MEDIA_ID);
     expect(extended.heroMediaId).not.toBe(PLATFORM_UUID);
   });
 
@@ -83,11 +94,12 @@ describe("M3 Platform PATCH payload safety", () => {
       detail,
       media: [
         {
-          id: "media-hero",
+          id: PLATFORM_HERO_MEDIA_ID,
           case_study_id: PLATFORM_UUID,
           storage_key: "hero.png",
           public_url: "https://cdn.example/hero.png",
           role: "hero",
+          upload_status: "confirmed",
           sort_order: 0,
         },
       ],

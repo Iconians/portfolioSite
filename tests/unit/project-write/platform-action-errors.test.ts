@@ -8,6 +8,7 @@ import {
   ProjectWriteConfigurationError,
 } from "@/lib/project-write/errors";
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
+import { PlatformChildReorderUnavailableError } from "@/lib/project-write/platform-child-reorder-policy";
 import { PlatformSlugImmutableError } from "@/lib/project-write/platform-update-errors";
 
 describe("toPlatformProjectWriteUserMessage", () => {
@@ -65,5 +66,11 @@ describe("toPlatformProjectWriteUserMessage", () => {
         new PlatformApiAdminMalformedResponseError("missing id")
       )
     ).toBe("missing id");
+  });
+
+  test("maps child reorder unavailable errors", () => {
+    expect(
+      toPlatformProjectWriteUserMessage(new PlatformChildReorderUnavailableError())
+    ).toContain("Reordering is temporarily unavailable");
   });
 });

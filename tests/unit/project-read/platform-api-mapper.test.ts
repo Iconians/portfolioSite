@@ -93,4 +93,25 @@ describe("mapPlatformApiDetail", () => {
 
     process.env.S3_PUBLIC_URL_BASE = previous;
   });
+
+  test("leaves canonical Platform public_url unchanged in mapper output", () => {
+    const previous = process.env.S3_PUBLIC_URL_BASE;
+    process.env.S3_PUBLIC_URL_BASE = "https://media.devlaunchsystems.com";
+    const canonical =
+      "https://media.devlaunchsystems.com/portfolio/projects/heroes/a.png";
+
+    const mapped = mapPlatformApiDetail({
+      ...detail,
+      media: [
+        {
+          role: "hero",
+          public_url: canonical,
+          alt_text: "Hero",
+        },
+      ],
+    });
+
+    expect(mapped.project.img).toBe(canonical);
+    process.env.S3_PUBLIC_URL_BASE = previous;
+  });
 });

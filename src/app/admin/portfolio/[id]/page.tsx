@@ -97,6 +97,7 @@ export default async function EditPortfolioPage({
       <ProjectEditor
         portfolioId={loaded.portfolioLocalId}
         writeSource={getProjectWriteSource()}
+        platformLifecycleState={loaded.platformLifecycleState}
         initialValues={loaded.initialValues}
         initialOgImageUrl={loaded.initialOgImageUrl}
         initialMetrics={loaded.initialMetrics}

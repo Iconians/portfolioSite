@@ -22,11 +22,13 @@ import type { PortfolioMetric } from "@/lib/types/portfolio";
 interface MetricEditorProps {
   portfolioId?: string;
   initialMetrics?: PortfolioMetric[];
+  disableReorder?: boolean;
 }
 
 export function MetricEditor({
   portfolioId,
   initialMetrics = [],
+  disableReorder = false,
 }: MetricEditorProps) {
   const [metrics, setMetrics] = useState(initialMetrics);
   const [label, setLabel] = useState("");
@@ -107,7 +109,9 @@ export function MetricEditor({
             {metrics.map((metric, index) => (
               <MetricRow
                 key={metric.id}
+                portfolioId={projectId}
                 metric={metric}
+                disableReorder={disableReorder}
                 isFirst={index === 0}
                 isLast={index === metrics.length - 1}
                 onUpdated={(updated) =>

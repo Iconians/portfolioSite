@@ -136,6 +136,15 @@ export class PlatformApiProjectReadProvider implements ProjectReadProvider {
       throw error;
     }
   }
+  invalidateListCache(): void {
+    this.listEtag = undefined;
+  }
+
+  invalidateProject(slug: string): void {
+    this.detailBodies.delete(slug);
+    this.detailEtags.delete(slug);
+    this.invalidateListCache();
+  }
 }
 
 export {

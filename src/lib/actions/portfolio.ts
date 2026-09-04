@@ -10,9 +10,13 @@ import {
 } from "@/lib/data/portfolio";
 import { logAdminAction } from "@/lib/logger";
 import { requireAdmin } from "@/lib/permissions";
+import { ProjectSourceConfigurationError } from "@/lib/project-source/errors";
 import { getProjectWriteSource } from "@/lib/project-write/config";
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
+import { PLATFORM_PROJECT_CREATE_UNAVAILABLE_MESSAGE } from "@/lib/project-write/platform-create-policy";
+import { PLATFORM_HARD_DELETE_UNAVAILABLE_MESSAGE } from "@/lib/project-write/platform-lifecycle-policy";
 import { updatePortfolioProjectViaPlatform } from "@/lib/project-write/platform-project-update";
+import { revalidateAfterPlatformProjectWrite } from "@/lib/project-write/public-project-cache";
 
 import type { ActionResult } from "@/lib/types/actions";
 import type {
@@ -22,6 +26,9 @@ import type {
 } from "@/lib/types/portfolio";
 
 function toUserMessage(error: unknown): string {
+  if (error instanceof ProjectSourceConfigurationError) {
+    return error.message;
+  }
   if (error instanceof z.ZodError) {
     return error.issues.map((issue) => issue.message).join(", ");
   }
@@ -45,6 +52,14 @@ export async function createPortfolioAction(
 ): Promise<ActionResult<Awaited<ReturnType<typeof createPortfolioItem>>>> {
   try {
     const user = await requireAdmin();
+
+    if (getProjectWriteSource() === "platform-api") {
+      return {
+        success: false,
+        error: PLATFORM_PROJECT_CREATE_UNAVAILABLE_MESSAGE,
+      };
+    }
+
     const item = await createPortfolioItem(data, extended);
     await logAdminAction(user.id, "create", "portfolio", item.id, {
       caption: item.caption,
@@ -74,9 +89,9 @@ export async function updatePortfolioAction(
         caption: item.caption,
         writeSource: "platform-api",
       }).catch(() => {});
-      revalidatePath("/");
-      revalidatePath("/admin/portfolio");
-      revalidatePath(`/admin/portfolio/${id}`);
+      if (item.slug) {
+        revalidateAfterPlatformProjectWrite(id, item.slug, "content");
+      }
       return { success: true, data: item };
     }
 
@@ -103,8 +118,7 @@ export async function deletePortfolioAction(
     if (getProjectWriteSource() === "platform-api") {
       return {
         success: false,
-        error:
-          "Project delete is disabled while PROJECT_WRITE_SOURCE=platform-api. Platform archive/delete is deferred to a later milestone.",
+        error: PLATFORM_HARD_DELETE_UNAVAILABLE_MESSAGE,
       };
     }
 

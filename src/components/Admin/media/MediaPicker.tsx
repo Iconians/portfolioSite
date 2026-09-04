@@ -5,8 +5,28 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { listMediaAssetsAction } from "@/lib/actions/media";
+import {
+  listProjectPlatformMediaAction,
+} from "@/lib/actions/portfolio-media";
+import {
+  canSelectExistingMediaForRole,
+  isExistingSingletonSelectionNoOp,
+  isSingletonRole,
+  PLATFORM_MEDIA_ROLE_IMMUTABLE_MESSAGE,
+  PLATFORM_SINGLETON_REPLACEMENT_MESSAGE,
+  platformMediaListRoleFilter,
+} from "@/lib/project-write/platform-media-policy";
 
+import {
+  reportMediaUploadFailure,
+  uploadDatabaseMediaFile,
+  uploadPlatformProjectMediaFile,
+  type MediaPickerAsset,
+} from "./media-picker-upload";
+
+import type { PlatformMediaRole } from "@/lib/project-write/platform-media-types";
 import type { MediaAsset } from "@/lib/types/media";
+
 
 export interface MediaPickerSelection {
   id: string;
@@ -18,35 +38,91 @@ export interface MediaPickerSelection {
 interface MediaPickerProps {
   onSelect: (asset: MediaPickerSelection) => void;
   triggerLabel?: string;
+  writeSource?: "database" | "platform-api";
+  portfolioId?: string;
+  uploadRole?: PlatformMediaRole;
+  currentMediaId?: string | null;
 }
+
+type PickerAsset = MediaPickerAsset;
 
 export function MediaPicker({
   onSelect,
   triggerLabel = "Choose from library",
+  writeSource = "database",
+  portfolioId,
+  uploadRole = "gallery",
+  currentMediaId = null,
 }: MediaPickerProps) {
   const [open, setOpen] = useState(false);
-  const [assets, setAssets] = useState<MediaAsset[]>([]);
+  const [assets, setAssets] = useState<PickerAsset[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const usePlatformProjectMedia =
+    writeSource === "platform-api" && Boolean(portfolioId);
 
   async function handleOpen() {
     setOpen(true);
     setLoading(true);
     setError(null);
 
-    const result = await listMediaAssetsAction();
-    if (result.success) {
-      setAssets(result.data);
+    if (usePlatformProjectMedia && portfolioId) {
+      const result = await listProjectPlatformMediaAction(portfolioId, {
+        role: platformMediaListRoleFilter(uploadRole),
+      });
+      if (result.success) {
+        setAssets(result.data);
+      } else {
+        setError(result.error);
+        setAssets([]);
+      }
     } else {
-      setError(result.error);
-      setAssets([]);
+      const result = await listMediaAssetsAction();
+      if (result.success) {
+        setAssets(
+          result.data.map((asset: MediaAsset) => ({
+            id: asset.id,
+            publicUrl: asset.publicUrl,
+            filename: asset.filename,
+            altText: asset.altText,
+          }))
+        );
+      } else {
+        setError(result.error);
+        setAssets([]);
+      }
     }
+
     setLoading(false);
   }
 
-  function handleSelect(asset: MediaAsset) {
+  function handleSelect(asset: PickerAsset) {
+    if (
+      usePlatformProjectMedia &&
+      asset.role &&
+      !canSelectExistingMediaForRole(uploadRole, asset.role)
+    ) {
+      toast.error(PLATFORM_MEDIA_ROLE_IMMUTABLE_MESSAGE);
+      return;
+    }
+
+    if (
+      usePlatformProjectMedia &&
+      asset.role &&
+      isExistingSingletonSelectionNoOp({
+        uploadRole,
+        existingRole: asset.role,
+        selectedMediaId: asset.id,
+        currentMediaId,
+      })
+    ) {
+      setOpen(false);
+      return;
+    }
+
     onSelect({
       id: asset.id,
       publicUrl: asset.publicUrl,
@@ -64,25 +140,20 @@ export function MediaPicker({
 
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const response = await fetch("/api/media/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error ?? "Upload failed");
-      }
+      const asset =
+        usePlatformProjectMedia && portfolioId
+          ? await uploadPlatformProjectMediaFile({
+              file,
+              portfolioId,
+              uploadRole,
+            })
+          : await uploadDatabaseMediaFile(file);
 
-      const asset = data.asset as MediaAsset;
       setAssets((current) => [asset, ...current]);
       handleSelect(asset);
       toast.success("Image uploaded and selected");
     } catch (uploadError) {
-      toast.error(
-        uploadError instanceof Error ? uploadError.message : "Upload failed"
-      );
+      reportMediaUploadFailure(uploadError);
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
@@ -91,11 +162,20 @@ export function MediaPicker({
     }
   }
 
+  const platformSingletonRole = usePlatformProjectMedia && isSingletonRole(uploadRole);
+  const resolvedTriggerLabel =
+    triggerLabel ??
+    (platformSingletonRole ? `Upload ${uploadRole} replacement` : "Choose from library");
+
   return (
     <>
       <Button type="button" variant="outline" onClick={handleOpen}>
-        {triggerLabel}
+        {resolvedTriggerLabel}
       </Button>
+
+      {platformSingletonRole ? (
+        <p className="text-xs text-muted-foreground">{PLATFORM_SINGLETON_REPLACEMENT_MESSAGE}</p>
+      ) : null}
 
       {open ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -107,7 +187,7 @@ export function MediaPicker({
           >
             <div className="flex items-center justify-between border-b p-4">
               <h2 id="media-picker-title" className="text-lg font-semibold">
-                Media library
+                {usePlatformProjectMedia ? "Project media" : "Media library"}
               </h2>
               <div className="flex gap-2">
                 <input
@@ -135,12 +215,12 @@ export function MediaPicker({
               {loading ? (
                 <p className="text-sm text-muted-foreground">Loading media...</p>
               ) : null}
-              {error ? (
-                <p className="text-sm text-destructive">{error}</p>
-              ) : null}
+              {error ? <p className="text-sm text-destructive">{error}</p> : null}
               {!loading && !error && assets.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  No media yet. Upload an image to use it as a project hero.
+                  {platformSingletonRole
+                    ? `No ${uploadRole} image yet. Upload a new image to set the project ${uploadRole}.`
+                    : "No media yet. Upload an image to use it in this project."}
                 </p>
               ) : null}
               {!loading && assets.length > 0 ? (
@@ -162,6 +242,12 @@ export function MediaPicker({
                       </div>
                       <div className="p-2">
                         <p className="truncate text-sm font-medium">{asset.filename}</p>
+                        {asset.role ? (
+                          <p className="text-xs text-muted-foreground">
+                            {asset.role}
+                            {currentMediaId === asset.id ? " (current)" : ""}
+                          </p>
+                        ) : null}
                       </div>
                     </button>
                   ))}

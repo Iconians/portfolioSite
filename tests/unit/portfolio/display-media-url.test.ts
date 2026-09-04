@@ -25,13 +25,16 @@ const detail: PlatformApiAdminCaseStudyDetail = {
   links: [],
 };
 
+const PLATFORM_HERO_MEDIA_ID = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+
 const media = [
   {
-    id: "media-hero-platform",
+    id: PLATFORM_HERO_MEDIA_ID,
     case_study_id: detail.id,
     storage_key: "portfolio/projects/heroes/example.webp",
     public_url: R2_HERO_URL,
     role: "hero",
+    upload_status: "confirmed",
     sort_order: 0,
   },
 ];
@@ -103,11 +106,6 @@ describe("admin portfolio display media URL compatibility", () => {
       detail,
       media,
       portfolioLocalId: "11111111-1111-4111-8111-111111111111",
-      mutationCompat: {
-        heroMediaId: "22222222-2222-4222-8222-222222222222",
-        ogMediaId: null,
-        gallery: [],
-      },
     });
 
     expect(loaded.initialValues.img).toBe(
@@ -116,9 +114,7 @@ describe("admin portfolio display media URL compatibility", () => {
     expect(loaded.initialOgImageUrl).toBe(
       `${CANONICAL_BASE}/portfolio/projects/heroes/example.webp`
     );
-    expect(loaded.initialValues.heroMediaId).toBe(
-      "22222222-2222-4222-8222-222222222222"
-    );
+    expect(loaded.initialValues.heroMediaId).toBe(PLATFORM_HERO_MEDIA_ID);
 
     process.env.S3_PUBLIC_URL_BASE = previous;
   });

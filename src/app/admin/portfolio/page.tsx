@@ -35,15 +35,18 @@ export default async function PortfolioPage() {
         title="Portfolio"
         description="Manage projects and engineering case studies"
         actions={
-          <Link href="/admin/portfolio/new">
-            <Button>Add Project</Button>
-          </Link>
+          getProjectWriteSource() === "platform-api" ? undefined : (
+            <Link href="/admin/portfolio/new">
+              <Button>Add Project</Button>
+            </Link>
+          )
         }
       />
 
       <PortfolioList
         portfolio={portfolio}
         disableDelete={getProjectWriteSource() === "platform-api"}
+        enablePlatformArchive={getProjectWriteSource() === "platform-api"}
       />
     </div>
   );

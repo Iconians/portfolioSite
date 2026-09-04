@@ -7,7 +7,7 @@ import { useFieldArray, useForm, useWatch, type FieldArrayPath } from "react-hoo
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   createPortfolioAction,
   updatePortfolioAction,
@@ -16,6 +16,7 @@ import {
   mapPortfolioItemToEditorValues,
   splitProjectEditorPayload,
 } from "@/lib/portfolio/project-editor";
+import { shouldDisableChildReorder } from "@/lib/project-write/platform-child-reorder-policy";
 import {
   ProjectEditorSchema,
   type PortfolioMetric,
@@ -25,12 +26,15 @@ import {
 
 import { MetricEditor } from "./MetricEditor";
 import { PlatformShowcaseEditor } from "./PlatformShowcaseEditor";
+import { ProjectEditorTabList } from "./ProjectEditorTabList";
 import { ProjectEvolutionEditor } from "./ProjectEvolutionEditor";
 import { DetailsSection } from "./sections/DetailsSection";
 import { LinksSeoSection } from "./sections/LinksSeoSection";
 import { MediaSection } from "./sections/MediaSection";
 import { OverviewSection } from "./sections/OverviewSection";
 import { StorySection } from "./sections/StorySection";
+
+import type { PlatformLifecycleAdminState } from "@/lib/project-write/platform-lifecycle-policy";
 
 
 interface ProjectEditorProps {
@@ -40,6 +44,7 @@ interface ProjectEditorProps {
   initialVersions?: ProjectVersion[];
   portfolioId?: string;
   writeSource?: "database" | "platform-api";
+  platformLifecycleState?: PlatformLifecycleAdminState;
   onSuccess?: () => void;
 }
 
@@ -60,11 +65,13 @@ export function ProjectEditor({
   initialVersions = [],
   portfolioId,
   writeSource = "database",
+  platformLifecycleState,
   onSuccess,
 }: ProjectEditorProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [ogImageUrl, setOgImageUrl] = useState(initialOgImageUrl);
+  const disableChildReorder = shouldDisableChildReorder(writeSource);
 
   const {
     register,
@@ -140,61 +147,16 @@ export function ProjectEditor({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Tabs defaultValue="overview">
-        <TabsList className="flex h-auto w-full flex-wrap gap-1 bg-muted/50 p-1">
-          <TabsTrigger
-            value="overview"
-            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
-          >
-            Overview
-          </TabsTrigger>
-          <TabsTrigger
-            value="media"
-            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
-          >
-            Media
-          </TabsTrigger>
-          <TabsTrigger
-            value="details"
-            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
-          >
-            Details
-          </TabsTrigger>
-          <TabsTrigger
-            value="story"
-            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
-          >
-            Story
-          </TabsTrigger>
-          <TabsTrigger
-            value="metrics"
-            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
-          >
-            Metrics
-          </TabsTrigger>
-          <TabsTrigger
-            value="evolution"
-            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
-          >
-            Evolution
-          </TabsTrigger>
-          <TabsTrigger
-            value="platform"
-            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
-          >
-            Platform
-          </TabsTrigger>
-          <TabsTrigger
-            value="links"
-            className="px-2.5 py-1.5 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm sm:text-sm"
-          >
-            Links & SEO
-          </TabsTrigger>
-        </TabsList>
+        <ProjectEditorTabList />
 
         <TabsContent value="overview">
           <OverviewSection
             {...sectionProps}
             slugReadOnly={writeSource === "platform-api" && Boolean(portfolioId)}
+            writeSource={writeSource}
+            portfolioId={portfolioId}
+            platformLifecycleState={platformLifecycleState}
+            projectTitle={initialValues?.caption ?? "this project"}
           />
         </TabsContent>
 
@@ -202,6 +164,8 @@ export function ProjectEditor({
           <MediaSection
             {...sectionProps}
             heroImageUrl={heroImageUrl}
+            writeSource={writeSource}
+            portfolioId={portfolioId}
             onSelectHero={({ id, publicUrl }) => {
               setValue("img", publicUrl, { shouldValidate: true, shouldDirty: true });
               setValue("heroMediaId", id, { shouldDirty: true });
@@ -223,13 +187,18 @@ export function ProjectEditor({
         </TabsContent>
 
         <TabsContent value="metrics">
-          <MetricEditor portfolioId={portfolioId} initialMetrics={initialMetrics} />
+          <MetricEditor
+            portfolioId={portfolioId}
+            initialMetrics={initialMetrics}
+            disableReorder={disableChildReorder}
+          />
         </TabsContent>
 
         <TabsContent value="evolution">
           <ProjectEvolutionEditor
             portfolioId={portfolioId}
             initialVersions={initialVersions}
+            disableReorder={disableChildReorder}
           />
         </TabsContent>
 
@@ -241,6 +210,8 @@ export function ProjectEditor({
           <LinksSeoSection
             {...sectionProps}
             ogImageUrl={ogImageUrl}
+            writeSource={writeSource}
+            portfolioId={portfolioId}
             onSelectOg={({ id, publicUrl }) => {
               setValue("ogMediaId", id, { shouldDirty: true });
               setOgImageUrl(publicUrl);

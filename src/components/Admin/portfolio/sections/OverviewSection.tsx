@@ -3,14 +3,24 @@ import { FormSection } from "@/components/Admin/shared/FormSection";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  shouldUsePlatformLifecycleActions,
+  type PlatformLifecycleAdminState,
+} from "@/lib/project-write/platform-lifecycle-policy";
+import {
   LIFECYCLE_STATUSES,
   PUBLISH_STATUSES,
 } from "@/lib/types/portfolio";
+
+import { LifecycleControls } from "../LifecycleControls";
 
 import type { ProjectEditorSectionProps } from "./types";
 
 interface OverviewSectionProps extends ProjectEditorSectionProps {
   slugReadOnly?: boolean;
+  writeSource?: "database" | "platform-api";
+  portfolioId?: string;
+  platformLifecycleState?: PlatformLifecycleAdminState;
+  projectTitle?: string;
 }
 
 const selectClassName =
@@ -21,7 +31,14 @@ export function OverviewSection({
   errors,
   isPending,
   slugReadOnly = false,
+  writeSource = "database",
+  portfolioId,
+  platformLifecycleState,
+  projectTitle,
 }: OverviewSectionProps) {
+  const usePlatformLifecycle =
+    shouldUsePlatformLifecycleActions(writeSource) &&
+    Boolean(platformLifecycleState && portfolioId);
   return (
     <FormSection
       title="Overview"
@@ -58,35 +75,47 @@ export function OverviewSection({
       </FormField>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormField label="Lifecycle status" error={errors.lifecycleStatus?.message}>
-          <select
-            id="lifecycleStatus"
-            {...register("lifecycleStatus")}
-            disabled={isPending}
-            className={selectClassName}
-          >
-            {LIFECYCLE_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-        </FormField>
+        {usePlatformLifecycle && platformLifecycleState && portfolioId ? (
+          <div className="sm:col-span-2">
+            <LifecycleControls
+              portfolioId={portfolioId}
+              lifecycleState={platformLifecycleState}
+              projectTitle={projectTitle ?? "this project"}
+            />
+          </div>
+        ) : (
+          <>
+            <FormField label="Lifecycle status" error={errors.lifecycleStatus?.message}>
+              <select
+                id="lifecycleStatus"
+                {...register("lifecycleStatus")}
+                disabled={isPending}
+                className={selectClassName}
+              >
+                {LIFECYCLE_STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </FormField>
 
-        <FormField label="Publish status" error={errors.publishStatus?.message}>
-          <select
-            id="publishStatus"
-            {...register("publishStatus")}
-            disabled={isPending}
-            className={selectClassName}
-          >
-            {PUBLISH_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-        </FormField>
+            <FormField label="Publish status" error={errors.publishStatus?.message}>
+              <select
+                id="publishStatus"
+                {...register("publishStatus")}
+                disabled={isPending}
+                className={selectClassName}
+              >
+                {PUBLISH_STATUSES.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+          </>
+        )}
       </div>
 
       <FormField

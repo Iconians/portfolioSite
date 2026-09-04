@@ -2,6 +2,14 @@ import { mapPortfolioItemToEditorValues } from "@/lib/portfolio/project-editor";
 import { mapPlatformApiDetail } from "@/lib/project-read/platform-api-mapper";
 import { rewritePublicAssetUrlIfConfigured } from "@/lib/storage/public-asset-url";
 
+import {
+  buildPlatformLifecycleAdminState,
+  type PlatformLifecycleAdminState,
+} from "./platform-lifecycle-policy";
+import { mapPlatformAdminMediaToEditorFields } from "./platform-media-mapper";
+import { mapPlatformAdminMetricsToPortfolio } from "./platform-metric-mapper";
+import { mapPlatformAdminMilestonesToProjectVersions } from "./platform-milestone-mapper";
+
 import type {
   PlatformApiAdminCaseStudyDetail,
   PlatformApiAdminMediaListItem,
@@ -34,6 +42,8 @@ export interface AdminProjectEditorLoadResult {
   initialVersions: ProjectVersion[];
   /** Present in platform-api mode; documents mutation-only local IDs. */
   mutationCompat?: PortfolioMutationCompat;
+  /** Authoritative Platform lifecycle state for M5 controls. */
+  platformLifecycleState?: PlatformLifecycleAdminState;
 }
 
 export interface AdminProjectPreviewLoadResult {
@@ -129,25 +139,21 @@ export function mapPlatformAdminDetailToEditorLoad(input: {
     })),
   };
 
-  const initialMetrics = mapped.metrics.map((metric) => ({
-    ...metric,
-    portfolioId: input.portfolioLocalId,
-  }));
-  const initialVersions = mapped.versions.map((version) => ({
-    ...version,
-    portfolioId: input.portfolioLocalId,
-  }));
+  const initialMetrics = mapPlatformAdminMetricsToPortfolio(
+    input.detail.metrics,
+    input.portfolioLocalId
+  );
+  const initialVersions = mapPlatformAdminMilestonesToProjectVersions(
+    input.detail.milestones,
+    input.portfolioLocalId
+  );
 
   const initialValues = mapPortfolioItemToEditorValues(project);
-  initialValues.img = rewritePublicAssetUrlIfConfigured(initialValues.img);
-  if (input.mutationCompat) {
-    initialValues.heroMediaId = input.mutationCompat.heroMediaId;
-    initialValues.ogMediaId = input.mutationCompat.ogMediaId;
-    initialValues.gallery = input.mutationCompat.gallery;
-  } else {
-    initialValues.heroMediaId = null;
-    initialValues.ogMediaId = null;
-  }
+  const mediaFields = mapPlatformAdminMediaToEditorFields(input.media);
+  initialValues.img = mediaFields.img || rewritePublicAssetUrlIfConfigured(initialValues.img);
+  initialValues.heroMediaId = mediaFields.heroMediaId;
+  initialValues.ogMediaId = mediaFields.ogMediaId;
+  initialValues.gallery = mediaFields.gallery;
 
   return {
     portfolioLocalId: input.portfolioLocalId,
@@ -158,7 +164,11 @@ export function mapPlatformAdminDetailToEditorLoad(input: {
     initialOgImageUrl: resolveOgImageUrl(input.media),
     initialMetrics,
     initialVersions,
-    ...(input.mutationCompat && { mutationCompat: input.mutationCompat }),
+    platformLifecycleState: buildPlatformLifecycleAdminState({
+      publishStatus: input.detail.publish_status,
+      lifecycleStatus: input.detail.lifecycle_status,
+      archivedAt: input.detail.archived_at ?? null,
+    }),
   };
 }
 

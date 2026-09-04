@@ -23,11 +23,13 @@ import type { ProjectVersion } from "@/lib/types/portfolio";
 interface ProjectEvolutionEditorProps {
   portfolioId?: string;
   initialVersions?: ProjectVersion[];
+  disableReorder?: boolean;
 }
 
 export function ProjectEvolutionEditor({
   portfolioId,
   initialVersions = [],
+  disableReorder = false,
 }: ProjectEvolutionEditorProps) {
   const [versions, setVersions] = useState(initialVersions);
   const [year, setYear] = useState(String(new Date().getFullYear()));
@@ -116,7 +118,9 @@ export function ProjectEvolutionEditor({
             {versions.map((version, index) => (
               <ProjectEvolutionRow
                 key={version.id}
+                portfolioId={projectId}
                 version={version}
+                disableReorder={disableReorder}
                 isFirst={index === 0}
                 isLast={index === versions.length - 1}
                 onUpdated={(updated) =>

@@ -14,9 +14,11 @@ import type { ProjectVersion } from "@/lib/types/portfolio";
 
 
 interface ProjectEvolutionRowProps {
+  portfolioId: string;
   version: ProjectVersion;
   isFirst: boolean;
   isLast: boolean;
+  disableReorder?: boolean;
   onUpdated: (version: ProjectVersion) => void;
   onDelete: (versionId: string) => Promise<void>;
   onReorder: (
@@ -26,9 +28,11 @@ interface ProjectEvolutionRowProps {
 }
 
 export function ProjectEvolutionRow({
+  portfolioId,
   version,
   isFirst,
   isLast,
+  disableReorder = false,
   onUpdated,
   onDelete,
   onReorder,
@@ -53,7 +57,7 @@ export function ProjectEvolutionRow({
         version: versionLabel,
         title,
         description: description.trim() ? description : undefined,
-      });
+      }, portfolioId);
 
       if (result.success) {
         onUpdated(result.data);
@@ -121,22 +125,26 @@ export function ProjectEvolutionRow({
           <Button type="button" disabled={isPending} onClick={handleSave}>
             {isPending ? "Saving..." : "Save version"}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={isPending || isFirst}
-            onClick={() => handleReorder("up")}
-          >
-            Move up
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={isPending || isLast}
-            onClick={() => handleReorder("down")}
-          >
-            Move down
-          </Button>
+          {!disableReorder ? (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isPending || isFirst}
+                onClick={() => handleReorder("up")}
+              >
+                Move up
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isPending || isLast}
+                onClick={() => handleReorder("down")}
+              >
+                Move down
+              </Button>
+            </>
+          ) : null}
           <Button
             type="button"
             variant="destructive"

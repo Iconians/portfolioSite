@@ -26,6 +26,42 @@ async function expectRejects(
 }
 
 describe("resolvePlatformCaseStudyIdBySlug", () => {
+  test("resolves archived Platform case study from later admin list page", async () => {
+    const requestedPages: number[] = [];
+    const id = await resolvePlatformCaseStudyIdBySlug(
+      {
+        listCaseStudies: async (options) => {
+          requestedPages.push(options?.page ?? 1);
+          if ((options?.page ?? 1) === 1) {
+            return {
+              items: [{ id: "other-project", slug: "other-project" }],
+              total: 2,
+              page: 1,
+              limit: 1,
+            };
+          }
+          return {
+            items: [
+              {
+                id: PLATFORM_UUID,
+                slug: "archived-project",
+                lifecycle_status: "archived",
+                archived_at: "2026-01-02T00:00:00Z",
+              },
+            ],
+            total: 2,
+            page: 2,
+            limit: 1,
+          };
+        },
+      },
+      "archived-project"
+    );
+
+    expect(id).toBe(PLATFORM_UUID);
+    expect(requestedPages).toEqual([1, 2]);
+  });
+
   test("resolves Platform UUID from slug via admin list", async () => {
     const id = await resolvePlatformCaseStudyIdBySlug(
       createClient([{ id: PLATFORM_UUID, slug: "devlaunch-crm" }]),

@@ -1,3 +1,5 @@
+import { resetCoherentProjectSourceConfigurationForTests } from "@/lib/project-source/coherence";
+
 import {
   assertPlatformApiWriteConfigured,
   getProjectWriteSource,
@@ -44,4 +46,5 @@ export function getProjectWriteProvider(): ProjectWriteProvider {
 
 export function resetProjectWriteProviderForTests(): void {
   cachedProvider = null;
+  resetCoherentProjectSourceConfigurationForTests();
 }

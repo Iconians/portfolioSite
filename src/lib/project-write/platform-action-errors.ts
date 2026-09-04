@@ -1,3 +1,5 @@
+import { ProjectSourceConfigurationError } from "@/lib/project-source/errors";
+
 import { AdminProjectLoadError } from "./admin-project-load-error";
 import {
   PlatformApiAdminMalformedResponseError,
@@ -5,9 +7,17 @@ import {
   PlatformApiAdminResponseError,
   ProjectWriteConfigurationError,
 } from "./errors";
+import { PlatformChildReorderUnavailableError } from "./platform-child-reorder-policy";
+import { PlatformGalleryReorderUnavailableError } from "./platform-media-reorder-policy";
 import { PlatformSlugImmutableError } from "./platform-update-errors";
 
 export function toPlatformProjectWriteUserMessage(error: unknown): string {
+  if (error instanceof PlatformChildReorderUnavailableError) {
+    return error.message;
+  }
+  if (error instanceof PlatformGalleryReorderUnavailableError) {
+    return error.message;
+  }
   if (error instanceof PlatformSlugImmutableError) {
     return error.message;
   }
@@ -15,6 +25,9 @@ export function toPlatformProjectWriteUserMessage(error: unknown): string {
     return error.message;
   }
   if (error instanceof ProjectWriteConfigurationError) {
+    return error.message;
+  }
+  if (error instanceof ProjectSourceConfigurationError) {
     return error.message;
   }
   if (error instanceof PlatformApiAdminResponseError) {

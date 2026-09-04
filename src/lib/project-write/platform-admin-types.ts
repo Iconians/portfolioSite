@@ -1,3 +1,5 @@
+import type { PlatformApiAdminMetric } from "./platform-metric-types";
+import type { PlatformApiAdminMilestone } from "./platform-milestone-types";
 import type {
   PlatformApiCaseStudyDetail,
   PlatformApiListItem,
@@ -17,9 +19,14 @@ export interface PlatformApiAdminCaseStudyListResponse {
 }
 
 /** Platform admin case-study detail (authoritative shared-domain read). */
-export interface PlatformApiAdminCaseStudyDetail extends PlatformApiCaseStudyDetail {
+export interface PlatformApiAdminCaseStudyDetail
+  extends Omit<PlatformApiCaseStudyDetail, "metrics" | "milestones"> {
   id: string;
   publish_status?: string | null;
+  archived_at?: string | null;
+  published_at?: string | null;
+  metrics?: PlatformApiAdminMetric[];
+  milestones?: PlatformApiAdminMilestone[];
 }
 
 export interface PlatformApiAdminMediaListItem {
