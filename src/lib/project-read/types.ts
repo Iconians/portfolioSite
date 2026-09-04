@@ -17,4 +17,6 @@ export interface ProjectReadProvider {
   getPublishedPortfolioItems(): Promise<PortfolioItem[]>;
   getPublishedPortfolioItemBySlug(slug: string): Promise<PortfolioItem | null>;
   getPublishedProjectDetail(slug: string): Promise<PublishedProjectDetail | null>;
+  /** Clears in-process Platform read cache for one project (platform-api provider only). */
+  invalidateProject?(slug: string): void;
 }

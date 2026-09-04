@@ -15,6 +15,8 @@ import {
 } from "@/lib/data/portfolio";
 import { buildProjectPageMetadata } from "@/lib/portfolio/public-project";
 import { getProjectReadProvider } from "@/lib/project-read";
+import { loadAdminProjectPreviewBySlug } from "@/lib/project-write/admin-project-load";
+import { getProjectWriteSource } from "@/lib/project-write/config";
 
 import type { Metadata } from "next";
 
@@ -64,6 +66,15 @@ async function loadProjectForPage(slug: string, previewRequested: boolean) {
     }
 
     throw error;
+  }
+
+  const platformPreview = await loadAdminProjectPreviewBySlug(slug);
+  if (platformPreview) {
+    return { ...platformPreview, isPreview: true };
+  }
+
+  if (getProjectWriteSource() === "platform-api") {
+    return null;
   }
 
   const draft = await getPortfolioItemBySlug(slug);

@@ -1,3 +1,5 @@
+import { getCoherentProjectSourceConfiguration } from "@/lib/project-source/coherence";
+
 export type ProjectReadSource = "database" | "platform-api";
 
 /**
@@ -42,7 +44,7 @@ export function resolveProjectReadSource(options?: {
 }
 
 export function getProjectReadSource(): ProjectReadSource {
-  return resolveProjectReadSource();
+  return getCoherentProjectSourceConfiguration().readSource;
 }
 
 export function assertPlatformApiReadConfigured(): void {

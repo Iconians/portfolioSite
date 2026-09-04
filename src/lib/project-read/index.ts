@@ -1,3 +1,5 @@
+import { resetCoherentProjectSourceConfigurationForTests } from "@/lib/project-source/coherence";
+
 import {
   assertPlatformApiReadConfigured,
   getProjectReadSource,
@@ -34,6 +36,15 @@ export function getProjectReadProvider(): ProjectReadProvider {
 
 export function resetProjectReadProviderForTests(): void {
   cachedProvider = null;
+  resetCoherentProjectSourceConfigurationForTests();
+}
+
+export function invalidateProjectReadProviderCache(slug: string): void {
+  if (cachedProvider?.source !== "platform-api") {
+    return;
+  }
+
+  cachedProvider.invalidateProject?.(slug);
 }
 
 export async function getPublishedPortfolioItems() {

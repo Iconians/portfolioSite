@@ -10,6 +10,13 @@ import {
 } from "@/lib/data/portfolio";
 import { logAdminAction } from "@/lib/logger";
 import { requireAdmin } from "@/lib/permissions";
+import { ProjectSourceConfigurationError } from "@/lib/project-source/errors";
+import { getProjectWriteSource } from "@/lib/project-write/config";
+import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
+import { PLATFORM_PROJECT_CREATE_UNAVAILABLE_MESSAGE } from "@/lib/project-write/platform-create-policy";
+import { PLATFORM_HARD_DELETE_UNAVAILABLE_MESSAGE } from "@/lib/project-write/platform-lifecycle-policy";
+import { updatePortfolioProjectViaPlatform } from "@/lib/project-write/platform-project-update";
+import { revalidateAfterPlatformProjectWrite } from "@/lib/project-write/public-project-cache";
 
 import type { ActionResult } from "@/lib/types/actions";
 import type {
@@ -19,6 +26,9 @@ import type {
 } from "@/lib/types/portfolio";
 
 function toUserMessage(error: unknown): string {
+  if (error instanceof ProjectSourceConfigurationError) {
+    return error.message;
+  }
   if (error instanceof z.ZodError) {
     return error.issues.map((issue) => issue.message).join(", ");
   }
@@ -42,6 +52,14 @@ export async function createPortfolioAction(
 ): Promise<ActionResult<Awaited<ReturnType<typeof createPortfolioItem>>>> {
   try {
     const user = await requireAdmin();
+
+    if (getProjectWriteSource() === "platform-api") {
+      return {
+        success: false,
+        error: PLATFORM_PROJECT_CREATE_UNAVAILABLE_MESSAGE,
+      };
+    }
+
     const item = await createPortfolioItem(data, extended);
     await logAdminAction(user.id, "create", "portfolio", item.id, {
       caption: item.caption,
@@ -60,6 +78,23 @@ export async function updatePortfolioAction(
 ): Promise<ActionResult<Awaited<ReturnType<typeof updatePortfolioItem>>>> {
   try {
     const user = await requireAdmin();
+
+    if (getProjectWriteSource() === "platform-api") {
+      const item = await updatePortfolioProjectViaPlatform(
+        id,
+        data as CreatePortfolioInput,
+        extended ?? {}
+      );
+      await logAdminAction(user.id, "update", "portfolio", id, {
+        caption: item.caption,
+        writeSource: "platform-api",
+      }).catch(() => {});
+      if (item.slug) {
+        revalidateAfterPlatformProjectWrite(id, item.slug, "content");
+      }
+      return { success: true, data: item };
+    }
+
     const item = await updatePortfolioItem(id, data, extended);
     await logAdminAction(user.id, "update", "portfolio", item.id, {
       caption: item.caption,
@@ -67,6 +102,9 @@ export async function updatePortfolioAction(
     revalidatePath("/");
     return { success: true, data: item };
   } catch (error) {
+    if (getProjectWriteSource() === "platform-api") {
+      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
+    }
     return { success: false, error: toUserMessage(error) };
   }
 }
@@ -76,6 +114,14 @@ export async function deletePortfolioAction(
 ): Promise<ActionResult<void>> {
   try {
     const user = await requireAdmin();
+
+    if (getProjectWriteSource() === "platform-api") {
+      return {
+        success: false,
+        error: PLATFORM_HARD_DELETE_UNAVAILABLE_MESSAGE,
+      };
+    }
+
     await deletePortfolioItem(id);
     await logAdminAction(user.id, "delete", "portfolio", id).catch(() => {});
     revalidatePath("/");

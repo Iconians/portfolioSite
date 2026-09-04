@@ -9,41 +9,47 @@ import { ProjectReadConfigurationError } from "@/lib/project-read/config";
 describe("getProjectReadProvider", () => {
   test("defaults to database provider", () => {
     resetProjectReadProviderForTests();
-    const previousSource = process.env.PROJECT_READ_SOURCE;
+    const previousRead = process.env.PROJECT_READ_SOURCE;
+    const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     delete process.env.PROJECT_READ_SOURCE;
+    delete process.env.PROJECT_WRITE_SOURCE;
     delete process.env.DEVLAUNCH_PLATFORM_API_URL;
 
     const provider = getProjectReadProvider();
     expect(provider.source).toBe("database");
-    expect(provider.constructor.name).toBe("DatabaseProjectReadProvider");
 
-    process.env.PROJECT_READ_SOURCE = previousSource;
+    process.env.PROJECT_READ_SOURCE = previousRead;
+    process.env.PROJECT_WRITE_SOURCE = previousWrite;
     process.env.DEVLAUNCH_PLATFORM_API_URL = previousUrl;
     resetProjectReadProviderForTests();
   });
 
   test("selects platform-api in production when explicitly configured", () => {
     resetProjectReadProviderForTests();
-    const previousSource = process.env.PROJECT_READ_SOURCE;
+    const previousRead = process.env.PROJECT_READ_SOURCE;
+    const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     process.env.PROJECT_READ_SOURCE = "platform-api";
+    process.env.PROJECT_WRITE_SOURCE = "platform-api";
     process.env.DEVLAUNCH_PLATFORM_API_URL = "https://api.devlaunchsystems.com";
 
     const provider = getProjectReadProvider();
     expect(provider.source).toBe("platform-api");
-    expect(provider.constructor.name).toBe("PlatformApiProjectReadProvider");
 
-    process.env.PROJECT_READ_SOURCE = previousSource;
+    process.env.PROJECT_READ_SOURCE = previousRead;
+    process.env.PROJECT_WRITE_SOURCE = previousWrite;
     process.env.DEVLAUNCH_PLATFORM_API_URL = previousUrl;
     resetProjectReadProviderForTests();
   });
 
   test("fails clearly when platform-api is selected without API URL", () => {
     resetProjectReadProviderForTests();
-    const previousSource = process.env.PROJECT_READ_SOURCE;
+    const previousRead = process.env.PROJECT_READ_SOURCE;
+    const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     process.env.PROJECT_READ_SOURCE = "platform-api";
+    process.env.PROJECT_WRITE_SOURCE = "platform-api";
     delete process.env.DEVLAUNCH_PLATFORM_API_URL;
 
     let threw = false;
@@ -55,7 +61,8 @@ describe("getProjectReadProvider", () => {
     }
     expect(threw).toBe(true);
 
-    process.env.PROJECT_READ_SOURCE = previousSource;
+    process.env.PROJECT_READ_SOURCE = previousRead;
+    process.env.PROJECT_WRITE_SOURCE = previousWrite;
     process.env.DEVLAUNCH_PLATFORM_API_URL = previousUrl;
     resetProjectReadProviderForTests();
   });

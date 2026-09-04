@@ -8,6 +8,7 @@ import {
   getProjectReadSource,
   resolveProjectReadSource,
 } from "@/lib/project-read/config";
+import { resetCoherentProjectSourceConfigurationForTests } from "@/lib/project-source/coherence";
 
 describe("resolveProjectReadSource", () => {
   test("defaults to database when unset", () => {
@@ -64,42 +65,57 @@ describe("resolveProjectReadSource", () => {
 
 describe("assertPlatformApiReadConfigured", () => {
   test("allows database without API URL", () => {
-    const previousSource = process.env.PROJECT_READ_SOURCE;
+    const previousRead = process.env.PROJECT_READ_SOURCE;
+    const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     process.env.PROJECT_READ_SOURCE = "database";
+    process.env.PROJECT_WRITE_SOURCE = "database";
     delete process.env.DEVLAUNCH_PLATFORM_API_URL;
+    resetCoherentProjectSourceConfigurationForTests();
 
     expect(() => assertPlatformApiReadConfigured()).not.toThrow();
 
-    process.env.PROJECT_READ_SOURCE = previousSource;
+    process.env.PROJECT_READ_SOURCE = previousRead;
+    process.env.PROJECT_WRITE_SOURCE = previousWrite;
     process.env.DEVLAUNCH_PLATFORM_API_URL = previousUrl;
+    resetCoherentProjectSourceConfigurationForTests();
   });
 
   test("requires API URL when platform-api is selected", () => {
-    const previousSource = process.env.PROJECT_READ_SOURCE;
+    const previousRead = process.env.PROJECT_READ_SOURCE;
+    const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     process.env.PROJECT_READ_SOURCE = "platform-api";
+    process.env.PROJECT_WRITE_SOURCE = "platform-api";
     delete process.env.DEVLAUNCH_PLATFORM_API_URL;
+    resetCoherentProjectSourceConfigurationForTests();
 
     expect(() => assertPlatformApiReadConfigured()).toThrow(
       /requires DEVLAUNCH_PLATFORM_API_URL/
     );
 
-    process.env.PROJECT_READ_SOURCE = previousSource;
+    process.env.PROJECT_READ_SOURCE = previousRead;
+    process.env.PROJECT_WRITE_SOURCE = previousWrite;
     process.env.DEVLAUNCH_PLATFORM_API_URL = previousUrl;
+    resetCoherentProjectSourceConfigurationForTests();
   });
 
   test("accepts valid platform-api configuration", () => {
-    const previousSource = process.env.PROJECT_READ_SOURCE;
+    const previousRead = process.env.PROJECT_READ_SOURCE;
+    const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     process.env.PROJECT_READ_SOURCE = "platform-api";
+    process.env.PROJECT_WRITE_SOURCE = "platform-api";
     process.env.DEVLAUNCH_PLATFORM_API_URL = "https://api.devlaunchsystems.com";
+    resetCoherentProjectSourceConfigurationForTests();
 
     expect(() => assertPlatformApiReadConfigured()).not.toThrow();
     expect(getProjectReadSource()).toBe("platform-api");
 
-    process.env.PROJECT_READ_SOURCE = previousSource;
+    process.env.PROJECT_READ_SOURCE = previousRead;
+    process.env.PROJECT_WRITE_SOURCE = previousWrite;
     process.env.DEVLAUNCH_PLATFORM_API_URL = previousUrl;
+    resetCoherentProjectSourceConfigurationForTests();
   });
 });
 

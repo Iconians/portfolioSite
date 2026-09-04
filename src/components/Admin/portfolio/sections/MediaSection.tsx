@@ -7,6 +7,8 @@ import type { ProjectEditorSectionProps } from "./types";
 
 interface MediaSectionProps extends ProjectEditorSectionProps {
   heroImageUrl: string;
+  writeSource?: "database" | "platform-api";
+  portfolioId?: string;
   onSelectHero: (asset: { id: string; publicUrl: string }) => void;
 }
 
@@ -15,11 +17,14 @@ export function MediaSection({
   errors,
   isPending,
   heroImageUrl,
+  writeSource = "database",
+  portfolioId,
   onSelectHero,
   setValue,
   watch,
 }: MediaSectionProps) {
   const gallery = watch("gallery");
+  const heroMediaId = watch("heroMediaId");
 
   return (
     <FormSection
@@ -46,6 +51,13 @@ export function MediaSection({
             </p>
           )}
           <MediaPicker
+            writeSource={writeSource}
+            portfolioId={portfolioId}
+            uploadRole="hero"
+            currentMediaId={heroMediaId}
+            triggerLabel={
+              writeSource === "platform-api" ? "Upload hero replacement" : undefined
+            }
             onSelect={(asset) =>
               onSelectHero({ id: asset.id, publicUrl: asset.publicUrl })
             }
@@ -57,6 +69,8 @@ export function MediaSection({
       <GalleryEditor
         items={gallery}
         disabled={isPending}
+        writeSource={writeSource}
+        portfolioId={portfolioId}
         onChange={(items) =>
           setValue("gallery", items, { shouldDirty: true, shouldValidate: true })
         }

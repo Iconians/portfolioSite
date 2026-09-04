@@ -8,6 +8,8 @@ import type { ProjectEditorSectionProps } from "./types";
 
 interface LinksSeoSectionProps extends ProjectEditorSectionProps {
   ogImageUrl: string;
+  writeSource?: "database" | "platform-api";
+  portfolioId?: string;
   onSelectOg: (asset: { id: string; publicUrl: string }) => void;
 }
 
@@ -16,8 +18,12 @@ export function LinksSeoSection({
   errors,
   isPending,
   ogImageUrl,
+  writeSource = "database",
+  portfolioId,
   onSelectOg,
+  watch,
 }: LinksSeoSectionProps) {
+  const ogMediaId = watch?.("ogMediaId") ?? null;
   return (
     <FormSection
       title="Links & SEO"
@@ -80,7 +86,13 @@ export function LinksSeoSection({
             </p>
           )}
           <MediaPicker
-            triggerLabel="Choose OG image"
+            triggerLabel={
+              writeSource === "platform-api" ? "Upload OG replacement" : "Choose OG image"
+            }
+            writeSource={writeSource}
+            portfolioId={portfolioId}
+            uploadRole="og"
+            currentMediaId={ogMediaId}
             onSelect={(asset) =>
               onSelectOg({ id: asset.id, publicUrl: asset.publicUrl })
             }

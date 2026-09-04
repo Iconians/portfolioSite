@@ -4,13 +4,15 @@ import { PageHeader } from "@/components/Admin/layout/PageHeader";
 import { PortfolioList } from "@/components/Admin/PortfolioList";
 import { Button } from "@/components/ui/button";
 import { getAllPortfolioItems } from "@/lib/data/portfolio";
+import { rewritePortfolioItemDisplayMedia } from "@/lib/portfolio/display-media-url";
+import { getProjectWriteSource } from "@/lib/project-write/config";
 
 export default async function PortfolioPage() {
   let portfolio: Awaited<ReturnType<typeof getAllPortfolioItems>> = [];
   let dbError: string | null = null;
 
   try {
-    portfolio = await getAllPortfolioItems();
+    portfolio = (await getAllPortfolioItems()).map(rewritePortfolioItemDisplayMedia);
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     if (msg.includes("DATABASE_URL") || msg.includes("Can't reach database")) {
@@ -33,13 +35,19 @@ export default async function PortfolioPage() {
         title="Portfolio"
         description="Manage projects and engineering case studies"
         actions={
-          <Link href="/admin/portfolio/new">
-            <Button>Add Project</Button>
-          </Link>
+          getProjectWriteSource() === "platform-api" ? undefined : (
+            <Link href="/admin/portfolio/new">
+              <Button>Add Project</Button>
+            </Link>
+          )
         }
       />
 
-      <PortfolioList portfolio={portfolio} />
+      <PortfolioList
+        portfolio={portfolio}
+        disableDelete={getProjectWriteSource() === "platform-api"}
+        enablePlatformArchive={getProjectWriteSource() === "platform-api"}
+      />
     </div>
   );
 }
