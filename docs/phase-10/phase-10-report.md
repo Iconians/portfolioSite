@@ -121,7 +121,7 @@ Platform API engineering detail → existing `PortfolioItem`, `PortfolioMetric`,
 
 ## 7. Caching
 
-- API client uses `cache: "no-store"` on fetch (Next.js server fetch)
+- API client uses `next: { revalidate: 3600 }` on fetch (aligned with page ISR)
 - Respects API `Cache-Control` and `ETag` headers in client result metadata
 - In-memory per-provider ETag cache for list/detail during a server request lifecycle
 - No Redis or competing application cache added
@@ -343,3 +343,47 @@ Repository-side preparation is complete:
 - Deployment via GitHub → Vercel only; agent does not deploy
 
 See `docs/phase-10/production-read-cutover-readiness.md` §0 for operator procedure.
+
+---
+
+## 18. Production Build Cache Fix (2026-09-04)
+
+**Status:** **PRODUCTION READ CUTOVER — CODE READY / OPERATOR DEPLOYMENT PENDING**
+
+### Failure observed (Vercel production build)
+
+Prerender of `/` failed with `PlatformApiNetworkError`, masking:
+
+```
+DYNAMIC_SERVER_USAGE — Route / couldn't be rendered statically because it used
+revalidate: 0 fetch [Platform API]/api/v1/case-studies?...
+```
+
+### Root cause
+
+`PlatformApiReadClient.request()` used `cache: "no-store"`, which Next.js treats as
+`revalidate: 0` fetch. That opts the route out of static/ISR prerendering while
+homepage/project pages declare `revalidate = 3600`.
+
+The generic `catch` wrapped the framework `DynamicServerError` in
+`PlatformApiNetworkError`, obscuring the real signal in build logs.
+
+### Fix
+
+1. **`src/lib/project-read/config.ts`** — `PROJECT_READ_ISR_REVALIDATE_SECONDS = 3600` and
+   `getPlatformApiFetchCacheOptions()` shared by pages and API client
+2. **`platform-api-client.ts`** — `next: { revalidate: 3600 }` instead of `cache: "no-store"`;
+   `unstable_rethrow(error)` before wrapping network failures
+3. **`page.tsx` / `projects/[slug]/page.tsx`** — import shared revalidate constant
+
+### ETag implications
+
+In-memory ETags remain useful within a single server invocation (list + N detail fetches).
+Across ISR cache hits, Next.js Data Cache serves responses without hitting the API until
+revalidation. ETags still apply on cache miss/revalidate cycles. No redesign required.
+
+### Local validation
+
+Reproduced failure with `PROJECT_READ_SOURCE=platform-api` before fix; build passes after.
+
+**No deployment performed by agent.**

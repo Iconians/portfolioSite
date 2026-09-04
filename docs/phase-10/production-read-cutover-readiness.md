@@ -238,7 +238,7 @@ Admin, draft preview, `/api/portfolio`, and all writes bypass the provider by de
 | Revalidation | `export const revalidate = 3600` on homepage + project pages (ISR, 1 hour) |
 | Provider selection | Runtime env via Vercel dashboard (not `vercel.json`) |
 | Platform API ETags | In-memory per provider instance only; **not durable across Vercel serverless invocations** |
-| Fetch cache | `cache: "no-store"` on API client |
+| Fetch cache | `next: { revalidate: 3600 }` aligned with page ISR (`PROJECT_READ_ISR_REVALIDATE_SECONDS`) |
 | Stale DB content after cutover | Up to **3600s** until ISR revalidation unless on-demand revalidate or redeploy |
 
 ### Cutover operational steps (operator)

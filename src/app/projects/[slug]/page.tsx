@@ -18,6 +18,7 @@ import { getProjectReadProvider } from "@/lib/project-read";
 
 import type { Metadata } from "next";
 
+/** Must match PROJECT_READ_ISR_REVALIDATE_SECONDS in project-read/config. */
 export const revalidate = 3600;
 
 interface ProjectPageProps {
