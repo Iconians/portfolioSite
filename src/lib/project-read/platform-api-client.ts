@@ -1,5 +1,8 @@
+import { unstable_rethrow } from "next/navigation";
+
 import {
   getPlatformApiBaseUrl,
+  getPlatformApiFetchCacheOptions,
   getPlatformApiTimeoutMs,
 } from "./config";
 
@@ -108,9 +111,10 @@ export class PlatformApiReadClient {
         method: "GET",
         headers,
         signal: AbortSignal.timeout(this.timeoutMs),
-        cache: "no-store",
+        next: getPlatformApiFetchCacheOptions(),
       });
     } catch (error) {
+      unstable_rethrow(error);
       throw new PlatformApiNetworkError("Platform API request failed", {
         cause: error,
       });

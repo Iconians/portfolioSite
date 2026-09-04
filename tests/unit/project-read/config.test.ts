@@ -3,6 +3,7 @@ import { describe, expect, test } from "bun:test";
 import {
   assertPlatformApiReadConfigured,
   getPlatformApiBaseUrl,
+  getPlatformApiFetchCacheOptions,
   getPlatformApiTimeoutMs,
   getProjectReadSource,
   resolveProjectReadSource,
@@ -92,5 +93,9 @@ describe("platform API config helpers", () => {
 
   test("defaults timeout to 5 seconds", () => {
     expect(getPlatformApiTimeoutMs()).toBe(5000);
+  });
+
+  test("aligns Platform API fetch cache with ISR revalidate", () => {
+    expect(getPlatformApiFetchCacheOptions()).toEqual({ revalidate: 3600 });
   });
 });

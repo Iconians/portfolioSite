@@ -43,10 +43,12 @@ async function expectRejects(
 describe("PlatformApiReadClient", () => {
   test("requests engineering consumer projection", async () => {
     let requestedUrl = "";
+    let requestInit: RequestInit | undefined;
     const client = new PlatformApiReadClient({
       baseUrl: "http://127.0.0.1:8000",
-      fetchImpl: mockFetch(async (input) => {
+      fetchImpl: mockFetch(async (input, init) => {
         requestedUrl = String(input);
+        requestInit = init;
         return new Response(
           JSON.stringify({ items: [], total: 0, page: 1, limit: 50 }),
           {
@@ -64,6 +66,11 @@ describe("PlatformApiReadClient", () => {
     expect(requestedUrl).toContain("/api/v1/case-studies?");
     expect(requestedUrl).toContain("consumer=engineering_portfolio");
     expect(requestedUrl).toContain("audience=engineering");
+    expect(requestInit?.cache).not.toBe("no-store");
+    expect(
+      (requestInit as RequestInit & { next?: { revalidate?: number } }).next
+        ?.revalidate
+    ).toBe(3600);
     expect(result.status).toBe("ok");
     if (result.status === "ok") {
       expect(result.etag).toBe('W/"list-etag"');
@@ -124,6 +131,32 @@ describe("PlatformApiReadClient", () => {
     });
 
     await expectRejects(client.getCaseStudyBySlug("devlaunch-crm"), PlatformApiNetworkError);
+  });
+
+  test("rethrows Next.js dynamic rendering control-flow errors", async () => {
+    const client = new PlatformApiReadClient({
+      baseUrl: "http://127.0.0.1:8000",
+      fetchImpl: mockFetch(async () => {
+        const error = new Error("Dynamic server usage: test");
+        Object.assign(error, { digest: "DYNAMIC_SERVER_USAGE" });
+        throw error;
+      }),
+    });
+
+    let threw = false;
+    try {
+      await client.getCaseStudyBySlug("devlaunch-crm");
+    } catch (error) {
+      threw = true;
+      expect(error instanceof PlatformApiNetworkError).toBe(false);
+      expect(
+        typeof error === "object" &&
+          error !== null &&
+          "digest" in error &&
+          error.digest === "DYNAMIC_SERVER_USAGE"
+      ).toBe(true);
+    }
+    expect(threw).toBe(true);
   });
 
   test("rejects malformed JSON", async () => {

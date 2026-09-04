@@ -1,5 +1,11 @@
 export type ProjectReadSource = "database" | "platform-api";
 
+/**
+ * ISR interval for public project-read pages and Platform API fetch cache.
+ * Page segment exports must use the literal `3600` (Next.js static analysis).
+ */
+export const PROJECT_READ_ISR_REVALIDATE_SECONDS = 3600;
+
 const VALID_SOURCES = new Set<ProjectReadSource>(["database", "platform-api"]);
 
 export class ProjectReadConfigurationError extends Error {
@@ -78,4 +84,9 @@ export function getPlatformApiTimeoutMs(): number {
   const raw = process.env.DEVLAUNCH_PLATFORM_API_TIMEOUT_MS?.trim();
   const parsed = raw ? Number.parseInt(raw, 10) : Number.NaN;
   return Number.isFinite(parsed) && parsed > 0 ? parsed : 5000;
+}
+
+/** Next.js fetch cache options aligned with public page ISR. */
+export function getPlatformApiFetchCacheOptions(): { revalidate: number } {
+  return { revalidate: PROJECT_READ_ISR_REVALIDATE_SECONDS };
 }

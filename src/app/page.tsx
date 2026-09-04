@@ -16,6 +16,7 @@ import { getAllArticles } from "@/lib/data/articles";
 import { getAllReviews } from "@/lib/data/reviews";
 import { getPublishedPortfolioItems } from "@/lib/project-read";
 
+/** Must match PROJECT_READ_ISR_REVALIDATE_SECONDS in project-read/config. */
 export const revalidate = 3600;
 
 export default async function Home() {
