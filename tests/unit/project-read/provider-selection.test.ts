@@ -7,13 +7,13 @@ import {
 import { ProjectReadConfigurationError } from "@/lib/project-read/config";
 
 describe("getProjectReadProvider", () => {
-  test("defaults to database provider", () => {
+  test("defaults to database provider with frozen platform write source", () => {
     resetProjectReadProviderForTests();
     const previousRead = process.env.PROJECT_READ_SOURCE;
     const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     delete process.env.PROJECT_READ_SOURCE;
-    delete process.env.PROJECT_WRITE_SOURCE;
+    process.env.PROJECT_WRITE_SOURCE = "platform-api";
     delete process.env.DEVLAUNCH_PLATFORM_API_URL;
 
     const provider = getProjectReadProvider();

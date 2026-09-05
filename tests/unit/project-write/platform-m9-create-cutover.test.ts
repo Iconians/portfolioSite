@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 describe("P11-M9 create cutover gate", () => {
-  test("incoherent platform read blocks create before Prisma write", () => {
+  test("createPortfolioAction returns unavailable message without Prisma create", () => {
     const source = readFileSync(
       fileURLToPath(
         new URL("../../../src/lib/actions/portfolio.ts", import.meta.url)
@@ -12,12 +12,11 @@ describe("P11-M9 create cutover gate", () => {
     );
 
     expect(source.includes("ProjectSourceConfigurationError")).toBe(true);
-    expect(source.indexOf("getProjectWriteSource() === \"platform-api\"")).toBeLessThan(
-      source.indexOf("await createPortfolioItem")
-    );
+    expect(source.includes("createPortfolioItem")).toBe(false);
+    expect(source.includes("PLATFORM_PROJECT_CREATE_UNAVAILABLE_MESSAGE")).toBe(true);
   });
 
-  test("createPortfolioAction rejects platform-api before Prisma create", () => {
+  test("createPortfolioAction does not invoke Prisma create", () => {
     const source = readFileSync(
       fileURLToPath(
         new URL("../../../src/lib/actions/portfolio.ts", import.meta.url)
@@ -29,10 +28,7 @@ describe("P11-M9 create cutover gate", () => {
     const fnEnd = source.indexOf("export async function updatePortfolioAction");
     const createBlock = source.slice(fnStart, fnEnd);
 
-    const guardIndex = createBlock.indexOf('getProjectWriteSource() === "platform-api"');
-    const createIndex = createBlock.indexOf("await createPortfolioItem");
-    expect(guardIndex).toBeGreaterThan(-1);
-    expect(createIndex).toBeGreaterThan(guardIndex);
+    expect(createBlock.includes("await createPortfolioItem")).toBe(false);
     expect(createBlock.includes("PLATFORM_PROJECT_CREATE_UNAVAILABLE_MESSAGE")).toBe(true);
   });
 

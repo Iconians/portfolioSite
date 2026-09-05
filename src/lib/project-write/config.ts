@@ -11,8 +11,8 @@ export type ProjectWriteSource = "database" | "platform-api";
 const VALID_SOURCES = new Set<ProjectWriteSource>(["database", "platform-api"]);
 
 /**
- * Resolves the shared-project write provider from explicit configuration.
- * Missing or invalid values fail safe to database unless platform-api is explicitly selected.
+ * Resolves a raw PROJECT_WRITE_SOURCE string for diagnostics/tests.
+ * Runtime shared-content writes are frozen to platform-api (M17).
  */
 export function resolveProjectWriteSource(options?: {
   projectWriteSource?: string;

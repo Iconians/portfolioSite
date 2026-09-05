@@ -28,19 +28,20 @@ export function getProjectWriteProvider(): ProjectWriteProvider {
   }
 
   const source = getProjectWriteSource();
-  if (source === "platform-api") {
-    assertPlatformApiWriteConfigured();
-    const client = PlatformApiAdminClient.fromEnvironment();
-    if (!client) {
-      throw new ProjectWriteConfigurationError(
-        "PROJECT_WRITE_SOURCE=platform-api requires DEVLAUNCH_PLATFORM_API_URL and DEVLAUNCH_PLATFORM_API_TOKEN"
-      );
-    }
-    cachedProvider = { source: "platform-api", client };
-    return cachedProvider;
+  if (source !== "platform-api") {
+    throw new ProjectWriteConfigurationError(
+      'Legacy Prisma shared-content writes are frozen (M17). PROJECT_WRITE_SOURCE must be "platform-api".'
+    );
   }
 
-  cachedProvider = { source: "database" };
+  assertPlatformApiWriteConfigured();
+  const client = PlatformApiAdminClient.fromEnvironment();
+  if (!client) {
+    throw new ProjectWriteConfigurationError(
+      "PROJECT_WRITE_SOURCE=platform-api requires DEVLAUNCH_PLATFORM_API_URL and DEVLAUNCH_PLATFORM_API_TOKEN"
+    );
+  }
+  cachedProvider = { source: "platform-api", client };
   return cachedProvider;
 }
 

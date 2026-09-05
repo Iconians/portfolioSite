@@ -50,7 +50,7 @@ describe("platform gallery reorder policy", () => {
       ),
       "utf8"
     );
-    expect(source.includes("assertPlatformGalleryReorderAllowed(getProjectWriteSource())")).toBe(
+    expect(source.includes('assertPlatformGalleryReorderAllowed("platform-api")')).toBe(
       true
     );
     expect(source.includes("parsed.sortOrder !== undefined")).toBe(true);

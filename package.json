@@ -26,7 +26,7 @@
     "audit:production": "npm audit --omit=dev --audit-level=high",
     "audit:all": "npm audit --audit-level=high",
     "ci:install": "npm ci && npm run ci",
-    "ci:github": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ci NEXTAUTH_SECRET=ci-placeholder-secret-min-32-chars-long!! NEXTAUTH_URL=http://localhost:3000 npm run ci"
+    "ci:github": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ci AUTH_SECRET=ci-placeholder-secret-min-32-chars-long!! NEXTAUTH_SECRET=ci-placeholder-secret-min-32-chars-long!! NEXTAUTH_URL=http://localhost:3000 PROJECT_READ_SOURCE=database PROJECT_WRITE_SOURCE=platform-api npm run ci"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1114.0",

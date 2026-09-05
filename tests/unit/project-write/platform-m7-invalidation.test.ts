@@ -38,7 +38,7 @@ describe("platform M7 invalidation integration", () => {
     expect(invalidateIndex).toBeGreaterThan(registerCallIndex);
   });
 
-  test("platform project update removes broad homepage-only invalidation", () => {
+  test("platform project update uses targeted invalidation only", () => {
     const source = readFileSync(
       fileURLToPath(
         new URL("../../../src/lib/actions/portfolio.ts", import.meta.url)
@@ -50,14 +50,9 @@ describe("platform M7 invalidation integration", () => {
     const deleteStart = source.indexOf("export async function deletePortfolioAction");
     const updateBlock = source.slice(updateStart, deleteStart);
 
-    const platformBranchStart = updateBlock.indexOf(
-      'if (getProjectWriteSource() === "platform-api")'
-    );
-    const databaseFallbackStart = updateBlock.indexOf("const item = await updatePortfolioItem");
-    const platformBranch = updateBlock.slice(platformBranchStart, databaseFallbackStart);
-
-    expect(platformBranch.includes('revalidatePath("/")')).toBe(false);
-    expect(platformBranch.includes("revalidateAfterPlatformProjectWrite")).toBe(true);
+    expect(updateBlock.includes("updatePortfolioProjectViaPlatform")).toBe(true);
+    expect(updateBlock.includes('revalidatePath("/")')).toBe(false);
+    expect(updateBlock.includes("revalidateAfterPlatformProjectWrite")).toBe(true);
   });
 
   test("lifecycle actions use membership invalidation reason", () => {

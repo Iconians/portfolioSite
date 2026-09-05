@@ -1,7 +1,7 @@
 import type { ProjectWriteSource } from "./config";
 
 export const PLATFORM_PROJECT_CREATE_UNAVAILABLE_MESSAGE =
-  "Creating new projects is unavailable while PROJECT_WRITE_SOURCE=platform-api. Top-level Platform project create is not yet migrated. Create projects in database mode or add them through the Platform API operator workflow.";
+  "Creating new projects is unavailable while shared content writes are frozen to Platform API. Platform-native project create remains a separately authorized milestone.";
 
 export function isPlatformProjectCreateAllowed(
   writeSource: ProjectWriteSource
