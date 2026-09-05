@@ -5,11 +5,8 @@ import { z } from "zod";
 import { logAdminAction } from "@/lib/logger";
 import { validateMediaUpload } from "@/lib/media/validate-upload";
 import { requireAdmin } from "@/lib/permissions";
-import { getProjectWriteSource } from "@/lib/project-write/config";
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
-import {
-  assertPlatformGalleryReorderAllowed,
-} from "@/lib/project-write/platform-media-reorder-policy";
+import { assertPlatformGalleryReorderAllowed } from "@/lib/project-write/platform-media-reorder-policy";
 import {
   deleteProjectMediaViaPlatform,
   listProjectMediaViaPlatform,
@@ -74,12 +71,6 @@ export async function presignProjectMediaAction(
 ): Promise<ActionResult<PlatformMediaPresignClientPayload>> {
   try {
     await requireAdmin();
-    if (getProjectWriteSource() !== "platform-api") {
-      return {
-        success: false,
-        error: "Platform media presign is only available in platform-api write mode.",
-      };
-    }
 
     const parsed = PresignInputSchema.parse(input);
     validateMediaUpload({
@@ -98,13 +89,7 @@ export async function presignProjectMediaAction(
 
     return { success: true, data: presign };
   } catch (error) {
-    if (getProjectWriteSource() === "platform-api") {
-      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
-    }
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to presign media upload.",
-    };
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
 }
 
@@ -122,12 +107,6 @@ export async function registerProjectMediaAction(
 > {
   try {
     const user = await requireAdmin();
-    if (getProjectWriteSource() !== "platform-api") {
-      return {
-        success: false,
-        error: "Platform media registration is only available in platform-api write mode.",
-      };
-    }
 
     const parsed = RegisterInputSchema.parse(input);
     const registered = await registerProjectMediaViaPlatform(portfolioId, {
@@ -157,13 +136,7 @@ export async function registerProjectMediaAction(
       },
     };
   } catch (error) {
-    if (getProjectWriteSource() === "platform-api") {
-      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
-    }
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to register media.",
-    };
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
 }
 
@@ -183,23 +156,11 @@ export async function listProjectPlatformMediaAction(
 > {
   try {
     await requireAdmin();
-    if (getProjectWriteSource() !== "platform-api") {
-      return {
-        success: false,
-        error: "Platform project media list is only available in platform-api write mode.",
-      };
-    }
 
     const items = await listProjectMediaViaPlatform(portfolioId, options);
     return { success: true, data: items };
   } catch (error) {
-    if (getProjectWriteSource() === "platform-api") {
-      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
-    }
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to load project media.",
-    };
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
 }
 
@@ -210,16 +171,10 @@ export async function updateProjectPlatformMediaAction(
 ): Promise<ActionResult<{ id: string }>> {
   try {
     const user = await requireAdmin();
-    if (getProjectWriteSource() !== "platform-api") {
-      return {
-        success: false,
-        error: "Platform media update is only available in platform-api write mode.",
-      };
-    }
 
     const parsed = UpdateInputSchema.parse(input);
     if (parsed.sortOrder !== undefined) {
-      assertPlatformGalleryReorderAllowed(getProjectWriteSource());
+      assertPlatformGalleryReorderAllowed("platform-api");
     }
 
     const updated = await updateProjectMediaViaPlatform(portfolioId, mediaId, {
@@ -239,13 +194,7 @@ export async function updateProjectPlatformMediaAction(
     await revalidatePublicProjectMediaPaths(portfolioId);
     return { success: true, data: { id: updated.id } };
   } catch (error) {
-    if (getProjectWriteSource() === "platform-api") {
-      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
-    }
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to update media.",
-    };
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
 }
 
@@ -255,12 +204,6 @@ export async function deleteProjectPlatformMediaAction(
 ): Promise<ActionResult<void>> {
   try {
     const user = await requireAdmin();
-    if (getProjectWriteSource() !== "platform-api") {
-      return {
-        success: false,
-        error: "Platform media delete is only available in platform-api write mode.",
-      };
-    }
 
     await deleteProjectMediaViaPlatform(portfolioId, mediaId);
     await logAdminAction(user.id, "delete", "platform_media", mediaId, {
@@ -269,13 +212,7 @@ export async function deleteProjectPlatformMediaAction(
     await revalidatePublicProjectMediaPaths(portfolioId);
     return { success: true, data: undefined };
   } catch (error) {
-    if (getProjectWriteSource() === "platform-api") {
-      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
-    }
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to delete media metadata.",
-    };
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
 }
 
@@ -286,15 +223,9 @@ export async function reorderProjectGalleryMediaAction(
 ): Promise<ActionResult<void>> {
   try {
     await requireAdmin();
-    assertPlatformGalleryReorderAllowed(getProjectWriteSource());
+    assertPlatformGalleryReorderAllowed("platform-api");
     return { success: false, error: "Gallery reorder is not available." };
   } catch (error) {
-    if (getProjectWriteSource() === "platform-api") {
-      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
-    }
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to reorder gallery media.",
-    };
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
 }

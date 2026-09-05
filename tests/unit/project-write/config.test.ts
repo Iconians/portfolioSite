@@ -62,7 +62,7 @@ describe("resolveProjectWriteSource", () => {
 });
 
 describe("assertPlatformApiWriteConfigured", () => {
-  test("allows database without API URL or token", () => {
+  test("rejects legacy database write source at coherence boundary", () => {
     const previousRead = process.env.PROJECT_READ_SOURCE;
     const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
@@ -73,7 +73,9 @@ describe("assertPlatformApiWriteConfigured", () => {
     delete process.env.DEVLAUNCH_PLATFORM_API_TOKEN;
     resetCoherentProjectSourceConfigurationForTests();
 
-    expect(() => assertPlatformApiWriteConfigured()).not.toThrow();
+    expect(() => assertPlatformApiWriteConfigured()).toThrow(
+      /Legacy Prisma shared-content writes are frozen/
+    );
 
     process.env.PROJECT_READ_SOURCE = previousRead;
     process.env.PROJECT_WRITE_SOURCE = previousWrite;
@@ -148,8 +150,8 @@ describe("assertPlatformApiWriteConfigured", () => {
   });
 });
 
-describe("read/write source independence", () => {
-  test("unset read with explicit platform write is rejected as incoherent", () => {
+describe("read/write source independence (M17)", () => {
+  test("unset read with explicit platform write is allowed for read rollback default", () => {
     const snapshot = {
       PROJECT_READ_SOURCE: process.env.PROJECT_READ_SOURCE,
       PROJECT_WRITE_SOURCE: process.env.PROJECT_WRITE_SOURCE,
@@ -158,14 +160,14 @@ describe("read/write source independence", () => {
     process.env.PROJECT_WRITE_SOURCE = "platform-api";
     resetCoherentProjectSourceConfigurationForTests();
 
-    expect(() => getProjectWriteSource()).toThrow(/Incoherent project source configuration/);
+    expect(getProjectWriteSource()).toBe("platform-api");
 
     process.env.PROJECT_READ_SOURCE = snapshot.PROJECT_READ_SOURCE;
     process.env.PROJECT_WRITE_SOURCE = snapshot.PROJECT_WRITE_SOURCE;
     resetCoherentProjectSourceConfigurationForTests();
   });
 
-  test("explicit platform read with unset write is rejected as incoherent", async () => {
+  test("explicit platform read with unset write rejects frozen legacy default", async () => {
     const snapshot = {
       PROJECT_READ_SOURCE: process.env.PROJECT_READ_SOURCE,
       PROJECT_WRITE_SOURCE: process.env.PROJECT_WRITE_SOURCE,
@@ -175,7 +177,7 @@ describe("read/write source independence", () => {
     resetCoherentProjectSourceConfigurationForTests();
 
     const { getProjectReadSource } = await import("@/lib/project-read/config");
-    expect(() => getProjectReadSource()).toThrow(/Incoherent project source configuration/);
+    expect(() => getProjectReadSource()).toThrow(/Legacy Prisma shared-content writes are frozen/);
 
     process.env.PROJECT_READ_SOURCE = snapshot.PROJECT_READ_SOURCE;
     process.env.PROJECT_WRITE_SOURCE = snapshot.PROJECT_WRITE_SOURCE;

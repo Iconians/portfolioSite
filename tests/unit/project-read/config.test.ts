@@ -64,12 +64,12 @@ describe("resolveProjectReadSource", () => {
 });
 
 describe("assertPlatformApiReadConfigured", () => {
-  test("allows database without API URL", () => {
+  test("allows database read rollback without API URL when write is platform-api", () => {
     const previousRead = process.env.PROJECT_READ_SOURCE;
     const previousWrite = process.env.PROJECT_WRITE_SOURCE;
     const previousUrl = process.env.DEVLAUNCH_PLATFORM_API_URL;
     process.env.PROJECT_READ_SOURCE = "database";
-    process.env.PROJECT_WRITE_SOURCE = "database";
+    process.env.PROJECT_WRITE_SOURCE = "platform-api";
     delete process.env.DEVLAUNCH_PLATFORM_API_URL;
     resetCoherentProjectSourceConfigurationForTests();
 

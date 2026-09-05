@@ -2,16 +2,13 @@
 
 import { logAdminAction } from "@/lib/logger";
 import { requireAdmin } from "@/lib/permissions";
-import { getProjectWriteSource } from "@/lib/project-write/config";
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
 import {
   archivePortfolioProjectViaPlatform,
   publishPortfolioProjectViaPlatform,
   unpublishPortfolioProjectViaPlatform,
 } from "@/lib/project-write/platform-lifecycle-write";
-import {
-  revalidateAfterPlatformProjectWrite,
-} from "@/lib/project-write/public-project-cache";
+import { revalidateAfterPlatformProjectWrite } from "@/lib/project-write/public-project-cache";
 
 import type { ActionResult } from "@/lib/types/actions";
 import type { PortfolioItem } from "@/lib/types/portfolio";
@@ -29,13 +26,6 @@ export async function publishPortfolioProjectAction(
   try {
     const user = await requireAdmin();
 
-    if (getProjectWriteSource() !== "platform-api") {
-      return {
-        success: false,
-        error: "Publish is only available through Platform API lifecycle actions.",
-      };
-    }
-
     const item = await publishPortfolioProjectViaPlatform(portfolioId);
     await logAdminAction(user.id, "publish", "portfolio", portfolioId, {
       writeSource: "platform-api",
@@ -43,13 +33,7 @@ export async function publishPortfolioProjectAction(
     revalidateLifecyclePaths(portfolioId, item.slug);
     return { success: true, data: item };
   } catch (error) {
-    if (getProjectWriteSource() === "platform-api") {
-      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
-    }
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to publish project.",
-    };
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
 }
 
@@ -59,13 +43,6 @@ export async function unpublishPortfolioProjectAction(
   try {
     const user = await requireAdmin();
 
-    if (getProjectWriteSource() !== "platform-api") {
-      return {
-        success: false,
-        error: "Unpublish is only available through Platform API lifecycle actions.",
-      };
-    }
-
     const item = await unpublishPortfolioProjectViaPlatform(portfolioId);
     await logAdminAction(user.id, "unpublish", "portfolio", portfolioId, {
       writeSource: "platform-api",
@@ -73,13 +50,7 @@ export async function unpublishPortfolioProjectAction(
     revalidateLifecyclePaths(portfolioId, item.slug);
     return { success: true, data: item };
   } catch (error) {
-    if (getProjectWriteSource() === "platform-api") {
-      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
-    }
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to unpublish project.",
-    };
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
 }
 
@@ -89,13 +60,6 @@ export async function archivePortfolioProjectAction(
   try {
     const user = await requireAdmin();
 
-    if (getProjectWriteSource() !== "platform-api") {
-      return {
-        success: false,
-        error: "Archive is only available through Platform API lifecycle actions.",
-      };
-    }
-
     const item = await archivePortfolioProjectViaPlatform(portfolioId);
     await logAdminAction(user.id, "archive", "portfolio", portfolioId, {
       writeSource: "platform-api",
@@ -103,12 +67,6 @@ export async function archivePortfolioProjectAction(
     revalidateLifecyclePaths(portfolioId, item.slug);
     return { success: true, data: item };
   } catch (error) {
-    if (getProjectWriteSource() === "platform-api") {
-      return { success: false, error: toPlatformProjectWriteUserMessage(error) };
-    }
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to archive project.",
-    };
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
 }

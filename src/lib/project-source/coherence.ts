@@ -31,7 +31,7 @@ export function parseProjectSourceRaw(
   return "invalid";
 }
 
-function toEffectiveSource(parsed: ParsedProjectSource): ProjectDataSource {
+function toEffectiveReadSource(parsed: ParsedProjectSource): ProjectDataSource {
   return parsed === "platform-api" ? "platform-api" : "database";
 }
 
@@ -55,18 +55,18 @@ export function resolveCoherentProjectSourceConfiguration(
 
   if (parsedWrite === "invalid") {
     throw new ProjectSourceConfigurationError(
-      `Invalid PROJECT_WRITE_SOURCE value "${formatRawValue(rawWriteSource)}". Expected "database" or "platform-api".`
+      `Invalid PROJECT_WRITE_SOURCE value "${formatRawValue(rawWriteSource)}". Expected "platform-api".`
     );
   }
 
-  const readSource = toEffectiveSource(parsedRead);
-  const writeSource = toEffectiveSource(parsedWrite);
-
-  if (readSource !== writeSource) {
+  if (parsedWrite !== "platform-api") {
     throw new ProjectSourceConfigurationError(
-      `Incoherent project source configuration: PROJECT_READ_SOURCE resolves to "${readSource}" while PROJECT_WRITE_SOURCE resolves to "${writeSource}". Supported steady states are database/database or platform-api/platform-api.`
+      `Legacy Prisma shared-content writes are frozen (M17). PROJECT_WRITE_SOURCE must be "platform-api". Received "${formatRawValue(rawWriteSource)}".`
     );
   }
+
+  const readSource = toEffectiveReadSource(parsedRead);
+  const writeSource: ProjectDataSource = "platform-api";
 
   return {
     readSource,

@@ -43,20 +43,14 @@ afterEach(() => {
   resetCoherentProjectSourceConfigurationForTests();
 });
 
-describe("project source coherence", () => {
-  test("database/database is allowed", () => {
+describe("project source coherence (M17 write freeze)", () => {
+  test("platform-api write with database read is allowed for read rollback", () => {
     const config = resolveCoherentProjectSourceConfiguration({
       PROJECT_READ_SOURCE: "database",
-      PROJECT_WRITE_SOURCE: "database",
+      PROJECT_WRITE_SOURCE: "platform-api",
     });
     expect(config.readSource).toBe("database");
-    expect(config.writeSource).toBe("database");
-  });
-
-  test("unset/unset resolves to database/database", () => {
-    const config = resolveCoherentProjectSourceConfiguration({});
-    expect(config.readSource).toBe("database");
-    expect(config.writeSource).toBe("database");
+    expect(config.writeSource).toBe("platform-api");
   });
 
   test("platform-api/platform-api is allowed", () => {
@@ -68,30 +62,35 @@ describe("project source coherence", () => {
     expect(config.writeSource).toBe("platform-api");
   });
 
-  test("platform-api with missing write rejects mixed ownership", () => {
-    expect(() =>
-      resolveCoherentProjectSourceConfiguration({
-        PROJECT_READ_SOURCE: "platform-api",
-      })
-    ).toThrow(/Incoherent project source configuration/);
+  test("unset read with platform write defaults read to database", () => {
+    const config = resolveCoherentProjectSourceConfiguration({
+      PROJECT_WRITE_SOURCE: "platform-api",
+    });
+    expect(config.readSource).toBe("database");
+    expect(config.writeSource).toBe("platform-api");
   });
 
-  test("database write with platform read rejects mixed ownership", () => {
-    expect(() =>
-      resolveCoherentProjectSourceConfiguration({
-        PROJECT_READ_SOURCE: "platform-api",
-        PROJECT_WRITE_SOURCE: "database",
-      })
-    ).toThrow(/Incoherent project source configuration/);
-  });
-
-  test("platform write with database read rejects mixed ownership", () => {
+  test("database/database rejects frozen legacy write source", () => {
     expect(() =>
       resolveCoherentProjectSourceConfiguration({
         PROJECT_READ_SOURCE: "database",
-        PROJECT_WRITE_SOURCE: "platform-api",
+        PROJECT_WRITE_SOURCE: "database",
       })
-    ).toThrow(/Incoherent project source configuration/);
+    ).toThrow(/Legacy Prisma shared-content writes are frozen/);
+  });
+
+  test("unset/unset rejects missing platform write source", () => {
+    expect(() => resolveCoherentProjectSourceConfiguration({})).toThrow(
+      /Legacy Prisma shared-content writes are frozen/
+    );
+  });
+
+  test("platform read with missing write rejects frozen legacy default", () => {
+    expect(() =>
+      resolveCoherentProjectSourceConfiguration({
+        PROJECT_READ_SOURCE: "platform-api",
+      })
+    ).toThrow(/Legacy Prisma shared-content writes are frozen/);
   });
 
   test("invalid write with platform read rejects before silent database fallback", () => {
@@ -114,19 +113,19 @@ describe("project source coherence", () => {
 
   test("getProjectReadSource and getProjectWriteSource share coherent configuration", () => {
     const snapshot = snapshotEnv();
-    process.env.PROJECT_READ_SOURCE = "platform-api";
+    process.env.PROJECT_READ_SOURCE = "database";
     process.env.PROJECT_WRITE_SOURCE = "platform-api";
     process.env.DEVLAUNCH_PLATFORM_API_URL = "https://api.devlaunchsystems.com";
     process.env.DEVLAUNCH_PLATFORM_API_TOKEN = "test-token";
 
-    expect(getProjectReadSource()).toBe("platform-api");
+    expect(getProjectReadSource()).toBe("database");
     expect(getProjectWriteSource()).toBe("platform-api");
-    expect(getCoherentProjectSourceConfiguration().readSource).toBe("platform-api");
+    expect(getCoherentProjectSourceConfiguration().readSource).toBe("database");
 
     restoreEnv(snapshot);
   });
 
-  test("platform-api/platform-api still requires token for write configuration assert", () => {
+  test("platform-api write still requires token for write configuration assert", () => {
     const snapshot = snapshotEnv();
     process.env.PROJECT_READ_SOURCE = "platform-api";
     process.env.PROJECT_WRITE_SOURCE = "platform-api";
