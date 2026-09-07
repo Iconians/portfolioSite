@@ -145,6 +145,8 @@ describe("M7 admin portfolio list", () => {
     );
 
     expect(source.includes("listAllPlatformAdminCaseStudies")).toBe(true);
+    expect(source.includes("listAllPlatformAdminHeroMedia")).toBe(true);
+    expect(source.includes("buildCaseStudyHeroDisplayUrlMap")).toBe(true);
     expect(source.includes("listPortfolioBridgeRows")).toBe(true);
     expect(source.includes("bridgeIdBySlug")).toBe(true);
     expect(source.includes("getAllPortfolioItems")).toBe(true);

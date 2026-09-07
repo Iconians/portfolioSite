@@ -6,8 +6,9 @@ import {
 import type { PlatformApiAdminCaseStudyListItem } from "./platform-admin-types";
 import type { PortfolioItem } from "@/lib/types/portfolio";
 
-/** List cards use Platform authority; hero is loaded in editor detail. */
-const ADMIN_LIST_PLACEHOLDER_IMG = "/";
+export interface AdminPortfolioListRowOptions {
+  heroImg?: string;
+}
 
 function parseOptionalDate(value: string | null | undefined): Date {
   if (!value) {
@@ -19,13 +20,14 @@ function parseOptionalDate(value: string | null | undefined): Date {
 
 export function mapPlatformAdminListItemToPortfolioListRow(
   item: PlatformApiAdminCaseStudyListItem,
-  portfolioLocalId: string
+  portfolioLocalId: string,
+  options?: AdminPortfolioListRowOptions
 ): PortfolioItem {
   const timestamp = parseOptionalDate(item.published_at);
 
   return {
     id: portfolioLocalId,
-    img: ADMIN_LIST_PLACEHOLDER_IMG,
+    img: options?.heroImg ?? "",
     caption: item.title,
     description: item.summary?.trim() ? item.summary : "Managed in Platform API.",
     category: (item.categories ?? []).map((category) => category.name),

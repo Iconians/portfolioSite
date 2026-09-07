@@ -26,8 +26,15 @@ Platform remains authoritative for shared project/case-study content, presentati
 
 - `/admin/portfolio` and admin dashboard count use `loadAdminPortfolioListItems()`
 - **Display authority:** Platform admin `GET /api/v1/admin/case-studies` (paginated)
+- **Hero thumbnails:** Platform admin `GET /api/v1/admin/media` (`role=hero`, `upload_status=confirmed`, paginated), joined by `case_study_id`
 - **Routing authority:** Prisma bridge `{ id, slug }` only — edit links remain `/admin/portfolio/[bridgeId]`
 - Platform list items without a matching bridge slug are skipped (no editor route)
+
+### M7 regression fix (operator review)
+
+During production smoke, admin project thumbnails broke because the initial M7 list mapper hardcoded `img: "/"` while `PortfolioList` passes `item.img` to `next/image`. The list projection does not include media metadata.
+
+**Fix:** Load confirmed Platform hero media alongside the case-study list, join by `case_study_id`, apply existing R2 display rewrite, and render `next/image` only when a valid hero URL exists. Prisma `img` is not used as display authority in platform-api mode.
 
 ---
 
@@ -121,11 +128,15 @@ Use the real DevLaunch Platform API project. Do **not** skip deployed verificati
 - `src/lib/project-write/admin-portfolio-list.ts`
 - `src/lib/project-write/admin-portfolio-list-mapper.ts`
 - `src/lib/project-write/platform-admin-list-pagination.ts`
+- `src/lib/project-write/platform-media-mapper.ts` (shared confirmed-hero helpers)
+- `src/lib/portfolio/display-media-url.ts` (`isDisplayablePortfolioListImage`)
+- `src/components/Admin/PortfolioList.tsx`
 - `src/lib/project-write/identity-bridge.ts` (shared pagination)
 - `src/lib/data/portfolio.ts` (`listPortfolioBridgeRows`)
 - `src/app/admin/portfolio/page.tsx`
 - `src/app/admin/page.tsx`
 - `tests/unit/project-write/platform-m7-admin-list.test.ts`
+- `tests/unit/project-write/platform-m7-admin-list-hero.test.ts`
 - `tests/unit/project-write/platform-m7-management-completion.test.ts`
 
 ---

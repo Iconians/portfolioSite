@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 
-import { rewritePortfolioItemDisplayMedia } from "@/lib/portfolio/display-media-url";
+import { rewritePortfolioItemDisplayMedia, isDisplayablePortfolioListImage } from "@/lib/portfolio/display-media-url";
 import { mapPlatformAdminDetailToEditorLoad } from "@/lib/project-write/platform-admin-mapper";
 
 import type { PlatformApiAdminCaseStudyDetail } from "@/lib/project-write/platform-admin-types";
@@ -117,5 +117,12 @@ describe("admin portfolio display media URL compatibility", () => {
     expect(loaded.initialValues.heroMediaId).toBe(PLATFORM_HERO_MEDIA_ID);
 
     process.env.S3_PUBLIC_URL_BASE = previous;
+  });
+
+  test("empty and placeholder list images are not displayable", () => {
+    expect(isDisplayablePortfolioListImage("")).toBe(false);
+    expect(isDisplayablePortfolioListImage("/")).toBe(false);
+    expect(isDisplayablePortfolioListImage("  ")).toBe(false);
+    expect(isDisplayablePortfolioListImage("https://cdn.example/hero.png")).toBe(true);
   });
 });

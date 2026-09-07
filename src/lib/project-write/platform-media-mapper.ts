@@ -14,15 +14,59 @@ export interface PlatformProjectMediaEditorFields {
   gallery: PortfolioGalleryItem[];
 }
 
-function isConfirmedMedia(item: PlatformApiAdminMediaListItem): boolean {
+export function isConfirmedPlatformAdminMedia(
+  item: PlatformApiAdminMediaListItem
+): boolean {
   return item.upload_status === "confirmed";
+}
+
+export function pickConfirmedHeroMedia(
+  media: PlatformApiAdminMediaListItem[]
+): PlatformApiAdminMediaListItem | undefined {
+  return media
+    .filter(isConfirmedPlatformAdminMedia)
+    .find((item) => item.role === "hero");
+}
+
+export function resolveConfirmedHeroDisplayUrl(
+  media: PlatformApiAdminMediaListItem[]
+): string {
+  const hero = pickConfirmedHeroMedia(media);
+  return hero?.public_url
+    ? rewritePublicAssetUrlIfConfigured(hero.public_url)
+    : "";
+}
+
+export function buildCaseStudyHeroDisplayUrlMap(
+  mediaItems: PlatformApiAdminMediaListItem[]
+): Map<string, string> {
+  const map = new Map<string, string>();
+
+  for (const item of mediaItems) {
+    if (
+      !isConfirmedPlatformAdminMedia(item) ||
+      item.role !== "hero" ||
+      !item.public_url?.trim()
+    ) {
+      continue;
+    }
+
+    if (!map.has(item.case_study_id)) {
+      map.set(
+        item.case_study_id,
+        rewritePublicAssetUrlIfConfigured(item.public_url)
+      );
+    }
+  }
+
+  return map;
 }
 
 export function mapPlatformAdminMediaToEditorFields(
   media: PlatformApiAdminMediaListItem[]
 ): PlatformProjectMediaEditorFields {
-  const confirmed = media.filter(isConfirmedMedia);
-  const hero = confirmed.find((item) => item.role === "hero");
+  const confirmed = media.filter(isConfirmedPlatformAdminMedia);
+  const hero = pickConfirmedHeroMedia(media);
   const og = confirmed.find((item) => item.role === "og");
   const gallery = confirmed
     .filter((item) => item.role === "gallery")
@@ -40,14 +84,10 @@ export function mapPlatformAdminMediaToEditorFields(
       caption: item.caption ?? undefined,
     }));
 
-  const heroUrl = hero?.public_url
-    ? rewritePublicAssetUrlIfConfigured(hero.public_url)
-    : "";
-
   return {
     heroMediaId: hero?.id ?? null,
     ogMediaId: og?.id ?? null,
-    img: heroUrl,
+    img: resolveConfirmedHeroDisplayUrl(media),
     gallery,
   };
 }

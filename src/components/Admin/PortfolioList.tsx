@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { deletePortfolioAction } from "@/lib/actions/portfolio";
 import { archivePortfolioProjectAction } from "@/lib/actions/portfolio-lifecycle";
+import { isDisplayablePortfolioListImage } from "@/lib/portfolio/display-media-url";
 import { PLATFORM_HARD_DELETE_UNAVAILABLE_MESSAGE } from "@/lib/project-write/platform-lifecycle-policy";
 
 
@@ -69,12 +70,18 @@ export function PortfolioList({
       {portfolio.map((item) => (
         <Card key={item.id} className="p-6">
           <div className="relative aspect-video mb-4 rounded overflow-hidden">
-            <Image
-              src={item.img}
-              alt={item.caption}
-              fill
-              className="object-cover"
-            />
+            {isDisplayablePortfolioListImage(item.img) ? (
+              <Image
+                src={item.img}
+                alt={item.caption}
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-muted text-sm text-muted-foreground">
+                No hero image
+              </div>
+            )}
           </div>
           <div className="flex items-start justify-between mb-2">
             <Link
