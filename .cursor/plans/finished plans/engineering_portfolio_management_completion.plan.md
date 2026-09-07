@@ -454,11 +454,14 @@ Platform supports `business_deliverable`, `platform_capability` in addition to e
 **Implementation (2026-09-07):**
 
 - **Admin list:** `loadAdminPortfolioListItems()` — Platform admin list (paginated) for display; Prisma bridge `{ id, slug }` join for `/admin/portfolio/[id]` routing only
-- **Mapper:** `mapPlatformAdminListItemToPortfolioListRow` — title, summary, categories, publish/lifecycle status, `sort_order`, `is_featured` from Platform
+- **Hero thumbnails:** Platform admin media list (`role=hero`, `upload_status=confirmed`, paginated) joined by `case_study_id`; no Prisma `img` authority
+- **Mapper:** `mapPlatformAdminListItemToPortfolioListRow` — title, summary, categories, publish/lifecycle status, `sort_order`, `is_featured`, hero `img` from Platform media
 - **Pagination:** `listAllPlatformAdminCaseStudies` shared by admin list + `resolvePlatformCaseStudyIdBySlug`
 - **Bridge reduction:** Admin list no longer uses `getAllPortfolioItems()` in platform-api mode; bridge retained for routing, M2 create, slug→Platform UUID resolution
 - **Report:** [`docs/phase-11/m7-management-completion-report.md`](docs/phase-11/m7-management-completion-report.md) — production smoke checklist (operator, post-deploy)
-- **Tests:** `platform-m7-admin-list.test.ts`, `platform-m7-management-completion.test.ts`
+- **Tests:** `platform-m7-admin-list.test.ts`, `platform-m7-admin-list-hero.test.ts`, `platform-m7-management-completion.test.ts`
+
+**M7 regression (operator review, 2026-09-07):** Initial list mapper hardcoded `img: "/"`, breaking `next/image` on `/admin/portfolio`. Fixed by loading Platform confirmed hero media and guarding `PortfolioList` for imageless projects.
 
 **Additional acceptance checks (operator production smoke — not local):**
 

@@ -10,6 +10,12 @@ export function rewritePortfolioDisplayMediaUrl(url: string): string {
   return rewritePublicAssetUrlIfConfigured(url);
 }
 
+/** True when a portfolio list card has a URL safe for next/image. */
+export function isDisplayablePortfolioListImage(img: string): boolean {
+  const trimmed = img.trim();
+  return trimmed.length > 0 && trimmed !== "/";
+}
+
 export function rewritePortfolioGalleryItemForDisplay(
   item: PortfolioGalleryItem
 ): PortfolioGalleryItem {

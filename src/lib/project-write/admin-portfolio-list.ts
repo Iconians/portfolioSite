@@ -10,7 +10,11 @@ import {
   sortAdminPortfolioListItems,
 } from "./admin-portfolio-list-mapper";
 import { getProjectWriteSource } from "./config";
-import { listAllPlatformAdminCaseStudies } from "./platform-admin-list-pagination";
+import {
+  listAllPlatformAdminCaseStudies,
+  listAllPlatformAdminHeroMedia,
+} from "./platform-admin-list-pagination";
+import { buildCaseStudyHeroDisplayUrlMap } from "./platform-media-mapper";
 import { getProjectWriteProvider } from "./provider";
 
 import type { PortfolioItem } from "@/lib/types/portfolio";
@@ -30,7 +34,11 @@ export async function loadAdminPortfolioListItems(): Promise<PortfolioItem[]> {
     return getAllPortfolioItems();
   }
 
-  const platformItems = await listAllPlatformAdminCaseStudies(provider.client);
+  const [platformItems, heroMedia] = await Promise.all([
+    listAllPlatformAdminCaseStudies(provider.client),
+    listAllPlatformAdminHeroMedia(provider.client),
+  ]);
+  const heroUrlByCaseStudyId = buildCaseStudyHeroDisplayUrlMap(heroMedia);
   const bridgeRows = await listPortfolioBridgeRows();
   const bridgeIdBySlug = new Map(
     bridgeRows
@@ -46,7 +54,9 @@ export async function loadAdminPortfolioListItems(): Promise<PortfolioItem[]> {
     }
 
     items.push(
-      mapPlatformAdminListItemToPortfolioListRow(platformItem, bridgeId)
+      mapPlatformAdminListItemToPortfolioListRow(platformItem, bridgeId, {
+        heroImg: heroUrlByCaseStudyId.get(platformItem.id) ?? "",
+      })
     );
   }
 
