@@ -125,6 +125,92 @@ describe("PlatformApiAdminClient", () => {
     expect(result.slug).toBe("devlaunch-crm");
   });
 
+  test("creates case study with POST /case-studies and omits slug when not provided", async () => {
+    let requestedUrl = "";
+    let requestInit: RequestInit | undefined;
+    const client = createClient(
+      mockFetch(async (input, init) => {
+        requestedUrl = String(input);
+        requestInit = init;
+        return new Response(
+          JSON.stringify({
+            ...detailFixture,
+            slug: "generated-slug",
+            title: "Generated Title",
+            project_type: "engineering",
+          }),
+          { status: 201 }
+        );
+      })
+    );
+
+    const result = await client.createCaseStudy({
+      title: "Generated Title",
+      project_type: "engineering",
+    });
+
+    expect(requestedUrl).toBe(
+      "https://api.devlaunchsystems.com/api/v1/admin/case-studies"
+    );
+    expect(requestInit?.method).toBe("POST");
+    expect(requestInit?.body).toBe(
+      JSON.stringify({
+        title: "Generated Title",
+        project_type: "engineering",
+      })
+    );
+    expect(result.id).toBe(PLATFORM_CASE_STUDY_ID);
+    expect(result.slug).toBe("generated-slug");
+  });
+
+  test("creates case study with explicit slug in payload", async () => {
+    let requestInit: RequestInit | undefined;
+    const client = createClient(
+      mockFetch(async (_input, init) => {
+        requestInit = init;
+        return new Response(
+          JSON.stringify({
+            ...detailFixture,
+            slug: "custom-slug",
+            title: "Custom Slug Project",
+            project_type: "client",
+          }),
+          { status: 201 }
+        );
+      })
+    );
+
+    await client.createCaseStudy({
+      title: "Custom Slug Project",
+      project_type: "client",
+      slug: "custom-slug",
+    });
+
+    expect(requestInit?.body).toBe(
+      JSON.stringify({
+        title: "Custom Slug Project",
+        project_type: "client",
+        slug: "custom-slug",
+      })
+    );
+  });
+
+  test("rejects create response missing id", async () => {
+    const client = createClient(
+      mockFetch(async () =>
+        new Response(JSON.stringify({ slug: "missing-id" }), { status: 201 })
+      )
+    );
+
+    await expectRejects(
+      client.createCaseStudy({
+        title: "Broken",
+        project_type: "saas",
+      }),
+      PlatformApiAdminMalformedResponseError
+    );
+  });
+
   test("requests admin media list with Bearer authorization and filters", async () => {
     let requestedUrl = "";
     let requestInit: RequestInit | undefined;
@@ -551,6 +637,7 @@ describe("admin client surface", () => {
       token: FAKE_TOKEN,
     });
     expect(typeof client.listCaseStudies).toBe("function");
+    expect(typeof client.createCaseStudy).toBe("function");
     expect(typeof client.getCaseStudyById).toBe("function");
     expect(typeof client.listMedia).toBe("function");
     expect(typeof client.presignCaseStudyMedia).toBe("function");
@@ -568,7 +655,7 @@ describe("admin client surface", () => {
     expect(typeof client.unpublishCaseStudy).toBe("function");
     expect(typeof client.archiveCaseStudy).toBe("function");
     expect("getCaseStudy" in client).toBe(false);
-    expect("createCaseStudy" in client).toBe(false);
+    expect("createCaseStudy" in client).toBe(true);
     expect("createMedia" in client).toBe(false);
     expect("updateMedia" in client).toBe(false);
   });

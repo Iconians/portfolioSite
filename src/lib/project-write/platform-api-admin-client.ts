@@ -18,6 +18,7 @@ import type {
   PlatformApiAdminCaseStudyListResponse,
   PlatformApiAdminMediaListResponse,
 } from "./platform-admin-types";
+import type { PlatformApiCaseStudyCreateRequest } from "./platform-create-types";
 import type {
   PlatformAdminMediaRecord,
   PlatformMediaPresignRequest,
@@ -107,6 +108,27 @@ export class PlatformApiAdminClient extends PlatformApiAdminRequestTransport {
     if (!data?.id) {
       throw new PlatformApiAdminMalformedResponseError(
         "Platform API admin detail response missing id"
+      );
+    }
+
+    return data;
+  }
+
+  async createCaseStudy(
+    payload: PlatformApiCaseStudyCreateRequest
+  ): Promise<PlatformApiAdminCaseStudyDetail> {
+    const data = await this.requestJson<PlatformApiAdminCaseStudyDetail>(
+      "/case-studies",
+      {
+        method: "POST",
+        body: payload,
+        operation: "createCaseStudy",
+      }
+    );
+
+    if (!data?.id) {
+      throw new PlatformApiAdminMalformedResponseError(
+        "Platform API admin create response missing id"
       );
     }
 

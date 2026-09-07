@@ -2,12 +2,19 @@
 
 import { z } from "zod";
 
+import { createPortfolioItem } from "@/lib/data/portfolio";
 import { logAdminAction } from "@/lib/logger";
 import { requireAdmin } from "@/lib/permissions";
 import { ProjectSourceConfigurationError } from "@/lib/project-source/errors";
+import { getProjectWriteSource } from "@/lib/project-write/config";
+import {
+  CreatePortfolioProjectInputSchema,
+  type CreatePortfolioProjectInput,
+} from "@/lib/project-write/create-portfolio-project-input";
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
-import { PLATFORM_PROJECT_CREATE_UNAVAILABLE_MESSAGE } from "@/lib/project-write/platform-create-policy";
+import { assertPlatformProjectCreateAllowed } from "@/lib/project-write/platform-create-policy";
 import { PLATFORM_HARD_DELETE_UNAVAILABLE_MESSAGE } from "@/lib/project-write/platform-lifecycle-policy";
+import { createPortfolioProjectViaPlatform } from "@/lib/project-write/platform-project-create";
 import { updatePortfolioProjectViaPlatform } from "@/lib/project-write/platform-project-update";
 import { revalidateAfterPlatformProjectWrite } from "@/lib/project-write/public-project-cache";
 
@@ -40,17 +47,64 @@ function toUserMessage(error: unknown): string {
 }
 
 export async function createPortfolioAction(
-  _data: CreatePortfolioInput,
-  _extended?: PortfolioExtendedInput
+  data: CreatePortfolioInput,
+  extended?: PortfolioExtendedInput
 ): Promise<ActionResult<PortfolioItem>> {
   try {
-    await requireAdmin();
-    return {
-      success: false,
-      error: PLATFORM_PROJECT_CREATE_UNAVAILABLE_MESSAGE,
-    };
+    assertPlatformProjectCreateAllowed(getProjectWriteSource());
+    const user = await requireAdmin();
+    const item = await createPortfolioItem(data, extended);
+    await logAdminAction(user.id, "create", "portfolio", item.id, {
+      caption: item.caption,
+      writeSource: "database",
+    }).catch(() => {});
+    return { success: true, data: item };
   } catch (error) {
     return { success: false, error: toUserMessage(error) };
+  }
+}
+
+export type CreatePortfolioProjectActionData = {
+  portfolioLocalId: string;
+  slug: string;
+};
+
+export async function createPortfolioProjectAction(
+  input: CreatePortfolioProjectInput
+): Promise<ActionResult<CreatePortfolioProjectActionData>> {
+  try {
+    const user = await requireAdmin();
+
+    if (getProjectWriteSource() !== "platform-api") {
+      return {
+        success: false,
+        error:
+          "Platform project creation requires PROJECT_WRITE_SOURCE=platform-api.",
+      };
+    }
+
+    const parsed = CreatePortfolioProjectInputSchema.parse(input);
+    const created = await createPortfolioProjectViaPlatform({
+      title: parsed.title,
+      projectType: parsed.projectType,
+      slug: parsed.slug?.trim() ? parsed.slug.trim() : undefined,
+    });
+
+    await logAdminAction(user.id, "create", "portfolio", created.portfolioLocalId, {
+      slug: created.slug,
+      platformCaseStudyId: created.platformCaseStudyId,
+      writeSource: "platform-api",
+    }).catch(() => {});
+
+    return {
+      success: true,
+      data: {
+        portfolioLocalId: created.portfolioLocalId,
+        slug: created.slug,
+      },
+    };
+  } catch (error) {
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
 }
 
