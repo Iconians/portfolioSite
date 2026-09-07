@@ -9,6 +9,7 @@ import {
 import { mapPlatformAdminMediaToEditorFields } from "./platform-media-mapper";
 import { mapPlatformAdminMetricsToPortfolio } from "./platform-metric-mapper";
 import { mapPlatformAdminMilestonesToProjectVersions } from "./platform-milestone-mapper";
+import { mapPlatformPresentationToEditorFields } from "./platform-presentation-mapper";
 
 import type {
   PlatformApiAdminCaseStudyDetail,
@@ -154,6 +155,7 @@ export function mapPlatformAdminDetailToEditorLoad(input: {
   initialValues.heroMediaId = mediaFields.heroMediaId;
   initialValues.ogMediaId = mediaFields.ogMediaId;
   initialValues.gallery = mediaFields.gallery;
+  Object.assign(initialValues, mapPlatformPresentationToEditorFields(input.detail));
 
   return {
     portfolioLocalId: input.portfolioLocalId,

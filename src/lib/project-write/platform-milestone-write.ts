@@ -1,13 +1,16 @@
 import "server-only";
 
 import { AdminProjectLoadError } from "./admin-project-load-error";
+import { buildChildReorderOrderedIds } from "./platform-child-reorder-order";
 import {
   buildPlatformMilestoneCreateRequest,
   buildPlatformMilestoneUpdateRequest,
   mapPlatformAdminMilestoneToProjectVersion,
+  mapPlatformAdminMilestonesToProjectVersions,
 } from "./platform-milestone-mapper";
 import { resolvePlatformCaseStudyWriteContext } from "./platform-parent-context";
 
+import type { ChildReorderDirection } from "./platform-child-reorder-order";
 import type {
   ProjectVersion,
   ProjectVersionInput,
@@ -77,4 +80,36 @@ export async function deleteProjectVersionViaPlatform(
   const context = await resolvePlatformCaseStudyWriteContext(portfolioLocalId);
   await assertMilestoneBelongsToCaseStudy(context, milestoneId);
   await context.client.deleteMilestone(milestoneId);
+}
+
+export async function reorderProjectVersionsViaPlatform(
+  portfolioLocalId: string,
+  milestoneId: string,
+  direction: ChildReorderDirection
+): Promise<ProjectVersion[]> {
+  const context = await resolvePlatformCaseStudyWriteContext(portfolioLocalId);
+  const detail = await context.client.getCaseStudyById(context.platformCaseStudyId);
+  const current = mapPlatformAdminMilestonesToProjectVersions(
+    detail.milestones,
+    context.portfolioLocalId
+  );
+  const orderedIds = buildChildReorderOrderedIds(
+    current.map((version) => version.id),
+    milestoneId,
+    direction
+  );
+
+  if (!orderedIds) {
+    return current;
+  }
+
+  await context.client.reorderMilestones(context.platformCaseStudyId, orderedIds);
+
+  const refreshed = await context.client.getCaseStudyById(
+    context.platformCaseStudyId
+  );
+  return mapPlatformAdminMilestonesToProjectVersions(
+    refreshed.milestones,
+    context.portfolioLocalId
+  );
 }

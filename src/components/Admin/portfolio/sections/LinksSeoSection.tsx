@@ -1,8 +1,12 @@
+import { toast } from "sonner";
+
 import { MediaPicker } from "@/components/Admin/media/MediaPicker";
 import { FormField } from "@/components/Admin/shared/FormField";
 import { FormSection } from "@/components/Admin/shared/FormSection";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { deleteProjectPlatformMediaAction } from "@/lib/actions/portfolio-media";
 
 import type { ProjectEditorSectionProps } from "./types";
 
@@ -11,6 +15,7 @@ interface LinksSeoSectionProps extends ProjectEditorSectionProps {
   writeSource?: "database" | "platform-api";
   portfolioId?: string;
   onSelectOg: (asset: { id: string; publicUrl: string }) => void;
+  onRemoveOg?: () => void;
 }
 
 export function LinksSeoSection({
@@ -21,9 +26,26 @@ export function LinksSeoSection({
   writeSource = "database",
   portfolioId,
   onSelectOg,
+  onRemoveOg,
   watch,
 }: LinksSeoSectionProps) {
   const ogMediaId = watch?.("ogMediaId") ?? null;
+  const usePlatformMedia = writeSource === "platform-api" && Boolean(portfolioId);
+
+  async function handleRemoveOg() {
+    if (!usePlatformMedia || !portfolioId || !ogMediaId) {
+      return;
+    }
+
+    const result = await deleteProjectPlatformMediaAction(portfolioId, ogMediaId);
+    if (result.success) {
+      onRemoveOg?.();
+      return;
+    }
+
+    toast.error(result.error ?? "Failed to remove OG image");
+  }
+
   return (
     <FormSection
       title="Links & SEO"
@@ -97,6 +119,16 @@ export function LinksSeoSection({
               onSelectOg({ id: asset.id, publicUrl: asset.publicUrl })
             }
           />
+          {usePlatformMedia && ogMediaId ? (
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isPending}
+              onClick={handleRemoveOg}
+            >
+              Remove OG image
+            </Button>
+          ) : null}
         </div>
       </FormField>
     </FormSection>

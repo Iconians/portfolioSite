@@ -6,49 +6,48 @@ import { getMetricReorderPair } from "@/lib/portfolio/metric-order";
 import { getVersionReorderPair } from "@/lib/portfolio/version-order";
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
 import {
-  assertPlatformChildReorderAllowed,
-  PLATFORM_CHILD_REORDER_UNAVAILABLE_MESSAGE,
   PlatformChildReorderUnavailableError,
   shouldDisableChildReorder,
 } from "@/lib/project-write/platform-child-reorder-policy";
 
 describe("platform child reorder policy", () => {
-  test("allows reorder in database mode", () => {
-    expect(() => assertPlatformChildReorderAllowed("database")).not.toThrow();
+  test("enables reorder controls in database mode", () => {
     expect(shouldDisableChildReorder("database")).toBe(false);
   });
 
-  test("rejects reorder in platform-api mode before any mutation", () => {
-    expect(shouldDisableChildReorder("platform-api")).toBe(true);
-    expect(() => assertPlatformChildReorderAllowed("platform-api")).toThrow(
-      PLATFORM_CHILD_REORDER_UNAVAILABLE_MESSAGE
+  test("enables reorder controls in platform-api mode", () => {
+    expect(shouldDisableChildReorder("platform-api")).toBe(false);
+  });
+
+  test("maps legacy reorder rejection to user-facing message", () => {
+    expect(
+      toPlatformProjectWriteUserMessage(new PlatformChildReorderUnavailableError())
+    ).toBe(
+      "Reordering is temporarily unavailable while Platform write migration is in progress."
     );
   });
 
-  test("maps reorder rejection to user-facing message", () => {
-    expect(
-      toPlatformProjectWriteUserMessage(new PlatformChildReorderUnavailableError())
-    ).toBe(PLATFORM_CHILD_REORDER_UNAVAILABLE_MESSAGE);
-  });
-
-  test("platform metric write module does not export reorder helpers", () => {
+  test("platform metric write module exports atomic reorder helper", () => {
     const source = readFileSync(
       fileURLToPath(
         new URL("../../../src/lib/project-write/platform-metric-write.ts", import.meta.url)
       ),
       "utf8"
     );
-    expect(source.includes("reorderPortfolioMetricViaPlatform")).toBe(false);
+    expect(source.includes("reorderPortfolioMetricsViaPlatform")).toBe(true);
   });
 
-  test("platform milestone write module does not export reorder helpers", () => {
+  test("platform milestone write module exports atomic reorder helper", () => {
     const source = readFileSync(
       fileURLToPath(
-        new URL("../../../src/lib/project-write/platform-milestone-write.ts", import.meta.url)
+        new URL(
+          "../../../src/lib/project-write/platform-milestone-write.ts",
+          import.meta.url
+        )
       ),
       "utf8"
     );
-    expect(source.includes("reorderProjectVersionViaPlatform")).toBe(false);
+    expect(source.includes("reorderProjectVersionsViaPlatform")).toBe(true);
   });
 
   test("database metric reorder pair selection remains available", () => {
@@ -61,6 +60,7 @@ describe("platform child reorder policy", () => {
           value: "1",
           description: null,
           displayOrder: 0,
+          showOnBusiness: true,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -71,6 +71,7 @@ describe("platform child reorder policy", () => {
           value: "2",
           description: null,
           displayOrder: 1,
+          showOnBusiness: true,
           createdAt: new Date(),
           updatedAt: new Date(),
         },

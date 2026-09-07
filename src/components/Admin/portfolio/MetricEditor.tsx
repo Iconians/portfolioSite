@@ -9,12 +9,14 @@ import { FormField } from "@/components/Admin/shared/FormField";
 import { FormSection } from "@/components/Admin/shared/FormSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   createPortfolioMetricAction,
   deletePortfolioMetricAction,
   reorderPortfolioMetricAction,
 } from "@/lib/actions/portfolio-metrics";
+import { applyMetricDirectionalReorder } from "@/lib/portfolio/metric-order";
 
 import type { PortfolioMetric } from "@/lib/types/portfolio";
 
@@ -34,7 +36,9 @@ export function MetricEditor({
   const [label, setLabel] = useState("");
   const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
+  const [showOnBusiness, setShowOnBusiness] = useState(true);
   const [isPending, startTransition] = useTransition();
+  const [isReordering, setIsReordering] = useState(false);
 
   if (!portfolioId) {
     return (
@@ -53,6 +57,7 @@ export function MetricEditor({
         label,
         value,
         description: description.trim() ? description : undefined,
+        showOnBusiness,
       });
 
       if (result.success) {
@@ -60,6 +65,7 @@ export function MetricEditor({
         setLabel("");
         setValue("");
         setDescription("");
+        setShowOnBusiness(true);
         toast.success("Metric added");
       } else {
         toast.error(result.error);
@@ -68,17 +74,33 @@ export function MetricEditor({
   }
 
   async function handleReorder(metricId: string, direction: "up" | "down") {
+    if (isReordering) {
+      return null;
+    }
+
+    const previous = metrics;
+    const optimistic = applyMetricDirectionalReorder(metrics, metricId, direction);
+    if (!optimistic) {
+      return null;
+    }
+
+    setIsReordering(true);
+    setMetrics(optimistic);
+
     const result = await reorderPortfolioMetricAction(
       metricId,
       projectId,
       direction
     );
 
+    setIsReordering(false);
+
     if (result.success) {
       setMetrics(result.data);
       return result.data;
     }
 
+    setMetrics(previous);
     toast.error(result.error);
     return null;
   }
@@ -111,7 +133,7 @@ export function MetricEditor({
                 key={metric.id}
                 portfolioId={projectId}
                 metric={metric}
-                disableReorder={disableReorder}
+                disableReorder={disableReorder || isReordering}
                 isFirst={index === 0}
                 isLast={index === metrics.length - 1}
                 onUpdated={(updated) =>
@@ -160,6 +182,19 @@ export function MetricEditor({
             onChange={(event) => setDescription(event.target.value)}
           />
         </FormField>
+        <div className="flex items-center gap-3">
+          <input
+            id="newMetricShowOnBusiness"
+            type="checkbox"
+            checked={showOnBusiness}
+            disabled={isPending}
+            className="h-4 w-4 rounded border border-input"
+            onChange={(event) => setShowOnBusiness(event.target.checked)}
+          />
+          <Label htmlFor="newMetricShowOnBusiness" className="font-normal">
+            Show on DevLaunch business projection
+          </Label>
+        </div>
         <Button
           type="button"
           disabled={isPending || !label.trim() || !value.trim()}

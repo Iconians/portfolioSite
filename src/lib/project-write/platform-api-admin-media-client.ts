@@ -1,6 +1,7 @@
 import { PlatformApiAdminMalformedResponseError } from "./errors";
 
 import type { PlatformApiAdminRequestTransport } from "./platform-api-admin-request";
+import type { PlatformApiChildReorderRequest } from "./platform-child-reorder-types";
 import type {
   PlatformAdminMediaRecord,
   PlatformMediaPresignRequest,
@@ -88,4 +89,19 @@ export async function deleteCaseStudyMedia(
     method: "DELETE",
     operation: "deleteCaseStudyMedia",
   });
+}
+
+export async function reorderGalleryCaseStudyMedia(
+  transport: MediaTransport,
+  caseStudyId: string,
+  payload: PlatformApiChildReorderRequest
+): Promise<void> {
+  await transport.requestJson(
+    `/case-studies/${encodeURIComponent(caseStudyId)}/media/gallery/reorder`,
+    {
+      method: "PUT",
+      body: payload,
+      operation: "reorderGalleryMedia",
+    }
+  );
 }

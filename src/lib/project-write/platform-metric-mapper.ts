@@ -25,6 +25,7 @@ export function mapPlatformAdminMetricToPortfolio(
     value: metric.value,
     description: metric.description ?? null,
     displayOrder: metric.sort_order,
+    showOnBusiness: metric.show_on_business,
     createdAt: timestamp,
     updatedAt: timestamp,
   };
@@ -53,7 +54,7 @@ export function buildPlatformMetricCreateRequest(
     label: input.label,
     value: input.value,
     description: input.description?.trim() ? input.description.trim() : null,
-    show_on_business: true,
+    show_on_business: input.showOnBusiness ?? true,
     sort_order: sortOrder,
   };
 }
@@ -76,6 +77,9 @@ export function buildPlatformMetricUpdateRequest(
   }
   if (input.displayOrder !== undefined) {
     payload.sort_order = input.displayOrder;
+  }
+  if (input.showOnBusiness !== undefined) {
+    payload.show_on_business = input.showOnBusiness;
   }
 
   return payload;

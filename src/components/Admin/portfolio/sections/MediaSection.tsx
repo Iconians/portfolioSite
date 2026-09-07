@@ -2,6 +2,7 @@ import { MediaPicker } from "@/components/Admin/media/MediaPicker";
 import { GalleryEditor } from "@/components/Admin/portfolio/GalleryEditor";
 import { FormField } from "@/components/Admin/shared/FormField";
 import { FormSection } from "@/components/Admin/shared/FormSection";
+import { PLATFORM_SINGLETON_CLEAR_UNSUPPORTED_MESSAGE } from "@/lib/project-write/platform-media-policy";
 
 import type { ProjectEditorSectionProps } from "./types";
 
@@ -62,6 +63,11 @@ export function MediaSection({
               onSelectHero({ id: asset.id, publicUrl: asset.publicUrl })
             }
           />
+          {writeSource === "platform-api" ? (
+            <p className="text-xs text-muted-foreground">
+              {PLATFORM_SINGLETON_CLEAR_UNSUPPORTED_MESSAGE}
+            </p>
+          ) : null}
           <input type="hidden" {...register("img")} />
         </div>
       </FormField>

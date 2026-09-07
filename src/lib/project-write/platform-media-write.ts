@@ -2,13 +2,16 @@ import "server-only";
 
 import { AdminProjectLoadError } from "./admin-project-load-error";
 import * as mediaClient from "./platform-api-admin-media-client";
+import { buildChildReorderOrderedIds } from "./platform-child-reorder-order";
 import {
+  mapPlatformAdminMediaToEditorFields,
   mapPlatformMediaRecordToPickerSelection,
   mapPresignResponseForBrowser,
 } from "./platform-media-mapper";
 import { resolvePlatformCaseStudyWriteContext } from "./platform-parent-context";
 
 import type { PlatformApiAdminMediaListItem } from "./platform-admin-types";
+import type { ChildReorderDirection } from "./platform-child-reorder-order";
 import type {
   PlatformAdminMediaRecord,
   PlatformMediaPresignRequest,
@@ -17,6 +20,7 @@ import type {
   PlatformMediaRole,
   PlatformMediaUpdateRequest,
 } from "./platform-media-types";
+import type { PortfolioGalleryItem } from "@/lib/types/portfolio";
 
 async function assertMediaBelongsToCaseStudy(
   context: Awaited<ReturnType<typeof resolvePlatformCaseStudyWriteContext>>,
@@ -86,4 +90,39 @@ export async function deleteProjectMediaViaPlatform(
   const context = await resolvePlatformCaseStudyWriteContext(portfolioLocalId);
   await assertMediaBelongsToCaseStudy(context, mediaId);
   await mediaClient.deleteCaseStudyMedia(context.client, mediaId);
+}
+
+async function listGalleryItemsViaPlatform(
+  context: Awaited<ReturnType<typeof resolvePlatformCaseStudyWriteContext>>
+): Promise<PortfolioGalleryItem[]> {
+  const response = await context.client.listMedia({
+    caseStudyId: context.platformCaseStudyId,
+    role: "gallery",
+  });
+  return mapPlatformAdminMediaToEditorFields(response.items).gallery;
+}
+
+export async function reorderProjectGalleryMediaViaPlatform(
+  portfolioLocalId: string,
+  mediaId: string,
+  direction: ChildReorderDirection
+): Promise<PortfolioGalleryItem[]> {
+  const context = await resolvePlatformCaseStudyWriteContext(portfolioLocalId);
+  const currentGallery = await listGalleryItemsViaPlatform(context);
+  const galleryIds = currentGallery
+    .map((item) => item.mediaId)
+    .filter((id): id is string => Boolean(id));
+
+  const orderedIds = buildChildReorderOrderedIds(galleryIds, mediaId, direction);
+  if (!orderedIds) {
+    return currentGallery;
+  }
+
+  await mediaClient.reorderGalleryCaseStudyMedia(
+    context.client,
+    context.platformCaseStudyId,
+    { ordered_ids: orderedIds }
+  );
+
+  return listGalleryItemsViaPlatform(context);
 }

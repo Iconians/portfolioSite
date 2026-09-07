@@ -63,6 +63,17 @@ describe("mapPlatformApiDetail", () => {
     expect(mapped.project.highlights).toBe("PostgreSQL • Stripe");
   });
 
+  test("maps engineering consumer presentation fields from Platform detail", () => {
+    const mapped = mapPlatformApiDetail({
+      ...detail,
+      is_featured: true,
+      sort_order: 4,
+    });
+
+    expect(mapped.project.isFeatured).toBe(true);
+    expect(mapped.project.sortOrder).toBe(4);
+  });
+
   test("maps metrics and milestones with stable synthetic ids", () => {
     const mapped = mapPlatformApiDetail(detail);
     expect(mapped.metrics.length).toBe(1);

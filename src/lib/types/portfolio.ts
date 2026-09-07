@@ -71,6 +71,22 @@ export const PortfolioExtendedFieldsSchema = z.object({
   docs: urlSchema,
   heroMediaId: z.string().uuid().nullable().optional(),
   ogMediaId: z.string().uuid().nullable().optional(),
+  managePresentation: z.boolean().optional(),
+  devlaunchIsVisible: z.boolean().optional(),
+  devlaunchIsFeatured: z.boolean().optional(),
+  devlaunchSortOrder: z.number().int().min(0).max(9999).optional(),
+  engineeringPortfolioIsVisible: z.boolean().optional(),
+  engineeringPortfolioIsFeatured: z.boolean().optional(),
+  engineeringPortfolioSortOrder: z.number().int().min(0).max(9999).optional(),
+  badge: z.string().max(500).optional(),
+  bestFor: z.string().max(500).optional(),
+  businessOutcome: z.string().max(5000).optional(),
+  businessContextNote: z.string().max(5000).optional(),
+  resultsNarrative: z.string().max(10000).optional(),
+  businessSummaryOverride: z.string().max(5000).optional(),
+  businessProblemOverride: z.string().max(10000).optional(),
+  businessSolutionOverride: z.string().max(10000).optional(),
+  engineeringSummaryOverride: z.string().max(5000).optional(),
 });
 
 export const PortfolioMetricInputSchema = z.object({
@@ -78,6 +94,7 @@ export const PortfolioMetricInputSchema = z.object({
   value: z.string().min(1).max(120),
   description: z.string().max(2000).optional(),
   displayOrder: z.number().int().min(0).max(9999).optional(),
+  showOnBusiness: z.boolean().optional(),
 });
 
 export const PortfolioMetricUpdateSchema = PortfolioMetricInputSchema.partial();
@@ -126,6 +143,22 @@ export const ProjectEditorSchema = PortfolioItemSchema.extend({
   ogMediaId: z.string().uuid().nullable().optional(),
   showPlatformSection: z.boolean(),
   platformFeatures: z.array(z.string().max(255)).max(50),
+  managePresentation: z.boolean(),
+  devlaunchIsVisible: z.boolean(),
+  devlaunchIsFeatured: z.boolean(),
+  devlaunchSortOrder: z.number().int().min(0).max(9999),
+  engineeringPortfolioIsVisible: z.boolean(),
+  engineeringPortfolioIsFeatured: z.boolean(),
+  engineeringPortfolioSortOrder: z.number().int().min(0).max(9999),
+  badge: z.string().max(500),
+  bestFor: z.string().max(500),
+  businessOutcome: z.string().max(5000),
+  businessContextNote: z.string().max(5000),
+  resultsNarrative: z.string().max(10000),
+  businessSummaryOverride: z.string().max(5000),
+  businessProblemOverride: z.string().max(10000),
+  businessSolutionOverride: z.string().max(10000),
+  engineeringSummaryOverride: z.string().max(5000),
 });
 
 export type CreatePortfolioInput = z.infer<typeof PortfolioItemSchema>;
@@ -165,6 +198,8 @@ export interface PortfolioItem {
   startDate: Date | null;
   endDate: Date | null;
   sortOrder: number;
+  /** Engineering Portfolio consumer featured state (Platform projection). */
+  isFeatured?: boolean;
   gallery: PortfolioGalleryItem[];
   features: string[];
   responsibilities: string[];
@@ -193,6 +228,7 @@ export interface PortfolioMetric {
   value: string;
   description: string | null;
   displayOrder: number;
+  showOnBusiness: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

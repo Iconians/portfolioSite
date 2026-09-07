@@ -67,7 +67,7 @@ describe("platform M7 invalidation integration", () => {
     expect(source.includes("revalidateAfterPlatformProjectWrite")).toBe(true);
   });
 
-  test("blocked gallery reorder action performs no public invalidation", () => {
+  test("gallery reorder action invalidates after successful Platform reorder", () => {
     const source = readFileSync(
       fileURLToPath(
         new URL("../../../src/lib/actions/portfolio-media.ts", import.meta.url)
@@ -78,8 +78,10 @@ describe("platform M7 invalidation integration", () => {
     const reorderStart = source.indexOf("export async function reorderProjectGalleryMediaAction");
     const reorderBlock = source.slice(reorderStart);
 
-    expect(reorderBlock.includes("revalidatePublicProjectMediaPaths")).toBe(false);
-    expect(reorderBlock.includes("invalidatePublicProjectCache")).toBe(false);
+    const reorderCallIndex = reorderBlock.indexOf("reorderProjectGalleryMediaViaPlatform");
+    const invalidateIndex = reorderBlock.indexOf("revalidatePublicProjectMediaPaths");
+    expect(reorderCallIndex).toBeGreaterThan(-1);
+    expect(invalidateIndex).toBeGreaterThan(reorderCallIndex);
   });
 
   test("public cache module invalidates paths then provider cache", () => {

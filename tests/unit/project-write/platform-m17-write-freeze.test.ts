@@ -47,7 +47,7 @@ describe("P11-M17 legacy shared-content write freeze", () => {
     expect(isLegacySharedContentWriteSource("platform-api")).toBe(false);
   });
 
-  test("createPortfolioAction no longer invokes Prisma create", () => {
+  test("createPortfolioAction blocks legacy full editor create on platform-api", () => {
     const source = readFileSync(
       fileURLToPath(
         new URL("../../../src/lib/actions/portfolio.ts", import.meta.url)
@@ -55,8 +55,24 @@ describe("P11-M17 legacy shared-content write freeze", () => {
       "utf8"
     );
 
-    expect(source.includes("createPortfolioItem")).toBe(false);
-    expect(source.includes("PLATFORM_PROJECT_CREATE_UNAVAILABLE_MESSAGE")).toBe(true);
+    expect(source.includes("assertPlatformProjectCreateAllowed")).toBe(true);
+    expect(source.includes("createPortfolioProjectViaPlatform")).toBe(true);
+  });
+
+  test("createPortfolioProjectAction does not invoke Prisma create", () => {
+    const source = readFileSync(
+      fileURLToPath(
+        new URL("../../../src/lib/actions/portfolio.ts", import.meta.url)
+      ),
+      "utf8"
+    );
+
+    const fnStart = source.indexOf("export async function createPortfolioProjectAction");
+    const fnEnd = source.indexOf("export async function updatePortfolioAction");
+    const createBlock = source.slice(fnStart, fnEnd);
+
+    expect(createBlock.includes("createPortfolioProjectViaPlatform")).toBe(true);
+    expect(createBlock.includes("createPortfolioItem")).toBe(false);
   });
 
   test("updatePortfolioAction routes only through Platform update helper", () => {
@@ -71,7 +87,7 @@ describe("P11-M17 legacy shared-content write freeze", () => {
     expect(source.includes("updatePortfolioItem")).toBe(false);
   });
 
-  test("portfolio metrics action no longer imports Prisma metric writers", () => {
+  test("portfolio metrics action routes platform writes through Platform helpers", () => {
     const source = readFileSync(
       fileURLToPath(
         new URL("../../../src/lib/actions/portfolio-metrics.ts", import.meta.url)
@@ -81,7 +97,8 @@ describe("P11-M17 legacy shared-content write freeze", () => {
 
     expect(source.includes("createPortfolioMetricViaPlatform")).toBe(true);
     expect(source.includes("createPortfolioMetric(")).toBe(false);
-    expect(source.includes("@/lib/portfolio/portfolio.service")).toBe(false);
+    expect(source.includes("reorderPortfolioMetricsViaPlatform")).toBe(true);
+    expect(source.includes("updatePortfolioMetric(")).toBe(false);
   });
 
   test("admin project editor load no longer has Prisma editor branch", () => {

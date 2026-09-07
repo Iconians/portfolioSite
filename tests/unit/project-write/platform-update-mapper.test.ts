@@ -114,6 +114,85 @@ describe("buildPlatformCaseStudyPatchRequest", () => {
     expect("consumer_settings" in patch).toBe(false);
   });
 
+  test("includes consumer_settings and presentation scalars when managePresentation is enabled", () => {
+    const patch = buildPlatformCaseStudyPatchRequest({
+      legacy: baseLegacy,
+      extended: {
+        ...baseExtended,
+        managePresentation: true,
+        devlaunchIsVisible: true,
+        devlaunchIsFeatured: false,
+        devlaunchSortOrder: 3,
+        engineeringPortfolioIsVisible: true,
+        engineeringPortfolioIsFeatured: true,
+        engineeringPortfolioSortOrder: 7,
+        badge: "SaaS",
+        bestFor: "Teams",
+        businessOutcome: "Revenue up",
+        businessContextNote: "Context",
+        resultsNarrative: "Results",
+        businessSummaryOverride: "Biz summary",
+        businessProblemOverride: "Biz problem",
+        businessSolutionOverride: "Biz solution",
+        engineeringSummaryOverride: "Eng summary",
+      },
+      originalSlug: "devlaunch-crm",
+    });
+
+    expect(patch.consumer_settings).toEqual([
+      {
+        consumer: "devlaunch",
+        is_visible: true,
+        is_featured: false,
+        sort_order: 3,
+      },
+      {
+        consumer: "engineering_portfolio",
+        is_visible: true,
+        is_featured: true,
+        sort_order: 7,
+      },
+    ]);
+    expect(patch.badge).toBe("SaaS");
+    expect(patch.best_for).toBe("Teams");
+    expect(patch.business_outcome).toBe("Revenue up");
+    expect(patch.business_context_note).toBe("Context");
+    expect(patch.results_narrative).toBe("Results");
+    expect(patch.business_summary_override).toBe("Biz summary");
+    expect(patch.business_problem_override).toBe("Biz problem");
+    expect(patch.business_solution_override).toBe("Biz solution");
+    expect(patch.engineering_summary_override).toBe("Eng summary");
+  });
+
+  test("clears presentation override fields with null when editor submits empty strings", () => {
+    const patch = buildPlatformCaseStudyPatchRequest({
+      legacy: baseLegacy,
+      extended: {
+        ...baseExtended,
+        managePresentation: true,
+        devlaunchIsVisible: false,
+        devlaunchIsFeatured: false,
+        devlaunchSortOrder: 0,
+        engineeringPortfolioIsVisible: false,
+        engineeringPortfolioIsFeatured: false,
+        engineeringPortfolioSortOrder: 0,
+        badge: "",
+        bestFor: "",
+        businessOutcome: "",
+        businessContextNote: "",
+        resultsNarrative: "",
+        businessSummaryOverride: "",
+        businessProblemOverride: "",
+        businessSolutionOverride: "",
+        engineeringSummaryOverride: "",
+      },
+      originalSlug: "devlaunch-crm",
+    });
+
+    expect(patch.business_summary_override).toBeNull();
+    expect(patch.engineering_summary_override).toBeNull();
+  });
+
   test("empty technologies array clears technologies collection", () => {
     const patch = buildPlatformCaseStudyPatchRequest({
       legacy: { ...baseLegacy, highlights: "" },

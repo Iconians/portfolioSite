@@ -1,13 +1,16 @@
 import "server-only";
 
 import { AdminProjectLoadError } from "./admin-project-load-error";
+import { buildChildReorderOrderedIds } from "./platform-child-reorder-order";
 import {
   buildPlatformMetricCreateRequest,
   buildPlatformMetricUpdateRequest,
   mapPlatformAdminMetricToPortfolio,
+  mapPlatformAdminMetricsToPortfolio,
 } from "./platform-metric-mapper";
 import { resolvePlatformCaseStudyWriteContext } from "./platform-parent-context";
 
+import type { ChildReorderDirection } from "./platform-child-reorder-order";
 import type {
   PortfolioMetric,
   PortfolioMetricInput,
@@ -68,4 +71,36 @@ export async function deletePortfolioMetricViaPlatform(
   const context = await resolvePlatformCaseStudyWriteContext(portfolioLocalId);
   await assertMetricBelongsToCaseStudy(context, metricId);
   await context.client.deleteMetric(metricId);
+}
+
+export async function reorderPortfolioMetricsViaPlatform(
+  portfolioLocalId: string,
+  metricId: string,
+  direction: ChildReorderDirection
+): Promise<PortfolioMetric[]> {
+  const context = await resolvePlatformCaseStudyWriteContext(portfolioLocalId);
+  const detail = await context.client.getCaseStudyById(context.platformCaseStudyId);
+  const current = mapPlatformAdminMetricsToPortfolio(
+    detail.metrics,
+    context.portfolioLocalId
+  );
+  const orderedIds = buildChildReorderOrderedIds(
+    current.map((metric) => metric.id),
+    metricId,
+    direction
+  );
+
+  if (!orderedIds) {
+    return current;
+  }
+
+  await context.client.reorderMetrics(context.platformCaseStudyId, orderedIds);
+
+  const refreshed = await context.client.getCaseStudyById(
+    context.platformCaseStudyId
+  );
+  return mapPlatformAdminMetricsToPortfolio(
+    refreshed.metrics,
+    context.portfolioLocalId
+  );
 }

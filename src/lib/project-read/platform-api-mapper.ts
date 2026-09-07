@@ -112,6 +112,7 @@ function mapMetrics(
     value: metric.value,
     description: metric.description ?? null,
     displayOrder: index,
+    showOnBusiness: true,
     createdAt: timestamp,
     updatedAt: timestamp,
   }));
@@ -186,7 +187,8 @@ function buildPortfolioItemFromDetail(detail: PlatformApiCaseStudyDetail): Portf
     publishStatus: "published",
     startDate: parseOptionalDate(detail.start_date),
     endDate: parseOptionalDate(detail.end_date),
-    sortOrder: 0,
+    sortOrder: detail.sort_order ?? 0,
+    isFeatured: detail.is_featured ?? false,
     gallery: mapGallery(detail.media),
     features: contentItemsByKind(detail.content_items, "feature"),
     responsibilities: contentItemsByKind(detail.content_items, "responsibility"),
@@ -246,4 +248,15 @@ export function mapPlatformApiListItemToPortfolioItem(
     links: [],
     media: [],
   });
+}
+
+export function mergePlatformListPresentation(
+  project: PortfolioItem,
+  listItem: PlatformApiListItem
+): PortfolioItem {
+  return {
+    ...project,
+    isFeatured: listItem.is_featured ?? project.isFeatured ?? false,
+    sortOrder: listItem.sort_order ?? project.sortOrder,
+  };
 }

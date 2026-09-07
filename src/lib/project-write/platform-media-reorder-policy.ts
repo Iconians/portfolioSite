@@ -1,6 +1,8 @@
+/** @deprecated M4 — platform-api gallery reorder is enabled; retained for error mapper compatibility. */
 export const PLATFORM_GALLERY_REORDER_UNAVAILABLE_MESSAGE =
   "Gallery reorder is unavailable in platform-api mode until Platform exposes an atomic reorder contract.";
 
+/** @deprecated M4 — platform-api gallery reorder is enabled; retained for error mapper compatibility. */
 export class PlatformGalleryReorderUnavailableError extends Error {
   constructor() {
     super(PLATFORM_GALLERY_REORDER_UNAVAILABLE_MESSAGE);
@@ -9,15 +11,16 @@ export class PlatformGalleryReorderUnavailableError extends Error {
 }
 
 export function assertPlatformGalleryReorderAllowed(
-  writeSource: "database" | "platform-api"
+  _writeSource: "database" | "platform-api"
 ): void {
-  if (writeSource === "platform-api") {
-    throw new PlatformGalleryReorderUnavailableError();
-  }
+  // M4: gallery reorder enabled for platform-api via atomic endpoint.
 }
 
 export function shouldDisableGalleryReorder(
-  writeSource: "database" | "platform-api"
+  _writeSource: "database" | "platform-api"
 ): boolean {
-  return writeSource === "platform-api";
+  return false;
 }
+
+export const PLATFORM_GALLERY_SORT_ORDER_PATCH_BLOCKED_MESSAGE =
+  "Use gallery reorder controls to change gallery order.";

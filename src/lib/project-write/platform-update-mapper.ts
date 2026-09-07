@@ -1,5 +1,6 @@
 import { slugifyTitle } from "@/lib/portfolio/slug";
 
+import { buildPresentationPatchFromExtended } from "./platform-presentation-mapper";
 import { PlatformSlugImmutableError } from "./platform-update-errors";
 
 import type {
@@ -189,5 +190,6 @@ export function buildPlatformCaseStudyPatchRequest(input: {
       docs: input.extended.docs,
     }),
     ...mapContentItemPatch(input.extended),
+    ...buildPresentationPatchFromExtended(input.extended),
   };
 }

@@ -4,29 +4,25 @@ import { fileURLToPath } from "node:url";
 
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
 import {
-  assertPlatformGalleryReorderAllowed,
-  PLATFORM_GALLERY_REORDER_UNAVAILABLE_MESSAGE,
   PlatformGalleryReorderUnavailableError,
   shouldDisableGalleryReorder,
 } from "@/lib/project-write/platform-media-reorder-policy";
 
 describe("platform gallery reorder policy", () => {
-  test("allows reorder policy check to pass in database mode", () => {
-    expect(() => assertPlatformGalleryReorderAllowed("database")).not.toThrow();
+  test("enables gallery reorder in database mode", () => {
     expect(shouldDisableGalleryReorder("database")).toBe(false);
   });
 
-  test("rejects gallery reorder in platform-api mode before any mutation", () => {
-    expect(shouldDisableGalleryReorder("platform-api")).toBe(true);
-    expect(() => assertPlatformGalleryReorderAllowed("platform-api")).toThrow(
-      PLATFORM_GALLERY_REORDER_UNAVAILABLE_MESSAGE
-    );
+  test("enables gallery reorder in platform-api mode", () => {
+    expect(shouldDisableGalleryReorder("platform-api")).toBe(false);
   });
 
-  test("maps gallery reorder rejection to user-facing message", () => {
+  test("maps legacy gallery reorder rejection to user-facing message", () => {
     expect(
       toPlatformProjectWriteUserMessage(new PlatformGalleryReorderUnavailableError())
-    ).toBe(PLATFORM_GALLERY_REORDER_UNAVAILABLE_MESSAGE);
+    ).toBe(
+      "Gallery reorder is unavailable in platform-api mode until Platform exposes an atomic reorder contract."
+    );
   });
 
   test("gallery editor does not implement sequential Platform sort_order PATCH reorder", () => {
@@ -41,6 +37,7 @@ describe("platform gallery reorder policy", () => {
     );
     expect(source.includes("sortOrder")).toBe(false);
     expect(source.includes("sort_order")).toBe(false);
+    expect(source.includes("reorderProjectGalleryMediaAction")).toBe(true);
   });
 
   test("portfolio media update rejects sort_order before Platform I/O in platform-api mode", () => {
@@ -50,9 +47,19 @@ describe("platform gallery reorder policy", () => {
       ),
       "utf8"
     );
-    expect(source.includes('assertPlatformGalleryReorderAllowed("platform-api")')).toBe(
+    expect(source.includes("PLATFORM_GALLERY_SORT_ORDER_PATCH_BLOCKED_MESSAGE")).toBe(
       true
     );
     expect(source.includes("parsed.sortOrder !== undefined")).toBe(true);
+  });
+
+  test("platform media write exports gallery reorder helper", () => {
+    const source = readFileSync(
+      fileURLToPath(
+        new URL("../../../src/lib/project-write/platform-media-write.ts", import.meta.url)
+      ),
+      "utf8"
+    );
+    expect(source.includes("reorderProjectGalleryMediaViaPlatform")).toBe(true);
   });
 });

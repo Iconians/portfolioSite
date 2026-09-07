@@ -1,4 +1,4 @@
-import { HOME_FEATURED_SLUGS } from "@/lib/portfolio/home-featured";
+import type { HomeFeaturedReadSource } from "@/lib/portfolio/home-featured";
 
 export type PublicProjectCacheInvalidationReason = "content" | "membership";
 
@@ -11,16 +11,14 @@ export function buildPublicProjectDetailPath(slug: string): string {
   return `/projects/${slug}`;
 }
 
-export function isHomeFeaturedSlug(slug: string): boolean {
-  return (HOME_FEATURED_SLUGS as readonly string[]).includes(slug);
-}
-
 export function buildPublicProjectCacheInvalidationPlan(
   slug: string,
-  reason: PublicProjectCacheInvalidationReason
+  reason: PublicProjectCacheInvalidationReason,
+  options?: { readSource?: HomeFeaturedReadSource }
 ): PublicProjectCacheInvalidationPlan {
   const invalidateHomepage =
-    reason === "membership" || isHomeFeaturedSlug(slug);
+    reason === "membership" ||
+    (reason === "content" && options?.readSource === "platform-api");
 
   return {
     projectDetailPath: buildPublicProjectDetailPath(slug),
@@ -30,9 +28,10 @@ export function buildPublicProjectCacheInvalidationPlan(
 
 export function collectPublicProjectCachePaths(
   slug: string,
-  reason: PublicProjectCacheInvalidationReason
+  reason: PublicProjectCacheInvalidationReason,
+  options?: { readSource?: HomeFeaturedReadSource }
 ): string[] {
-  const plan = buildPublicProjectCacheInvalidationPlan(slug, reason);
+  const plan = buildPublicProjectCacheInvalidationPlan(slug, reason, options);
   const paths = [plan.projectDetailPath];
   if (plan.homepagePath) {
     paths.push(plan.homepagePath);

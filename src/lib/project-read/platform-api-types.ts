@@ -17,6 +17,7 @@ export interface PlatformApiListItem {
   project_type: string;
   lifecycle_status: string;
   is_featured?: boolean;
+  sort_order?: number;
   published_at?: string | null;
   categories?: PlatformApiCategoryRef[];
   technologies?: PlatformApiTechnologyRef[];

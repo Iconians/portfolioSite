@@ -6,6 +6,7 @@ import {
   pickHomeFeaturedProjects,
   pickRemainingPortfolioProjects,
 } from "@/lib/portfolio/home-featured";
+import { getProjectReadSource } from "@/lib/project-read/config";
 
 import { PortfolioSectionClient } from "./PortfolioSectionClient";
 
@@ -22,7 +23,8 @@ export default function PortfolioSection({
     return null;
   }
 
-  const featuredItems = pickHomeFeaturedProjects(initialItems);
+  const readSource = getProjectReadSource();
+  const featuredItems = pickHomeFeaturedProjects(initialItems, readSource);
   const remainingItems = pickRemainingPortfolioProjects(initialItems, featuredItems);
 
   if (featuredItems.length === 0) {

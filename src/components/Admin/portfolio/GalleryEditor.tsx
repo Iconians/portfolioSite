@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { MediaPicker } from "@/components/Admin/media/MediaPicker";
@@ -9,8 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   deleteProjectPlatformMediaAction,
+  reorderProjectGalleryMediaAction,
   updateProjectPlatformMediaAction,
 } from "@/lib/actions/portfolio-media";
+import { applyGalleryDirectionalReorder } from "@/lib/portfolio/gallery-order";
 import { shouldDisableGalleryReorder } from "@/lib/project-write/platform-media-reorder-policy";
 
 import type { PortfolioGalleryItem } from "@/lib/types/portfolio";
@@ -31,8 +33,9 @@ export function GalleryEditor({
   portfolioId,
 }: GalleryEditorProps) {
   const [isPending, startTransition] = useTransition();
+  const [isReordering, setIsReordering] = useState(false);
   const usePlatformMedia = writeSource === "platform-api" && Boolean(portfolioId);
-  const disableReorder = shouldDisableGalleryReorder(writeSource);
+  const disableReorder = shouldDisableGalleryReorder(writeSource) || !usePlatformMedia;
 
   function addItem(asset: { id: string; publicUrl: string; altText: string | null }) {
     onChange([
@@ -83,14 +86,46 @@ export function GalleryEditor({
     onChange(items.filter((_, itemIndex) => itemIndex !== index));
   }
 
+  async function handleReorder(mediaId: string | undefined, direction: "up" | "down") {
+    if (!mediaId || !usePlatformMedia || !portfolioId || isReordering || disableReorder) {
+      return;
+    }
+
+    const previous = items;
+    const optimistic = applyGalleryDirectionalReorder(items, mediaId, direction);
+    if (!optimistic) {
+      return;
+    }
+
+    setIsReordering(true);
+    onChange(optimistic);
+
+    const result = await reorderProjectGalleryMediaAction(
+      portfolioId,
+      mediaId,
+      direction
+    );
+
+    setIsReordering(false);
+
+    if (result.success) {
+      onChange(result.data);
+      return;
+    }
+
+    onChange(previous);
+    toast.error(result.error);
+  }
+
   return (
     <div className="space-y-4">
       <div>
         <Label>Gallery images</Label>
         <p className="mt-1 text-xs text-muted-foreground">
-          Add images from the media library. Captions and alt text are optional.
-          {disableReorder
-            ? " Gallery reorder is unavailable in platform-api mode until Platform exposes an atomic reorder contract."
+          Platform-managed gallery media. Add images from the media library; captions and alt
+          text are optional.
+          {usePlatformMedia
+            ? " Reorder uses gallery-role Platform media IDs only."
             : null}
         </p>
       </div>
@@ -109,26 +144,53 @@ export function GalleryEditor({
               className="max-h-40 rounded object-contain"
             />
           </div>
+          {item.mediaId ? (
+            <p className="text-xs text-muted-foreground">Gallery media ID: {item.mediaId}</p>
+          ) : null}
           <Input
             value={item.alt ?? ""}
-            disabled={disabled || isPending}
+            disabled={disabled || isPending || isReordering}
             placeholder="Alt text"
             onChange={(event) => updateItem(index, { alt: event.target.value })}
           />
           <Input
             value={item.caption ?? ""}
-            disabled={disabled || isPending}
+            disabled={disabled || isPending || isReordering}
             placeholder="Caption"
             onChange={(event) => updateItem(index, { caption: event.target.value })}
           />
-          <Button
-            type="button"
-            variant="outline"
-            disabled={disabled || isPending}
-            onClick={() => removeItem(index)}
-          >
-            Remove image
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            {!disableReorder && item.mediaId ? (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={disabled || isPending || isReordering || index === 0}
+                  onClick={() => handleReorder(item.mediaId, "up")}
+                >
+                  Move up
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={
+                    disabled || isPending || isReordering || index === items.length - 1
+                  }
+                  onClick={() => handleReorder(item.mediaId, "down")}
+                >
+                  Move down
+                </Button>
+              </>
+            ) : null}
+            <Button
+              type="button"
+              variant="outline"
+              disabled={disabled || isPending || isReordering}
+              onClick={() => removeItem(index)}
+            >
+              Remove image
+            </Button>
+          </div>
         </div>
       ))}
 

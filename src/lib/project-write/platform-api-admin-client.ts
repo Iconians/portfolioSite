@@ -18,6 +18,7 @@ import type {
   PlatformApiAdminCaseStudyListResponse,
   PlatformApiAdminMediaListResponse,
 } from "./platform-admin-types";
+import type { PlatformApiCaseStudyCreateRequest } from "./platform-create-types";
 import type {
   PlatformAdminMediaRecord,
   PlatformMediaPresignRequest,
@@ -113,6 +114,27 @@ export class PlatformApiAdminClient extends PlatformApiAdminRequestTransport {
     return data;
   }
 
+  async createCaseStudy(
+    payload: PlatformApiCaseStudyCreateRequest
+  ): Promise<PlatformApiAdminCaseStudyDetail> {
+    const data = await this.requestJson<PlatformApiAdminCaseStudyDetail>(
+      "/case-studies",
+      {
+        method: "POST",
+        body: payload,
+        operation: "createCaseStudy",
+      }
+    );
+
+    if (!data?.id) {
+      throw new PlatformApiAdminMalformedResponseError(
+        "Platform API admin create response missing id"
+      );
+    }
+
+    return data;
+  }
+
   async updateCaseStudy(
     id: string,
     payload: PlatformApiCaseStudyPatchRequest
@@ -153,6 +175,15 @@ export class PlatformApiAdminClient extends PlatformApiAdminRequestTransport {
     return childClient.deleteMetric(this, metricId);
   }
 
+  async reorderMetrics(
+    caseStudyId: string,
+    orderedIds: string[]
+  ): Promise<void> {
+    return childClient.reorderMetrics(this, caseStudyId, {
+      ordered_ids: orderedIds,
+    });
+  }
+
   async createMilestone(
     caseStudyId: string,
     payload: PlatformApiMilestoneCreateRequest
@@ -169,6 +200,15 @@ export class PlatformApiAdminClient extends PlatformApiAdminRequestTransport {
 
   async deleteMilestone(milestoneId: string): Promise<void> {
     return childClient.deleteMilestone(this, milestoneId);
+  }
+
+  async reorderMilestones(
+    caseStudyId: string,
+    orderedIds: string[]
+  ): Promise<void> {
+    return childClient.reorderMilestones(this, caseStudyId, {
+      ordered_ids: orderedIds,
+    });
   }
 
   async publishCaseStudy(id: string): Promise<PlatformApiAdminCaseStudyDetail> {
@@ -239,6 +279,15 @@ export class PlatformApiAdminClient extends PlatformApiAdminRequestTransport {
 
   async deleteCaseStudyMedia(mediaId: string): Promise<void> {
     return mediaClient.deleteCaseStudyMedia(this, mediaId);
+  }
+
+  async reorderGalleryMedia(
+    caseStudyId: string,
+    orderedIds: string[]
+  ): Promise<void> {
+    return mediaClient.reorderGalleryCaseStudyMedia(this, caseStudyId, {
+      ordered_ids: orderedIds,
+    });
   }
 
   async listMedia(options?: {

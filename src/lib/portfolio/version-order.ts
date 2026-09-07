@@ -22,3 +22,23 @@ export function getVersionReorderPair(
     adjacent: versions[adjacentIndex],
   };
 }
+
+export function applyVersionDirectionalReorder(
+  versions: ProjectVersion[],
+  versionId: string,
+  direction: VersionReorderDirection
+): ProjectVersion[] | null {
+  const pair = getVersionReorderPair(versions, versionId, direction);
+  if (!pair) {
+    return null;
+  }
+
+  const currentIndex = versions.findIndex((version) => version.id === versionId);
+  const adjacentIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+  const next = [...versions];
+  [next[currentIndex], next[adjacentIndex]] = [
+    next[adjacentIndex],
+    next[currentIndex],
+  ];
+  return next;
+}

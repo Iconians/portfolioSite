@@ -5,13 +5,15 @@ import { z } from "zod";
 import { logAdminAction } from "@/lib/logger";
 import { validateMediaUpload } from "@/lib/media/validate-upload";
 import { requireAdmin } from "@/lib/permissions";
+import { getProjectWriteSource } from "@/lib/project-write/config";
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
-import { assertPlatformGalleryReorderAllowed } from "@/lib/project-write/platform-media-reorder-policy";
+import { PLATFORM_GALLERY_SORT_ORDER_PATCH_BLOCKED_MESSAGE } from "@/lib/project-write/platform-media-reorder-policy";
 import {
   deleteProjectMediaViaPlatform,
   listProjectMediaViaPlatform,
   presignProjectMediaViaPlatform,
   registerProjectMediaViaPlatform,
+  reorderProjectGalleryMediaViaPlatform,
   updateProjectMediaViaPlatform,
 } from "@/lib/project-write/platform-media-write";
 import {
@@ -24,6 +26,7 @@ import type {
   PlatformMediaRole,
 } from "@/lib/project-write/platform-media-types";
 import type { ActionResult } from "@/lib/types/actions";
+import type { PortfolioGalleryItem } from "@/lib/types/portfolio";
 
 const PresignInputSchema = z.object({
   filename: z.string().min(1),
@@ -173,8 +176,11 @@ export async function updateProjectPlatformMediaAction(
     const user = await requireAdmin();
 
     const parsed = UpdateInputSchema.parse(input);
-    if (parsed.sortOrder !== undefined) {
-      assertPlatformGalleryReorderAllowed("platform-api");
+    if (parsed.sortOrder !== undefined && getProjectWriteSource() === "platform-api") {
+      return {
+        success: false,
+        error: PLATFORM_GALLERY_SORT_ORDER_PATCH_BLOCKED_MESSAGE,
+      };
     }
 
     const updated = await updateProjectMediaViaPlatform(portfolioId, mediaId, {
@@ -217,14 +223,35 @@ export async function deleteProjectPlatformMediaAction(
 }
 
 export async function reorderProjectGalleryMediaAction(
-  _portfolioId: string,
-  _mediaId: string,
-  _direction: "up" | "down"
-): Promise<ActionResult<void>> {
+  portfolioId: string,
+  mediaId: string,
+  direction: "up" | "down"
+): Promise<ActionResult<PortfolioGalleryItem[]>> {
   try {
-    await requireAdmin();
-    assertPlatformGalleryReorderAllowed("platform-api");
-    return { success: false, error: "Gallery reorder is not available." };
+    const user = await requireAdmin();
+
+    if (getProjectWriteSource() !== "platform-api") {
+      return {
+        success: false,
+        error: "Gallery reorder requires PROJECT_WRITE_SOURCE=platform-api.",
+      };
+    }
+
+    const gallery = await reorderProjectGalleryMediaViaPlatform(
+      portfolioId,
+      mediaId,
+      direction
+    );
+
+    await logAdminAction(user.id, "update", "platform_media", mediaId, {
+      portfolioId,
+      direction,
+      writeSource: "platform-api",
+      operation: "gallery_reorder",
+    }).catch(() => {});
+
+    await revalidatePublicProjectMediaPaths(portfolioId);
+    return { success: true, data: gallery };
   } catch (error) {
     return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }

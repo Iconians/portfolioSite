@@ -19,6 +19,7 @@ function buildMetric(
     value: "1",
     description: null,
     displayOrder,
+    showOnBusiness: true,
     createdAt: new Date(createdAt),
     updatedAt: new Date(createdAt),
   };

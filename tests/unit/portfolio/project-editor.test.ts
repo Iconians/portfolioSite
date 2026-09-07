@@ -6,6 +6,8 @@ import {
 } from "@/lib/portfolio/project-editor";
 import { ProjectEditorSchema } from "@/lib/types/portfolio";
 
+import { projectEditorPresentationDefaults } from "../../helpers/project-editor-fixtures";
+
 describe("ProjectEditorSchema", () => {
   test("accepts a complete editor payload", () => {
     const result = ProjectEditorSchema.safeParse({
@@ -43,6 +45,7 @@ describe("ProjectEditorSchema", () => {
       ogMediaId: null,
       showPlatformSection: false,
       platformFeatures: ["Media library & persisted uploads"],
+      ...projectEditorPresentationDefaults,
     });
 
     expect(result.success).toBe(true);
@@ -104,6 +107,7 @@ describe("project-editor helpers", () => {
       ogMediaId: null,
       showPlatformSection: false,
       platformFeatures: [],
+      ...projectEditorPresentationDefaults,
     });
 
     expect(legacy.category).toEqual(["Web"]);
