@@ -1,14 +1,14 @@
 "use server";
 
-import { z } from "zod";
-
 import { logAdminAction } from "@/lib/logger";
 import { requireAdmin } from "@/lib/permissions";
+import { reorderProjectVersion } from "@/lib/portfolio/portfolio.service";
+import { getProjectWriteSource } from "@/lib/project-write/config";
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
-import { assertPlatformChildReorderAllowed } from "@/lib/project-write/platform-child-reorder-policy";
 import {
   createProjectVersionViaPlatform,
   deleteProjectVersionViaPlatform,
+  reorderProjectVersionsViaPlatform,
   updateProjectVersionViaPlatform,
 } from "@/lib/project-write/platform-milestone-write";
 import {
@@ -26,14 +26,6 @@ import type {
   ProjectVersionInput,
   ProjectVersionUpdate,
 } from "@/lib/types/portfolio";
-
-function toUserMessage(error: unknown): string {
-  if (error instanceof z.ZodError) {
-    return error.issues.map((issue) => issue.message).join(", ");
-  }
-
-  return error instanceof Error ? error.message : "Something went wrong.";
-}
 
 async function revalidatePlatformPortfolioPaths(portfolioId: string) {
   revalidateAdminProjectPaths(portfolioId);
@@ -112,12 +104,32 @@ export async function reorderProjectVersionAction(
   direction: "up" | "down"
 ): Promise<ActionResult<ProjectVersion[]>> {
   try {
-    await requireAdmin();
-    void versionId;
-    void portfolioId;
-    void direction;
-    assertPlatformChildReorderAllowed("platform-api");
-    return { success: false, error: toUserMessage(new Error("Unreachable")) };
+    const user = await requireAdmin();
+
+    if (getProjectWriteSource() === "platform-api") {
+      const versions = await reorderProjectVersionsViaPlatform(
+        portfolioId,
+        versionId,
+        direction
+      );
+      await logAdminAction(user.id, "update", "project_version", versionId, {
+        portfolioId,
+        direction,
+        writeSource: "platform-api",
+        operation: "reorder",
+      }).catch(() => {});
+      await revalidatePlatformPortfolioPaths(portfolioId);
+      return { success: true, data: versions };
+    }
+
+    const versions = await reorderProjectVersion(versionId, direction);
+    await logAdminAction(user.id, "update", "project_version", versionId, {
+      portfolioId,
+      direction,
+      writeSource: "database",
+      operation: "reorder",
+    }).catch(() => {});
+    return { success: true, data: versions };
   } catch (error) {
     return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }

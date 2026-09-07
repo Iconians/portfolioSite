@@ -1,14 +1,14 @@
 "use server";
 
-import { z } from "zod";
-
 import { logAdminAction } from "@/lib/logger";
 import { requireAdmin } from "@/lib/permissions";
+import { reorderPortfolioMetric } from "@/lib/portfolio/portfolio.service";
+import { getProjectWriteSource } from "@/lib/project-write/config";
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
-import { assertPlatformChildReorderAllowed } from "@/lib/project-write/platform-child-reorder-policy";
 import {
   createPortfolioMetricViaPlatform,
   deletePortfolioMetricViaPlatform,
+  reorderPortfolioMetricsViaPlatform,
   updatePortfolioMetricViaPlatform,
 } from "@/lib/project-write/platform-metric-write";
 import {
@@ -26,14 +26,6 @@ import type {
   PortfolioMetricInput,
   PortfolioMetricUpdate,
 } from "@/lib/types/portfolio";
-
-function toUserMessage(error: unknown): string {
-  if (error instanceof z.ZodError) {
-    return error.issues.map((issue) => issue.message).join(", ");
-  }
-
-  return error instanceof Error ? error.message : "Something went wrong.";
-}
 
 async function revalidatePlatformPortfolioPaths(portfolioId: string) {
   revalidateAdminProjectPaths(portfolioId);
@@ -112,12 +104,32 @@ export async function reorderPortfolioMetricAction(
   direction: "up" | "down"
 ): Promise<ActionResult<PortfolioMetric[]>> {
   try {
-    await requireAdmin();
-    void metricId;
-    void portfolioId;
-    void direction;
-    assertPlatformChildReorderAllowed("platform-api");
-    return { success: false, error: toUserMessage(new Error("Unreachable")) };
+    const user = await requireAdmin();
+
+    if (getProjectWriteSource() === "platform-api") {
+      const metrics = await reorderPortfolioMetricsViaPlatform(
+        portfolioId,
+        metricId,
+        direction
+      );
+      await logAdminAction(user.id, "update", "portfolio_metric", metricId, {
+        portfolioId,
+        direction,
+        writeSource: "platform-api",
+        operation: "reorder",
+      }).catch(() => {});
+      await revalidatePlatformPortfolioPaths(portfolioId);
+      return { success: true, data: metrics };
+    }
+
+    const metrics = await reorderPortfolioMetric(metricId, direction);
+    await logAdminAction(user.id, "update", "portfolio_metric", metricId, {
+      portfolioId,
+      direction,
+      writeSource: "database",
+      operation: "reorder",
+    }).catch(() => {});
+    return { success: true, data: metrics };
   } catch (error) {
     return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }

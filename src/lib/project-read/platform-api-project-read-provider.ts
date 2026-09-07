@@ -11,6 +11,7 @@ import {
   mapPlatformApiDetail,
   mapPlatformApiDetailToPortfolioItem,
   mapPlatformApiListItemToPortfolioItem,
+  mergePlatformListPresentation,
 } from "./platform-api-mapper";
 
 import type {
@@ -93,9 +94,10 @@ export class PlatformApiProjectReadProvider implements ProjectReadProvider {
       listItems.map(async (item) => {
         try {
           const detail = await this.fetchDetail(item.slug);
-          return detail
+          const mapped = detail
             ? mapPlatformApiDetailToPortfolioItem(detail)
             : mapPlatformApiListItemToPortfolioItem(item);
+          return mergePlatformListPresentation(mapped, item);
         } catch (error) {
           if (
             error instanceof PlatformApiResponseError &&

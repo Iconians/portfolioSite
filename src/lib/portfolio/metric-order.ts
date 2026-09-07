@@ -22,3 +22,23 @@ export function getMetricReorderPair(
     adjacent: metrics[adjacentIndex],
   };
 }
+
+export function applyMetricDirectionalReorder(
+  metrics: PortfolioMetric[],
+  metricId: string,
+  direction: MetricReorderDirection
+): PortfolioMetric[] | null {
+  const pair = getMetricReorderPair(metrics, metricId, direction);
+  if (!pair) {
+    return null;
+  }
+
+  const currentIndex = metrics.findIndex((metric) => metric.id === metricId);
+  const adjacentIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+  const next = [...metrics];
+  [next[currentIndex], next[adjacentIndex]] = [
+    next[adjacentIndex],
+    next[currentIndex],
+  ];
+  return next;
+}

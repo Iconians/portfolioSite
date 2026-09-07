@@ -160,6 +160,17 @@ export async function getPortfolioItemBySlug(
   return item ? mapPortfolioRecord(item) : null;
 }
 
+export async function listPortfolioBridgeRows(): Promise<
+  Array<{ id: string; slug: string | null }>
+> {
+  await requireAdmin();
+
+  return db.portfolio.findMany({
+    select: { id: true, slug: true },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 export async function resolveHeroMediaIdFromImg(
   img: string
 ): Promise<string | null> {

@@ -1,4 +1,5 @@
 import { AdminProjectLoadError } from "./admin-project-load-error";
+import { listAllPlatformAdminCaseStudies } from "./platform-admin-list-pagination";
 
 export interface PlatformCaseStudySlugListItem {
   id: string;
@@ -16,32 +17,6 @@ export interface PlatformCaseStudySlugListClient {
   }>;
 }
 
-const DEFAULT_PAGE_SIZE = 200;
-
-async function listAllCaseStudiesForSlugResolution(
-  client: PlatformCaseStudySlugListClient
-): Promise<PlatformCaseStudySlugListItem[]> {
-  const items: PlatformCaseStudySlugListItem[] = [];
-  let page = 1;
-
-  while (true) {
-    const response = await client.listCaseStudies({
-      page,
-      limit: DEFAULT_PAGE_SIZE,
-    });
-    items.push(...response.items);
-
-    const total = response.total ?? items.length;
-    if (items.length >= total || response.items.length === 0) {
-      break;
-    }
-
-    page += 1;
-  }
-
-  return items;
-}
-
 /**
  * Resolves a Platform case-study UUID from slug via the admin list contract.
  * Paginates through admin results so identity resolution is not limited to page 1.
@@ -51,7 +26,7 @@ export async function resolvePlatformCaseStudyIdBySlug(
   client: PlatformCaseStudySlugListClient,
   slug: string
 ): Promise<string> {
-  const items = await listAllCaseStudiesForSlugResolution(client);
+  const items = await listAllPlatformAdminCaseStudies(client);
   const matches = items.filter((item) => item.slug === slug);
   if (matches.length === 0) {
     throw new AdminProjectLoadError(

@@ -16,6 +16,7 @@ import {
   deleteProjectVersionAction,
   reorderProjectVersionAction,
 } from "@/lib/actions/portfolio-versions";
+import { applyVersionDirectionalReorder } from "@/lib/portfolio/version-order";
 
 import type { ProjectVersion } from "@/lib/types/portfolio";
 
@@ -37,6 +38,7 @@ export function ProjectEvolutionEditor({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [isReordering, setIsReordering] = useState(false);
 
   if (!portfolioId) {
     return (
@@ -77,17 +79,33 @@ export function ProjectEvolutionEditor({
   }
 
   async function handleReorder(versionId: string, direction: "up" | "down") {
+    if (isReordering) {
+      return null;
+    }
+
+    const previous = versions;
+    const optimistic = applyVersionDirectionalReorder(versions, versionId, direction);
+    if (!optimistic) {
+      return null;
+    }
+
+    setIsReordering(true);
+    setVersions(optimistic);
+
     const result = await reorderProjectVersionAction(
       versionId,
       projectId,
       direction
     );
 
+    setIsReordering(false);
+
     if (result.success) {
       setVersions(result.data);
       return result.data;
     }
 
+    setVersions(previous);
     toast.error(result.error);
     return null;
   }
@@ -120,7 +138,7 @@ export function ProjectEvolutionEditor({
                 key={version.id}
                 portfolioId={projectId}
                 version={version}
-                disableReorder={disableReorder}
+                disableReorder={disableReorder || isReordering}
                 isFirst={index === 0}
                 isLast={index === versions.length - 1}
                 onUpdated={(updated) =>

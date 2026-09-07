@@ -32,6 +32,7 @@ import { DetailsSection } from "./sections/DetailsSection";
 import { LinksSeoSection } from "./sections/LinksSeoSection";
 import { MediaSection } from "./sections/MediaSection";
 import { OverviewSection } from "./sections/OverviewSection";
+import { PresentationSection } from "./sections/PresentationSection";
 import { StorySection } from "./sections/StorySection";
 
 import type { PlatformLifecycleAdminState } from "@/lib/project-write/platform-lifecycle-policy";
@@ -147,7 +148,7 @@ export function ProjectEditor({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Tabs defaultValue="overview">
-        <ProjectEditorTabList />
+        <ProjectEditorTabList showPresentation={writeSource === "platform-api"} />
 
         <TabsContent value="overview">
           <OverviewSection
@@ -186,6 +187,12 @@ export function ProjectEditor({
           <StorySection {...sectionProps} />
         </TabsContent>
 
+        {writeSource === "platform-api" ? (
+          <TabsContent value="presentation">
+            <PresentationSection {...sectionProps} />
+          </TabsContent>
+        ) : null}
+
         <TabsContent value="metrics">
           <MetricEditor
             portfolioId={portfolioId}
@@ -215,6 +222,10 @@ export function ProjectEditor({
             onSelectOg={({ id, publicUrl }) => {
               setValue("ogMediaId", id, { shouldDirty: true });
               setOgImageUrl(publicUrl);
+            }}
+            onRemoveOg={() => {
+              setValue("ogMediaId", null, { shouldDirty: true });
+              setOgImageUrl("");
             }}
           />
         </TabsContent>

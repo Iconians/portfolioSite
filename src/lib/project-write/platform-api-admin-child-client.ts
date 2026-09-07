@@ -1,6 +1,7 @@
 import { PlatformApiAdminMalformedResponseError } from "./errors";
 
 import type { PlatformApiAdminRequestTransport } from "./platform-api-admin-request";
+import type { PlatformApiChildReorderRequest } from "./platform-child-reorder-types";
 import type {
   PlatformApiMetricCreateRequest,
   PlatformApiMetricUpdateRequest,
@@ -70,6 +71,21 @@ export async function deleteMetric(
   });
 }
 
+export async function reorderMetrics(
+  transport: ChildTransport,
+  caseStudyId: string,
+  payload: PlatformApiChildReorderRequest
+): Promise<void> {
+  await transport.requestJson(
+    `/case-studies/${encodeURIComponent(caseStudyId)}/metrics/reorder`,
+    {
+      method: "PUT",
+      body: payload,
+      operation: "reorderMetrics",
+    }
+  );
+}
+
 export async function createMilestone(
   transport: ChildTransport,
   caseStudyId: string,
@@ -124,4 +140,19 @@ export async function deleteMilestone(
     method: "DELETE",
     operation: "deleteMilestone",
   });
+}
+
+export async function reorderMilestones(
+  transport: ChildTransport,
+  caseStudyId: string,
+  payload: PlatformApiChildReorderRequest
+): Promise<void> {
+  await transport.requestJson(
+    `/case-studies/${encodeURIComponent(caseStudyId)}/milestones/reorder`,
+    {
+      method: "PUT",
+      body: payload,
+      operation: "reorderMilestones",
+    }
+  );
 }

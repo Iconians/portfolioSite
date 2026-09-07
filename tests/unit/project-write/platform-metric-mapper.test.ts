@@ -29,9 +29,30 @@ describe("platform metric mapper", () => {
     expect(metric.value).toBe("99.9%");
     expect(metric.description).toBe("Initial");
     expect(metric.displayOrder).toBe(2);
+    expect(metric.showOnBusiness).toBe(true);
   });
 
-  test("builds create request from Portfolio input", () => {
+  test("builds create request with explicit show_on_business from operator input", () => {
+    expect(
+      buildPlatformMetricCreateRequest(
+        {
+          label: "Users",
+          value: "100+",
+          description: "Active users",
+          showOnBusiness: false,
+        },
+        3
+      )
+    ).toEqual({
+      label: "Users",
+      value: "100+",
+      description: "Active users",
+      show_on_business: false,
+      sort_order: 3,
+    });
+  });
+
+  test("builds create request defaulting show_on_business to true", () => {
     expect(
       buildPlatformMetricCreateRequest(
         {
@@ -54,11 +75,13 @@ describe("platform metric mapper", () => {
     const payload = buildPlatformMetricUpdateRequest({
       label: "Updated",
       displayOrder: 1,
+      showOnBusiness: false,
     });
 
     expect(payload).toEqual({
       label: "Updated",
       sort_order: 1,
+      show_on_business: false,
     });
     expect("portfolioId" in payload).toBe(false);
     expect("id" in payload).toBe(false);

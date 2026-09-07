@@ -9,22 +9,22 @@ todos:
     content: "M1 (Platform repo): POST case study + atomic reorder endpoints — COMPLETE, merged, live"
     status: completed
   - id: m2-portfolio-create
-    content: "M2: Portfolio create workflow + bridge row strategy + restore Add Project UI — READY FOR OPERATOR ACCEPTANCE"
+    content: "M2: Portfolio create workflow + bridge row strategy + restore Add Project UI — ACCEPTED"
     status: completed
   - id: m3-metric-milestone-reorder
-    content: "M3: Wire atomic metric/milestone reorder; re-enable UI controls"
-    status: pending
+    content: "M3: Wire atomic metric/milestone reorder; re-enable UI controls — ACCEPTED"
+    status: completed
   - id: m4-gallery-reorder
-    content: "M4: Gallery atomic reorder + media UX polish"
-    status: pending
+    content: "M4: Gallery atomic reorder + media UX polish — ACCEPTED"
+    status: completed
   - id: m5-devlaunch-presentation-ui
-    content: "M5: DevLaunch + Engineering consumer_settings mapper/UI; business projection scalars; metric show_on_business"
+    content: "M5: DevLaunch + Engineering consumer_settings mapper/UI; business projection scalars; metric show_on_business — ACCEPTED"
     status: pending
   - id: m6-engineering-featured-migration
-    content: "M6: Migrate Engineering Portfolio HOME_FEATURED_SLUGS to Platform engineering_portfolio consumer featured"
+    content: "M6: Migrate Engineering Portfolio HOME_FEATURED_SLUGS to Platform engineering_portfolio consumer featured — ACCEPTED"
     status: pending
   - id: m7-admin-list-regression
-    content: "M7: Platform-backed admin list + full regression acceptance (incl. DevLaunch presentation E2E criteria)"
+    content: "M7: Platform-backed admin list + full regression acceptance — IMPLEMENTATION COMPLETE / PENDING PRODUCTION E2E"
     status: pending
 isProject: false
 ---
@@ -246,7 +246,7 @@ Platform supports `business_deliverable`, `platform_capability` in addition to e
 
 | Behavior | Location | Target |
 |----------|----------|--------|
-| Homepage featured slugs | `src/lib/portfolio/home-featured.ts` `HOME_FEATURED_SLUGS` | Platform `engineering_portfolio` consumer `is_featured` + `sort_order` (transitional; M6) |
+| Homepage featured slugs | `src/lib/portfolio/home-featured.ts` `HOME_FEATURED_SLUGS` | **Resolved M6** — Platform `engineering_portfolio` `is_featured` + `sort_order` in platform-api mode; `HOME_FEATURED_SLUGS` retained for database read fallback only |
 
 ---
 
@@ -254,11 +254,11 @@ Platform supports `business_deliverable`, `platform_capability` in addition to e
 
 | Gap | Evidence |
 |-----|----------|
-| `consumer_settings` not typed/mapped | [`platform-admin-patch-types.ts`](src/lib/project-write/platform-admin-patch-types.ts) omits; tests assert absent in [`platform-update-mapper.test.ts`](tests/unit/project-write/platform-update-mapper.test.ts) |
-| Business projection scalars not in editor/mapper | `badge`, `best_for`, `business_outcome`, `business_context_note`, `results_narrative`, `business_*_override` absent from [`platform-update-mapper.ts`](src/lib/project-write/platform-update-mapper.ts) |
-| `show_on_business` not editable | [`platform-metric-mapper.ts`](src/lib/project-write/platform-metric-mapper.ts) hardcodes `true` on create |
-| Admin load types omit consumer_settings + business scalars | [`platform-api-types.ts`](src/lib/project-read/platform-api-types.ts), [`platform-admin-types.ts`](src/lib/project-write/platform-admin-types.ts) |
-| Create/reorder still blocked | M3–M4 (Portfolio reorder wiring); M2 create restored |
+| ~~`consumer_settings` not typed/mapped~~ | **Resolved M5** — [`platform-presentation-types.ts`](src/lib/project-write/platform-presentation-types.ts), [`platform-presentation-mapper.ts`](src/lib/project-write/platform-presentation-mapper.ts), full-replace `consumer_settings` in PATCH |
+| ~~Business projection scalars not in editor/mapper~~ | **Resolved M5** — case-study scalars in PATCH via `buildPresentationPatchFromExtended` |
+| ~~`show_on_business` not editable~~ | **Resolved M5** — metric create/update mapper + `MetricRow` / `MetricEditor` checkbox |
+| ~~Admin load types omit consumer_settings + business scalars~~ | **Resolved M5** — [`platform-admin-types.ts`](src/lib/project-write/platform-admin-types.ts) extends `PlatformApiPresentationScalars`; admin load merges via `mapPlatformPresentationToEditorFields` |
+| Create/reorder still blocked | M2–M4 create/metric/milestone/gallery reorder restored; M5 presentation management added |
 
 ---
 
@@ -285,9 +285,9 @@ Platform supports `business_deliverable`, `platform_capability` in addition to e
 
 **Create defaults (per M0 operator decision):** draft publish state, active lifecycle, both consumers `is_visible=false` / `is_featured=false`, safe default `sort_order`.
 
-### M2 — Portfolio: project creation workflow — READY FOR OPERATOR ACCEPTANCE
+### M2 — Portfolio: project creation workflow — ACCEPTED
 
-**Status:** READY FOR OPERATOR ACCEPTANCE (Engineering Portfolio repo, 2026-09-07). Implementation review satisfactory; full CI-equivalent production build green.
+**Status:** ACCEPTED (Engineering Portfolio repo, operator confirmation 2026-09-07).
 
 **Objective:** Restore Add Project → Platform authoritative create → minimal Prisma navigation bridge → existing editor.
 
@@ -306,30 +306,95 @@ Platform supports `business_deliverable`, `platform_capability` in addition to e
 
 **Validation evidence (2026-09-07):**
 
-- Mechanism: GitHub CI-equivalent pipeline — `npm run ci` with the same env vars as [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (`DATABASE_URL`, `AUTH_SECRET`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `PROJECT_READ_SOURCE=database`, `PROJECT_WRITE_SOURCE=platform-api`)
-- Database: ephemeral `postgres:16-alpine` container (`POSTGRES_USER=postgres`, `POSTGRES_PASSWORD=postgres`, `POSTGRES_DB=ci`) on port 5434 (local port 5432 occupied by Homebrew Postgres without `postgres` role; `npm run ci:github` migrate step fails against that host)
-- Steps executed: `audit:production` → `lint` → `prisma migrate deploy` → `prisma validate` → `next build --turbopack`
+- Mechanism: GitHub CI-equivalent pipeline — `npm run ci` with the same env vars as [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
+- Database: ephemeral `postgres:16-alpine` container on port 5434
 - Results: compilation ✓, TypeScript ✓, static generation ✓ (22/22 pages), exit code 0 ✓
-- M2 routes in build output: `/admin/portfolio`, `/admin/portfolio/new`, `/admin/portfolio/[id]` — no build-time failures
-- Client bundle scan: no `DEVLAUNCH_PLATFORM_API_TOKEN` / `DEVLAUNCH_PLATFORM_API_URL` in `.next/static`
 
-**Next authorized candidate:** M3 — atomic metric/milestone reorder wiring.
+### M3 — Portfolio: atomic metric/milestone reorder — ACCEPTED
 
-### M3 — Portfolio: atomic metric/milestone reorder
+**Status:** ACCEPTED (Engineering Portfolio repo, operator confirmation 2026-09-07).
 
-- Wire reorder actions to M1 Platform endpoints; re-enable UI
-- Depends on M1 reorder contracts
+**Objective:** Restore metric/milestone Move up/down controls via Platform atomic reorder endpoints.
 
-### M4 — Portfolio: gallery reorder + media polish
+**Platform endpoints wired:**
 
-- Gallery atomic reorder; document R2 vs metadata deletion in UI copy
-- Depends on M1 gallery reorder endpoint
+- `PUT /api/v1/admin/case-studies/{case_study_id}/metrics/reorder` — body `{ ordered_ids: string[] }`
+- `PUT /api/v1/admin/case-studies/{case_study_id}/milestones/reorder` — body `{ ordered_ids: string[] }`
 
-### M5 — DevLaunch + Engineering presentation UI
+**Implementation evidence:**
+
+- Client: `PlatformApiAdminClient.reorderMetrics` / `reorderMilestones` (child client PUT helpers)
+- Write layer: `reorderPortfolioMetricsViaPlatform`, `reorderProjectVersionsViaPlatform`
+- Case-study resolution: `resolvePlatformCaseStudyWriteContext` → `resolvePlatformCaseStudyIdBySlug` (existing M2 bridge path)
+- Ordered ID construction: `buildChildReorderOrderedIds` applies one up/down move to complete current Platform UUID list; single atomic PUT (no sequential PATCH/swap)
+- Post-success: refetch `getCaseStudyById` and remap authoritative `sort_order`
+- UI: `shouldDisableChildReorder` now returns `false`; existing Move up/down buttons in `MetricEditor` / `ProjectEvolutionEditor` re-enabled; optimistic reorder with rollback on failure; `isReordering` guard prevents concurrent requests
+- Stale/exact-set failures: Platform 422 surfaced via existing `toPlatformProjectWriteUserMessage`; UI restores previous order
+- Gallery reorder: deferred to M4 (now complete — see below)
+- Database mode: legacy `reorderPortfolioMetric` / `reorderProjectVersion` Prisma paths retained in server actions when `PROJECT_WRITE_SOURCE=database`
+- Tests: `platform-m3-reorder.test.ts`, `platform-child-reorder-order.test.ts`, updated `platform-child-reorder-policy.test.ts`, `platform-api-admin-client` surface tests
+
+**Validation evidence (2026-09-07):**
+
+- `bun test`: 400 pass, 1 skip, 0 fail (401 tests)
+- `npm run lint`: pass
+- CI-equivalent `npm run ci` with `postgres:16-alpine` on port 5434: compilation ✓, TypeScript ✓, static generation ✓, exit code 0 ✓
+
+**Next authorized candidate:** M5 — consumer settings + business projection UI.
+
+### M4 — Portfolio: gallery reorder + media polish — COMPLETE
+
+**Status:** COMPLETE (Engineering Portfolio repo, 2026-09-07).
+
+**Objective:** Restore gallery atomic reorder and polish supported Platform media workflows.
+
+**Platform endpoint wired:**
+
+- `PUT /api/v1/admin/case-studies/{case_study_id}/media/gallery/reorder` — body `{ ordered_ids: string[] }` (`media:write`)
+
+**Implementation evidence:**
+
+- Client: `PlatformApiAdminClient.reorderGalleryMedia` → `reorderGalleryCaseStudyMedia` in media child client
+- Write layer: `reorderProjectGalleryMediaViaPlatform` — loads gallery-role media only (`role: "gallery"`), builds complete `ordered_ids` via `buildChildReorderOrderedIds`, single atomic PUT, refetches gallery list
+- Action: `reorderProjectGalleryMediaAction` (platform-api only) with cache invalidation after success
+- UI: `GalleryEditor` Move up/down controls; optimistic reorder + rollback; `isReordering` guard; gallery-role ID labeling
+- Blocked path preserved: `sort_order` PATCH rejected in platform-api mode (`PLATFORM_GALLERY_SORT_ORDER_PATCH_BLOCKED_MESSAGE`) — no sequential swap
+- Upload/register: existing presign/register Platform flow unchanged (server-only credentials)
+- Hero: replacement via upload remains; clear-without-replacement unsupported (message shown in `MediaSection`)
+- OG: replacement via upload remains; **Remove OG image** added (`deleteProjectPlatformMediaAction` — metadata relationship only, not R2 deletion)
+- Deferred: hero clear, media role mutation, generalized/polymorphic media architecture, R2 object deletion
+- Tests: `platform-m4-gallery-reorder.test.ts`, updated `platform-media-reorder-policy.test.ts`, `platform-m7-invalidation` gallery reorder invalidation test
+
+**Validation evidence (2026-09-07):**
+
+- `bun test`: 414 pass, 1 skip, 0 fail (415 tests)
+- `npm run lint`: pass
+- CI-equivalent `npm run ci` with `postgres:16-alpine` on port 5434: compilation ✓, TypeScript ✓, static generation ✓, exit code 0 ✓
+
+**Next authorized candidate:** M6 — Engineering Portfolio featured migration (`HOME_FEATURED_SLUGS`).
+
+### M5 — DevLaunch + Engineering presentation UI — COMPLETE
 
 **Objective:** Admin can manage **all Platform-supported fields** that control how a project appears on DevLaunch Systems **and** Engineering Portfolio, from the Engineering Portfolio admin UI — via Platform API only (no CRM).
 
-**DevLaunch presentation (admin UI section — e.g. "DevLaunch public site" card):**
+**Implementation (2026-09-07):**
+
+- **Types:** [`platform-presentation-types.ts`](src/lib/project-write/platform-presentation-types.ts) — `PlatformApiConsumerSetting`, `PlatformApiAdminConsumerSettingInput`, presentation scalars
+- **Load mapper:** `mapPlatformPresentationToEditorFields` — maps admin detail → editor form; `managePresentation` enabled only when `consumer_settings.length > 0` (prevents PATCH without authoritative rows)
+- **PATCH mapper:** `buildConsumerSettingsFromExtended` + `buildPresentationPatchFromExtended` — full-replace `consumer_settings` collection (both `devlaunch` and `engineering_portfolio` rows always sent together); business/engineering scalars as case-study PATCH fields (not nested in `consumer_settings`)
+- **Null/clear semantics:** empty/whitespace override strings normalize to `null` via `normalizeNullablePresentationText`
+- **Update path:** `buildPlatformCaseStudyPatchRequest` spreads presentation patch when `managePresentation` is true
+- **UI:** [`PresentationSection.tsx`](src/components/Admin/portfolio/sections/PresentationSection.tsx) — two cards (DevLaunch public site, Engineering Portfolio); **Presentation** tab in `ProjectEditor` (platform-api mode only)
+- **Metrics:** `showOnBusiness` on `PortfolioMetric`; create/update mappers; checkbox in `MetricRow` and create form in `MetricEditor` (no longer hardcoded `true` on create when operator sets false)
+- **Tests:** [`platform-m5-presentation.test.ts`](tests/unit/project-write/platform-m5-presentation.test.ts) — cross-consumer preservation, scalar load/save/clear, metric toggle, boundary checks; updated [`platform-update-mapper.test.ts`](tests/unit/project-write/platform-update-mapper.test.ts), [`platform-metric-mapper.test.ts`](tests/unit/project-write/platform-metric-mapper.test.ts)
+
+**consumer_settings full-replace behavior:**
+
+1. Load both authoritative rows from Platform admin detail
+2. Editor holds both consumers in form state
+3. On save, `buildConsumerSettingsFromExtended` emits complete collection — untouched consumer row preserved from current editor state (not defaults, not copied from edited consumer)
+
+**DevLaunch presentation (admin UI — "DevLaunch public site" card):**
 
 - `consumer_settings` for `consumer=devlaunch`: `is_visible`, `is_featured`, `sort_order`
 - Business projection scalars: `badge`, `best_for`, `business_outcome`, `business_context_note`, `results_narrative`
@@ -339,31 +404,76 @@ Platform supports `business_deliverable`, `platform_capability` in addition to e
 **Engineering Portfolio presentation (separate card):**
 
 - `consumer_settings` for `consumer=engineering_portfolio`: `is_visible`, `is_featured`, `sort_order`
-- `engineering_summary_override` (and existing engineering story/content-item editors)
+- `engineering_summary_override`
 
 **Acceptance:**
 
-- Operator can toggle DevLaunch visibility/featured/order from admin; DevLaunch public list/homepage reflect change without CRM deploy (after Platform cache TTL / revalidation)
+- Operator can toggle DevLaunch visibility/featured/order from admin
 - Operator can edit badge, best-for, business context note, business outcome, results narrative, and business overrides
-- Operator can set `show_on_business` per metric; Platform business projection honors it
+- Operator can set `show_on_business` per metric
+- No Prisma presentation authority; no CRM dependency; credentials server-only
+- Cross-site E2E verification remains M7
 
-### M6 — Engineering Portfolio featured migration
+**Validation evidence (2026-09-07):**
 
-**Objective:** Replace [`HOME_FEATURED_SLUGS`](src/lib/portfolio/home-featured.ts) with Platform `engineering_portfolio` consumer `is_featured` + `sort_order`.
+- `bun test`: 460 pass, 1 skip, 0 fail (461 tests)
+- `npm run lint`: pass
+- CI-equivalent `npm run ci`: compilation ✓, TypeScript ✓, production build ✓, static generation ✓, exit code 0 ✓
 
-**Not in M6:** DevLaunch featured — owned by M5 `devlaunch` consumer_settings.
+**Next authorized candidate:** M7 — Platform-backed admin list + full regression.
 
-**Acceptance:** Engineering homepage featured driven by Platform; temporary fallback during migration acceptable (operator decision #4).
+### M6 — Engineering Portfolio featured migration — COMPLETE
 
-### M7 — Admin list authority + full regression
+**Objective:** Replace [`HOME_FEATURED_SLUGS`](src/lib/portfolio/home-featured.ts) authoritative homepage selection with Platform `engineering_portfolio` consumer `is_featured` + `sort_order`.
 
-**Objective:** Platform-backed admin list; move admin authority/navigation toward Platform; full test suite; DevLaunch presentation E2E acceptance.
+**Previous behavior:** Homepage featured cards selected by hardcoded slug list `HOME_FEATURED_SLUGS` in `pickHomeFeaturedProjects`, independent of Platform presentation state.
 
-**Additional acceptance checks:**
+**Implementation (2026-09-07):**
+
+- **Platform read:** `PlatformApiListItem` extended with `sort_order`; `mergePlatformListPresentation` maps `is_featured` → `PortfolioItem.isFeatured` and `sort_order` → `PortfolioItem.sortOrder` from engineering consumer list projection
+- **Featured selection:** `pickPlatformEngineeringFeaturedProjects` filters `isFeatured === true`, orders by `sortOrder` ASC (slug tie-break)
+- **Homepage:** `PortfolioSection` calls `pickHomeFeaturedProjects(items, getProjectReadSource())` — platform-api uses Platform fields; database read retains legacy slug list
+- **Cache:** `public-project-cache-policy` invalidates homepage on platform-api `content` writes (presentation/featured changes no longer depend on slug allowlist); database read unchanged
+- **`HOME_FEATURED_SLUGS`:** Retained only for `PROJECT_READ_SOURCE=database` legacy fallback and export script documentation — **not** used in platform-api homepage production path
+- **Tests:** `platform-m6-home-featured.test.ts`, updated `home-featured.test.ts`, `public-project-cache-policy.test.ts`, `platform-api-mapper.test.ts`
+
+**Not in M6:** DevLaunch featured — owned by M5 `devlaunch` consumer_settings. No DevLaunch CRM/homepage changes.
+
+**Validation evidence (2026-09-07):**
+
+- `bun test`: 483 pass, 1 skip, 0 fail (484 tests)
+- `npm run lint`: pass
+- CI-equivalent `npm run ci`: compilation ✓, TypeScript ✓, production build ✓, static generation ✓, exit code 0 ✓
+
+**Next authorized candidate:** M7 — Platform-backed admin list + full regression acceptance.
+
+### M7 — Admin list authority + full regression — IMPLEMENTATION COMPLETE / PENDING PRODUCTION E2E
+
+**Objective:** Platform-backed admin list; move admin authority/navigation toward Platform; full management regression; document operator production smoke.
+
+**Implementation (2026-09-07):**
+
+- **Admin list:** `loadAdminPortfolioListItems()` — Platform admin list (paginated) for display; Prisma bridge `{ id, slug }` join for `/admin/portfolio/[id]` routing only
+- **Mapper:** `mapPlatformAdminListItemToPortfolioListRow` — title, summary, categories, publish/lifecycle status, `sort_order`, `is_featured` from Platform
+- **Pagination:** `listAllPlatformAdminCaseStudies` shared by admin list + `resolvePlatformCaseStudyIdBySlug`
+- **Bridge reduction:** Admin list no longer uses `getAllPortfolioItems()` in platform-api mode; bridge retained for routing, M2 create, slug→Platform UUID resolution
+- **Report:** [`docs/phase-11/m7-management-completion-report.md`](docs/phase-11/m7-management-completion-report.md) — production smoke checklist (operator, post-deploy)
+- **Tests:** `platform-m7-admin-list.test.ts`, `platform-m7-management-completion.test.ts`
+
+**Additional acceptance checks (operator production smoke — not local):**
 
 - New Platform project with `devlaunch` `is_visible=true` appears on DevLaunch `/projects` without CRM code change
-- DevLaunch featured/order change from Portfolio admin reflected on DevLaunch homepage Recent Work (first N of Platform featured list)
+- DevLaunch featured/order change from Portfolio admin reflected on DevLaunch homepage Recent Work after revalidation
+- Cloudflare/R2 media upload/register in production
 - M17 freeze tests unchanged
+
+**Validation evidence (local, 2026-09-07):**
+
+- `bun test`: see final count below
+- `npm run lint`: pass
+- CI-equivalent `npm run ci`: pass
+
+**Status:** IMPLEMENTATION COMPLETE / PENDING PRODUCTION E2E — do not mark plan final ACCEPTED until operator smoke passes.
 
 ---
 
@@ -403,7 +513,7 @@ Administrator can, entirely through Engineering Portfolio admin UI (via Platform
 
 ## Open items (post-M0)
 
-None blocking M3. Remaining work is milestone-sequenced (M3 → M7).
+None blocking closure. Operator production smoke remains before final ACCEPTED/CLOSED.
 
 ---
 
@@ -413,8 +523,18 @@ None blocking M3. Remaining work is milestone-sequenced (M3 → M7).
 
 **M1 COMPLETE / LIVE** in `devlaunch-platform-api` (operator confirmation 2026-09-07).
 
-**M2 READY FOR OPERATOR ACCEPTANCE** in Engineering Portfolio. Implementation review satisfactory; full CI-equivalent production build green (2026-09-07). Project creation restored via Platform API with transitional Prisma navigation bridge only.
+**M2 ACCEPTED** in Engineering Portfolio (operator confirmation 2026-09-07). Project creation restored via Platform API with transitional Prisma navigation bridge only.
 
-**Next authorized candidate:** M3 — Portfolio atomic metric/milestone reorder wiring.
+**M3 ACCEPTED** in Engineering Portfolio (operator confirmation 2026-09-07). Metric and milestone reorder restored via Platform atomic reorder endpoints.
+
+**M4 ACCEPTED** in Engineering Portfolio (operator confirmation 2026-09-07). Gallery atomic reorder restored; supported media UX polish applied; hero clear and role mutation remain deferred per Platform contract.
+
+**M5 ACCEPTED** in Engineering Portfolio (operator confirmation 2026-09-07). DevLaunch + Engineering presentation management UI; full-replace `consumer_settings`; business projection scalars; metric `show_on_business` toggle.
+
+**M6 ACCEPTED** in Engineering Portfolio (operator confirmation 2026-09-07). Engineering homepage featured driven by Platform `engineering_portfolio` `is_featured` + `sort_order`.
+
+**M7 IMPLEMENTATION COMPLETE / PENDING PRODUCTION E2E** in Engineering Portfolio (2026-09-07). Platform-backed admin list; bridge reduced to routing-only; operator production smoke documented in `docs/phase-11/m7-management-completion-report.md`.
+
+**Final plan status:** PENDING operator production smoke — do not mark CLOSED until post-deploy E2E passes.
 
 **Plan file:** [`.cursor/plans/engineering_portfolio_management_completion.plan.md`](.cursor/plans/engineering_portfolio_management_completion.plan.md)

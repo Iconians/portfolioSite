@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { getPortfolioItemById } from "@/lib/data/portfolio";
 import { invalidateProjectReadProviderCache } from "@/lib/project-read";
+import { getProjectReadSource } from "@/lib/project-read/config";
 import { getProjectWriteSource } from "@/lib/project-write/config";
 
 import {
@@ -32,7 +33,9 @@ export function invalidatePublicProjectCache(
     return;
   }
 
-  const paths = collectPublicProjectCachePaths(slug, reason);
+  const paths = collectPublicProjectCachePaths(slug, reason, {
+    readSource: getProjectReadSource(),
+  });
   for (const path of paths) {
     revalidatePathImpl(path);
   }

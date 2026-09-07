@@ -3,6 +3,8 @@ import { describe, expect, test } from "bun:test";
 import { splitProjectEditorPayload } from "@/lib/portfolio/project-editor";
 import { PortfolioStoryFieldsSchema } from "@/lib/types/portfolio";
 
+import { projectEditorPresentationDefaults } from "../../helpers/project-editor-fixtures";
+
 describe("PortfolioStoryFieldsSchema", () => {
   test("accepts partial story content", () => {
     const result = PortfolioStoryFieldsSchema.safeParse({
@@ -50,6 +52,7 @@ describe("project-editor story persistence", () => {
       ogMediaId: null,
       showPlatformSection: false,
       platformFeatures: [],
+      ...projectEditorPresentationDefaults,
     });
 
     expect(extended.problem).toBe("Real problem statement");

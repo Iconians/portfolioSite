@@ -7,6 +7,7 @@ import { ConfirmDialog } from "@/components/Admin/shared/ConfirmDialog";
 import { FormField } from "@/components/Admin/shared/FormField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { updatePortfolioMetricAction } from "@/lib/actions/portfolio-metrics";
 
@@ -40,6 +41,7 @@ export function MetricRow({
   const [label, setLabel] = useState(metric.label);
   const [value, setValue] = useState(metric.value);
   const [description, setDescription] = useState(metric.description ?? "");
+  const [showOnBusiness, setShowOnBusiness] = useState(metric.showOnBusiness);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -49,6 +51,7 @@ export function MetricRow({
         label,
         value,
         description: description.trim() ? description : undefined,
+        showOnBusiness,
       }, portfolioId);
 
       if (result.success) {
@@ -101,6 +104,20 @@ export function MetricRow({
             onChange={(event) => setDescription(event.target.value)}
           />
         </FormField>
+
+        <div className="flex items-center gap-3">
+          <input
+            id={`showOnBusiness-${metric.id}`}
+            type="checkbox"
+            checked={showOnBusiness}
+            disabled={isPending}
+            className="h-4 w-4 rounded border border-input"
+            onChange={(event) => setShowOnBusiness(event.target.checked)}
+          />
+          <Label htmlFor={`showOnBusiness-${metric.id}`} className="font-normal">
+            Show on DevLaunch business projection
+          </Label>
+        </div>
 
         <div className="flex flex-wrap gap-2">
           <Button type="button" disabled={isPending} onClick={handleSave}>

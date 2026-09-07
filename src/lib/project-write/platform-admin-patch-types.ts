@@ -1,5 +1,7 @@
 /** Platform admin PATCH /api/v1/admin/case-studies/{id} request (CaseStudyPatchRequest). */
 
+import type { PlatformApiAdminConsumerSettingInput } from "./platform-presentation-types";
+
 /** M3 editor-owned Platform content-item kinds (engineering consumer). */
 export type PlatformApiM3ContentItemKind =
   | "feature"
@@ -47,4 +49,14 @@ export interface PlatformApiCaseStudyPatchRequest {
   technologies?: PlatformApiAdminTechnologyInput[];
   categories?: PlatformApiAdminCategoryInput[];
   links?: PlatformApiAdminLinkInput[];
+  consumer_settings?: PlatformApiAdminConsumerSettingInput[];
+  badge?: string | null;
+  best_for?: string | null;
+  business_outcome?: string | null;
+  business_context_note?: string | null;
+  results_narrative?: string | null;
+  business_summary_override?: string | null;
+  business_problem_override?: string | null;
+  business_solution_override?: string | null;
+  engineering_summary_override?: string | null;
 }

@@ -645,6 +645,9 @@ describe("admin client surface", () => {
     expect(typeof client.updateCaseStudyMedia).toBe("function");
     expect(typeof client.deleteCaseStudyMedia).toBe("function");
     expect(typeof client.updateCaseStudy).toBe("function");
+    expect(typeof client.reorderMetrics).toBe("function");
+    expect(typeof client.reorderMilestones).toBe("function");
+    expect(typeof client.reorderGalleryMedia).toBe("function");
     expect(typeof client.createMetric).toBe("function");
     expect(typeof client.updateMetric).toBe("function");
     expect(typeof client.deleteMetric).toBe("function");

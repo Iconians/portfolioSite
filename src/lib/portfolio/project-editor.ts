@@ -75,6 +75,22 @@ export function mapPortfolioItemToEditorValues(
     ogMediaId: item?.ogMediaId ?? null,
     showPlatformSection: item?.showPlatformSection ?? false,
     platformFeatures: item?.platformFeatures ?? [],
+    managePresentation: false,
+    devlaunchIsVisible: false,
+    devlaunchIsFeatured: false,
+    devlaunchSortOrder: 0,
+    engineeringPortfolioIsVisible: false,
+    engineeringPortfolioIsFeatured: false,
+    engineeringPortfolioSortOrder: 0,
+    badge: "",
+    bestFor: "",
+    businessOutcome: "",
+    businessContextNote: "",
+    resultsNarrative: "",
+    businessSummaryOverride: "",
+    businessProblemOverride: "",
+    businessSolutionOverride: "",
+    engineeringSummaryOverride: "",
   };
 }
 
@@ -129,6 +145,25 @@ export function splitProjectEditorPayload(data: ProjectEditorFormData): {
       parsed.platformFeatures.filter((entry) => entry.trim().length > 0)
     ),
   };
+
+  if (parsed.managePresentation) {
+    extended.managePresentation = true;
+    extended.devlaunchIsVisible = parsed.devlaunchIsVisible;
+    extended.devlaunchIsFeatured = parsed.devlaunchIsFeatured;
+    extended.devlaunchSortOrder = parsed.devlaunchSortOrder;
+    extended.engineeringPortfolioIsVisible = parsed.engineeringPortfolioIsVisible;
+    extended.engineeringPortfolioIsFeatured = parsed.engineeringPortfolioIsFeatured;
+    extended.engineeringPortfolioSortOrder = parsed.engineeringPortfolioSortOrder;
+    extended.badge = parsed.badge;
+    extended.bestFor = parsed.bestFor;
+    extended.businessOutcome = parsed.businessOutcome;
+    extended.businessContextNote = parsed.businessContextNote;
+    extended.resultsNarrative = parsed.resultsNarrative;
+    extended.businessSummaryOverride = parsed.businessSummaryOverride;
+    extended.businessProblemOverride = parsed.businessProblemOverride;
+    extended.businessSolutionOverride = parsed.businessSolutionOverride;
+    extended.engineeringSummaryOverride = parsed.engineeringSummaryOverride;
+  }
 
   return { legacy, extended };
 }

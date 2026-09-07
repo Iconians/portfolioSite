@@ -3,15 +3,15 @@ import Link from "next/link";
 import { PageHeader } from "@/components/Admin/layout/PageHeader";
 import { Card } from "@/components/ui/card";
 import { getAllArticlesAdmin } from "@/lib/data/articles";
-import { getAllPortfolioItems } from "@/lib/data/portfolio";
 import { getAllReviewsAdmin } from "@/lib/data/reviews";
+import { loadAdminPortfolioListItems } from "@/lib/project-write/admin-portfolio-list";
 
 
 export default async function AdminDashboard() {
   const [articles, reviews, portfolio] = await Promise.all([
     getAllArticlesAdmin(),
     getAllReviewsAdmin(),
-    getAllPortfolioItems(),
+    loadAdminPortfolioListItems(),
   ]);
 
   const publishedArticles = articles.filter((a) => a.status === "published");

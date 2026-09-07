@@ -87,7 +87,7 @@ describe("P11-M17 legacy shared-content write freeze", () => {
     expect(source.includes("updatePortfolioItem")).toBe(false);
   });
 
-  test("portfolio metrics action no longer imports Prisma metric writers", () => {
+  test("portfolio metrics action routes platform writes through Platform helpers", () => {
     const source = readFileSync(
       fileURLToPath(
         new URL("../../../src/lib/actions/portfolio-metrics.ts", import.meta.url)
@@ -97,7 +97,8 @@ describe("P11-M17 legacy shared-content write freeze", () => {
 
     expect(source.includes("createPortfolioMetricViaPlatform")).toBe(true);
     expect(source.includes("createPortfolioMetric(")).toBe(false);
-    expect(source.includes("@/lib/portfolio/portfolio.service")).toBe(false);
+    expect(source.includes("reorderPortfolioMetricsViaPlatform")).toBe(true);
+    expect(source.includes("updatePortfolioMetric(")).toBe(false);
   });
 
   test("admin project editor load no longer has Prisma editor branch", () => {
