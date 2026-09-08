@@ -1,3 +1,7 @@
+import {
+  isMeaningfulArticleMdx,
+  resolveArticleContentForUpdate,
+} from "@/lib/articles/article-content";
 import { isAdminRole } from "@/lib/auth/roles";
 import { db } from "@/lib/db/client";
 import { requireAdmin } from "@/lib/permissions";
@@ -139,6 +143,10 @@ export async function createArticle(
 
   const validatedData = ArticleSchema.parse(data);
 
+  if (!isMeaningfulArticleMdx(validatedData.content)) {
+    throw new Error("Content is required");
+  }
+
   return db.article.create({
     data: {
       title: validatedData.title,
@@ -173,10 +181,24 @@ export async function updateArticle(
     throw new Error("Forbidden");
   }
 
+  const writeData = buildArticleWriteData(data);
+  const resolvedContent = resolveArticleContentForUpdate(
+    article.content,
+    data.content
+  );
+
+  if (data.content !== undefined) {
+    if (resolvedContent === undefined) {
+      delete writeData.content;
+    } else {
+      writeData.content = resolvedContent;
+    }
+  }
+
   return db.article.update({
     where: { id },
     data: {
-      ...buildArticleWriteData(data),
+      ...writeData,
       updatedAt: new Date(),
     },
     select: {
