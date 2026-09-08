@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  PLATFORM_MEDIA_BROWSER_UPLOAD_FAILURE_MESSAGE,
   PlatformMediaBrowserUploadError,
   putFileToPresignedUrl,
 } from "@/lib/media/platform-media-upload-client";
@@ -36,6 +37,7 @@ describe("platform media browser upload client", () => {
     const file = new File(["bytes"], "hero.png", { type: "image/png" });
     await putFileToPresignedUrl({
       presign: {
+        mediaId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
         uploadUrl: "https://r2.example/upload",
         uploadHeaders: { "Content-Type": "image/png" },
         storageKey: "portfolio/projects/heroes/a.png",
@@ -61,6 +63,7 @@ describe("platform media browser upload client", () => {
     await expectRejects(
       putFileToPresignedUrl({
         presign: {
+          mediaId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
           uploadUrl: "https://r2.example/upload",
           uploadHeaders: { "Content-Type": "image/png" },
           storageKey: "key",
@@ -73,5 +76,34 @@ describe("platform media browser upload client", () => {
     );
 
     globalThis.fetch = originalFetch;
+  });
+
+  test("maps failed to fetch into actionable storage upload guidance", async () => {
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () => {
+      throw new TypeError("Failed to fetch");
+    };
+
+    try {
+      await putFileToPresignedUrl({
+        presign: {
+          mediaId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+          uploadUrl: "https://r2.example/upload",
+          uploadHeaders: { "Content-Type": "image/png" },
+          storageKey: "key",
+          publicUrl: "https://cdn.example/hero.png",
+          expiresIn: 900,
+        },
+        file: new File(["bytes"], "hero.png", { type: "image/png" }),
+      });
+      throw new Error("expected rejection");
+    } catch (error) {
+      expect(error instanceof PlatformMediaBrowserUploadError).toBe(true);
+      expect((error as Error).message).toBe(
+        PLATFORM_MEDIA_BROWSER_UPLOAD_FAILURE_MESSAGE
+      );
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
   });
 });

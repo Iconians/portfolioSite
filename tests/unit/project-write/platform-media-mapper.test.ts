@@ -70,6 +70,7 @@ describe("platform media mapper", () => {
     });
 
     expect(payload).toEqual({
+      mediaId: PLATFORM_HERO_ID,
       uploadUrl: "https://r2.example/upload",
       uploadHeaders: { "Content-Type": "image/png" },
       storageKey: "portfolio/projects/heroes/a.png",

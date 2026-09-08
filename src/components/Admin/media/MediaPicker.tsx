@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { listMediaAssetsAction } from "@/lib/actions/media";
 import {
+  cleanupPendingProjectPlatformMediaAction,
+  listProjectPendingPlatformMediaAction,
   listProjectPlatformMediaAction,
 } from "@/lib/actions/portfolio-media";
 import {
@@ -23,8 +25,12 @@ import {
   uploadPlatformProjectMediaFile,
   type MediaPickerAsset,
 } from "./media-picker-upload";
+import { MediaPickerDialog } from "./MediaPickerDialog";
 
-import type { PlatformMediaRole } from "@/lib/project-write/platform-media-types";
+import type {
+  PlatformMediaRole,
+  ProjectPlatformMediaPickerItem,
+} from "@/lib/project-write/platform-media-types";
 import type { MediaAsset } from "@/lib/types/media";
 
 
@@ -56,8 +62,10 @@ export function MediaPicker({
 }: MediaPickerProps) {
   const [open, setOpen] = useState(false);
   const [assets, setAssets] = useState<PickerAsset[]>([]);
+  const [pendingAssets, setPendingAssets] = useState<ProjectPlatformMediaPickerItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [cleaningUpId, setCleaningUpId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -70,16 +78,29 @@ export function MediaPicker({
     setError(null);
 
     if (usePlatformProjectMedia && portfolioId) {
-      const result = await listProjectPlatformMediaAction(portfolioId, {
-        role: platformMediaListRoleFilter(uploadRole),
-      });
-      if (result.success) {
-        setAssets(result.data);
+      const role = platformMediaListRoleFilter(uploadRole);
+      const [confirmedResult, pendingResult] = await Promise.all([
+        listProjectPlatformMediaAction(portfolioId, { role }),
+        listProjectPendingPlatformMediaAction(portfolioId, { role }),
+      ]);
+
+      if (confirmedResult.success) {
+        setAssets(confirmedResult.data);
       } else {
-        setError(result.error);
+        setError(confirmedResult.error);
         setAssets([]);
       }
+
+      if (pendingResult.success) {
+        setPendingAssets(pendingResult.data);
+      } else {
+        setPendingAssets([]);
+        if (confirmedResult.success) {
+          setError(pendingResult.error);
+        }
+      }
     } else {
+      setPendingAssets([]);
       const result = await listMediaAssetsAction();
       if (result.success) {
         setAssets(
@@ -97,6 +118,27 @@ export function MediaPicker({
     }
 
     setLoading(false);
+  }
+
+  async function handleCleanupPending(mediaId: string) {
+    if (!usePlatformProjectMedia || !portfolioId) {
+      return;
+    }
+
+    setCleaningUpId(mediaId);
+    const result = await cleanupPendingProjectPlatformMediaAction(
+      portfolioId,
+      mediaId
+    );
+    setCleaningUpId(null);
+
+    if (result.success) {
+      setPendingAssets((current) => current.filter((item) => item.id !== mediaId));
+      toast.success("Removed failed upload record");
+      return;
+    }
+
+    toast.error(result.error ?? "Failed to remove pending upload record");
   }
 
   function handleSelect(asset: PickerAsset) {
@@ -178,84 +220,24 @@ export function MediaPicker({
       ) : null}
 
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="media-picker-title"
-            className="flex max-h-[90vh] w-full max-w-4xl flex-col rounded-lg border bg-background shadow-lg"
-          >
-            <div className="flex items-center justify-between border-b p-4">
-              <h2 id="media-picker-title" className="text-lg font-semibold">
-                {usePlatformProjectMedia ? "Project media" : "Media library"}
-              </h2>
-              <div className="flex gap-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp,image/gif"
-                  className="hidden"
-                  onChange={handleUpload}
-                />
-                <Button
-                  type="button"
-                  variant="secondary"
-                  disabled={uploading || loading}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  {uploading ? "Uploading..." : "Upload new"}
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                  Close
-                </Button>
-              </div>
-            </div>
-
-            <div className="overflow-y-auto p-4">
-              {loading ? (
-                <p className="text-sm text-muted-foreground">Loading media...</p>
-              ) : null}
-              {error ? <p className="text-sm text-destructive">{error}</p> : null}
-              {!loading && !error && assets.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  {platformSingletonRole
-                    ? `No ${uploadRole} image yet. Upload a new image to set the project ${uploadRole}.`
-                    : "No media yet. Upload an image to use it in this project."}
-                </p>
-              ) : null}
-              {!loading && assets.length > 0 ? (
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {assets.map((asset) => (
-                    <button
-                      key={asset.id}
-                      type="button"
-                      onClick={() => handleSelect(asset)}
-                      className="overflow-hidden rounded-md border text-left transition hover:border-primary"
-                    >
-                      <div className="aspect-video bg-muted">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={asset.publicUrl}
-                          alt={asset.altText ?? asset.filename}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-2">
-                        <p className="truncate text-sm font-medium">{asset.filename}</p>
-                        {asset.role ? (
-                          <p className="text-xs text-muted-foreground">
-                            {asset.role}
-                            {currentMediaId === asset.id ? " (current)" : ""}
-                          </p>
-                        ) : null}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
+        <MediaPickerDialog
+          title={usePlatformProjectMedia ? "Project media" : "Media library"}
+          assets={assets}
+          pendingAssets={pendingAssets}
+          loading={loading}
+          uploading={uploading}
+          cleaningUpId={cleaningUpId}
+          error={error}
+          uploadRole={uploadRole}
+          currentMediaId={currentMediaId}
+          platformSingletonRole={Boolean(platformSingletonRole)}
+          showPendingCleanup={usePlatformProjectMedia}
+          fileInputRef={fileInputRef}
+          onClose={() => setOpen(false)}
+          onSelect={handleSelect}
+          onUpload={handleUpload}
+          onCleanupPending={handleCleanupPending}
+        />
       ) : null}
     </>
   );

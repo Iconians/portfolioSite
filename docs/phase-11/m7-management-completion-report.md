@@ -36,6 +36,26 @@ During production smoke, admin project thumbnails broke because the initial M7 l
 
 **Fix:** Load confirmed Platform hero media alongside the case-study list, join by `case_study_id`, apply existing R2 display rewrite, and render `next/image` only when a valid hero URL exists. Prisma `img` is not used as display authority in platform-api mode.
 
+### M7 production media smoke (operator review)
+
+**Failed-upload partial state:** Interrupted project hero uploads left pending Platform media rows (presign creates metadata before browser PUT). Retries created duplicate pending heroes visible in the project media picker.
+
+**Operator configuration fixes (not Portfolio code):**
+
+- `ENVIRONMENT=production` on Platform API
+- Production R2 bucket + `R2_PUBLIC_BASE_URL`
+- R2 CORS for Engineering Portfolio admin origin (browser PUT)
+
+**Upload path status:** Production presign → PUT → register → `media.devlaunchsystems.com` render is now operator-verified.
+
+**Portfolio cleanup fix:**
+
+- Project media picker lists **confirmed** media only for normal selection
+- Pending failed uploads appear in a separate **Failed upload cleanup** section with **Remove** (Platform metadata DELETE only)
+- Best-effort automatic cleanup of presign orphan after browser PUT/register failure
+- Actionable browser PUT failure message (CORS/connectivity guidance; no presigned URL exposure)
+- Confirmed hero clear remains unsupported; cleanup is for pending/orphan records only
+
 ---
 
 ## Prisma bridge audit
@@ -79,11 +99,12 @@ Unchanged from M5/M6:
 
 ## Validation evidence (local)
 
-- `bun test`: see CI run in plan update
-- `npm run lint`: pass
-- `npm run ci`: pass (TypeScript, Prisma, production build, static generation)
+- `bun test`: **520 pass**, 1 skip, 0 fail (521 tests across 81 files)
+- `npm run lint`: **pass**
+- `npm run ci`: **blocked locally** — `db:migrate:deploy` requires a reachable Postgres instance (`P1010` without local DB); audit + lint pass when run in isolation
+- Production build: TypeScript **pass**; static generation requires database connectivity (local env limitation)
 
-**Not locally proven:** Cloudflare/R2 production media upload/register behavior — requires deployed operator smoke.
+**Not locally proven:** Operator must verify pending cleanup UI and removal of legacy failed-upload rows after deployment.
 
 ---
 
@@ -130,13 +151,19 @@ Use the real DevLaunch Platform API project. Do **not** skip deployed verificati
 - `src/lib/project-write/platform-admin-list-pagination.ts`
 - `src/lib/project-write/platform-media-mapper.ts` (shared confirmed-hero helpers)
 - `src/lib/portfolio/display-media-url.ts` (`isDisplayablePortfolioListImage`)
-- `src/components/Admin/PortfolioList.tsx`
+- `src/components/Admin/media/MediaPicker.tsx` (confirmed-only picker + pending cleanup)
+- `src/components/Admin/media/MediaPickerDialog.tsx` (picker dialog shell)
+- `src/components/Admin/media/ProjectMediaPendingCleanup.tsx` (failed-upload cleanup section)
+- `src/components/Admin/media/media-picker-upload.ts` (orphan cleanup + upload sequencing)
+- `src/lib/media/platform-media-upload-client.ts` (actionable PUT failure messages)
+- `src/lib/actions/portfolio-media.ts` (pending list + cleanup actions)
 - `src/lib/project-write/identity-bridge.ts` (shared pagination)
 - `src/lib/data/portfolio.ts` (`listPortfolioBridgeRows`)
 - `src/app/admin/portfolio/page.tsx`
 - `src/app/admin/page.tsx`
 - `tests/unit/project-write/platform-m7-admin-list.test.ts`
 - `tests/unit/project-write/platform-m7-admin-list-hero.test.ts`
+- `tests/unit/project-write/platform-m7-media-cleanup.test.ts`
 - `tests/unit/project-write/platform-m7-management-completion.test.ts`
 
 ---
