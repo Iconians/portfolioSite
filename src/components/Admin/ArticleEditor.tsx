@@ -13,12 +13,14 @@ import {
   updateArticleAction,
   publishArticleAction,
 } from "@/lib/actions/articles";
+import { isMeaningfulArticleMdx } from "@/lib/articles/article-content";
 import { serializeArticleMdx } from "@/lib/articles/mdx-serialize";
 
 import { ArticleEditorActions } from "./article-editor/ArticleEditorActions";
 import { ArticleEditorContent } from "./article-editor/ArticleEditorContent";
 import { ArticleEditorCover } from "./article-editor/ArticleEditorCover";
 import { ArticleEditorFields } from "./article-editor/ArticleEditorFields";
+import { resolveEditorMdxForSubmit } from "./article-editor/resolve-editor-mdx";
 import { serializeToMDX } from "./mdxSerializer";
 
 import type { ArticleEditorFormData } from "./article-editor/types";
@@ -93,26 +95,16 @@ export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
   };
 
   const onSubmit = (data: ArticleEditorFormData) => {
-    // Get MDX content from editor if available, otherwise use stored mdxContent
-    // For existing articles, use the original content if editor is empty
-    let currentMdx = "";
-    if (editor) {
-      const editorContent = editor.getJSON();
-      if (
-        editorContent &&
-        editorContent.content &&
-        editorContent.content.length > 0
-      ) {
-        currentMdx = serializeToMDX(editorContent);
-      }
-    }
+    const isEditingExisting = Boolean(initialArticle);
+    const resolvedMdx = resolveEditorMdxForSubmit({
+      editorDocument: editor?.getJSON() as
+        | { type: "doc"; content?: Array<{ type: string }> }
+        | undefined,
+      fallbackMdx: mdxContent || initialArticle?.content,
+      isEditingExisting,
+    });
 
-    // Fallback to stored mdxContent or initial article content
-    if (!currentMdx) {
-      currentMdx = mdxContent || initialArticle?.content || "";
-    }
-
-    if (!currentMdx.trim()) {
+    if (!isEditingExisting && !isMeaningfulArticleMdx(resolvedMdx)) {
       toast.error("Article content is required");
       return;
     }
@@ -127,14 +119,17 @@ export function ArticleEditor({ initialArticle }: ArticleEditorProps) {
       const articleData: CreateArticleInput = {
         ...data,
         tags: tagsArray,
-        content: currentMdx,
         date: initialArticle?.date || new Date(),
         coverMediaId,
+        ...(resolvedMdx !== undefined ? { content: resolvedMdx } : {}),
       };
 
       const result = initialArticle
         ? await updateArticleAction(initialArticle.id, articleData)
-        : await createArticleAction(articleData);
+        : await createArticleAction({
+            ...articleData,
+            content: resolvedMdx ?? "",
+          });
 
       if (result.success) {
         toast.success(initialArticle ? "Article updated" : "Article created");
