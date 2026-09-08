@@ -4,6 +4,7 @@ import { AdminProjectLoadError } from "./admin-project-load-error";
 import * as mediaClient from "./platform-api-admin-media-client";
 import { buildChildReorderOrderedIds } from "./platform-child-reorder-order";
 import {
+  isConfirmedPlatformAdminMedia,
   mapPlatformAdminMediaToEditorFields,
   mapPlatformMediaRecordToPickerSelection,
   mapPresignResponseForBrowser,
@@ -19,6 +20,7 @@ import type {
   PlatformMediaRegisterRequest,
   PlatformMediaRole,
   PlatformMediaUpdateRequest,
+  ProjectPlatformMediaPickerItem,
 } from "./platform-media-types";
 import type { PortfolioGalleryItem } from "@/lib/types/portfolio";
 
@@ -61,16 +63,49 @@ export async function registerProjectMediaViaPlatform(
   );
 }
 
-export async function listProjectMediaViaPlatform(
+async function listProjectMediaPickerItemsViaPlatform(
   portfolioLocalId: string,
   options?: { role?: PlatformMediaRole }
-) {
+): Promise<ProjectPlatformMediaPickerItem[]> {
   const context = await resolvePlatformCaseStudyWriteContext(portfolioLocalId);
   const response = await context.client.listMedia({
     caseStudyId: context.platformCaseStudyId,
     role: options?.role,
   });
   return response.items.map(mapPlatformMediaRecordToPickerSelection);
+}
+
+export async function listConfirmedProjectMediaViaPlatform(
+  portfolioLocalId: string,
+  options?: { role?: PlatformMediaRole }
+): Promise<ProjectPlatformMediaPickerItem[]> {
+  const items = await listProjectMediaPickerItemsViaPlatform(
+    portfolioLocalId,
+    options
+  );
+  return items.filter((item) =>
+    isConfirmedPlatformAdminMedia({ upload_status: item.uploadStatus })
+  );
+}
+
+export async function listPendingProjectMediaViaPlatform(
+  portfolioLocalId: string,
+  options?: { role?: PlatformMediaRole }
+): Promise<ProjectPlatformMediaPickerItem[]> {
+  const items = await listProjectMediaPickerItemsViaPlatform(
+    portfolioLocalId,
+    options
+  );
+  return items.filter(
+    (item) => !isConfirmedPlatformAdminMedia({ upload_status: item.uploadStatus })
+  );
+}
+
+export async function listProjectMediaViaPlatform(
+  portfolioLocalId: string,
+  options?: { role?: PlatformMediaRole }
+) {
+  return listConfirmedProjectMediaViaPlatform(portfolioLocalId, options);
 }
 
 export async function updateProjectMediaViaPlatform(
@@ -89,6 +124,20 @@ export async function deleteProjectMediaViaPlatform(
 ): Promise<void> {
   const context = await resolvePlatformCaseStudyWriteContext(portfolioLocalId);
   await assertMediaBelongsToCaseStudy(context, mediaId);
+  await mediaClient.deleteCaseStudyMedia(context.client, mediaId);
+}
+
+export async function cleanupPendingProjectMediaViaPlatform(
+  portfolioLocalId: string,
+  mediaId: string
+): Promise<void> {
+  const context = await resolvePlatformCaseStudyWriteContext(portfolioLocalId);
+  const owned = await assertMediaBelongsToCaseStudy(context, mediaId);
+  if (isConfirmedPlatformAdminMedia(owned)) {
+    throw new AdminProjectLoadError(
+      "Only pending failed upload records can be cleaned up. Replacing a confirmed hero uses upload replacement."
+    );
+  }
   await mediaClient.deleteCaseStudyMedia(context.client, mediaId);
 }
 

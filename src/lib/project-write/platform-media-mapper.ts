@@ -15,9 +15,15 @@ export interface PlatformProjectMediaEditorFields {
 }
 
 export function isConfirmedPlatformAdminMedia(
-  item: PlatformApiAdminMediaListItem
+  item: Pick<PlatformApiAdminMediaListItem, "upload_status">
 ): boolean {
   return item.upload_status === "confirmed";
+}
+
+export function isPendingPlatformAdminMedia(
+  item: Pick<PlatformApiAdminMediaListItem, "upload_status">
+): boolean {
+  return !isConfirmedPlatformAdminMedia(item);
 }
 
 export function pickConfirmedHeroMedia(
@@ -96,6 +102,7 @@ export function mapPresignResponseForBrowser(
   presign: PlatformMediaPresignResponse
 ): PlatformMediaPresignClientPayload {
   return {
+    mediaId: presign.media_id,
     uploadUrl: presign.upload_url,
     uploadHeaders: presign.upload_headers,
     storageKey: presign.storage_key,
@@ -109,6 +116,7 @@ export function mapPlatformMediaRecordToPickerSelection(media: {
   public_url: string;
   alt_text?: string | null;
   role: string;
+  upload_status?: string | null;
 }) {
   return {
     id: media.id,
@@ -116,5 +124,22 @@ export function mapPlatformMediaRecordToPickerSelection(media: {
     filename: media.public_url.split("/").pop() ?? media.id,
     altText: media.alt_text ?? null,
     role: media.role,
+    uploadStatus: media.upload_status ?? "pending",
   };
+}
+
+export function filterConfirmedProjectPlatformMedia<
+  T extends { uploadStatus: string },
+>(items: T[]): T[] {
+  return items.filter((item) => isConfirmedPlatformAdminMedia({
+    upload_status: item.uploadStatus,
+  }));
+}
+
+export function filterPendingProjectPlatformMedia<
+  T extends { uploadStatus: string },
+>(items: T[]): T[] {
+  return items.filter((item) => isPendingPlatformAdminMedia({
+    upload_status: item.uploadStatus,
+  }));
 }

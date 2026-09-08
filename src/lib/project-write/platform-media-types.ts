@@ -55,9 +55,19 @@ export interface PlatformAdminMediaRecord {
 
 /** Browser-safe presign payload — no bearer token or internal secrets. */
 export interface PlatformMediaPresignClientPayload {
+  mediaId: string;
   uploadUrl: string;
   uploadHeaders: Record<string, string>;
   storageKey: string;
   publicUrl: string;
   expiresIn: number;
+}
+
+export interface ProjectPlatformMediaPickerItem {
+  id: string;
+  publicUrl: string;
+  filename: string;
+  altText: string | null;
+  role: string;
+  uploadStatus: string;
 }

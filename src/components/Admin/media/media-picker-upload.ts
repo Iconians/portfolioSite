@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 
 import {
+  cleanupPendingProjectPlatformMediaAction,
   presignProjectMediaAction,
   registerProjectMediaAction,
 } from "@/lib/actions/portfolio-media";
@@ -12,6 +13,17 @@ import type { MediaAsset } from "@/lib/types/media";
 
 
 export type MediaPickerAsset = MediaPickerSelection & { role?: string };
+
+async function cleanupPresignOrphanBestEffort(
+  portfolioId: string,
+  mediaId: string | undefined
+): Promise<void> {
+  if (!mediaId) {
+    return;
+  }
+
+  await cleanupPendingProjectPlatformMediaAction(portfolioId, mediaId).catch(() => {});
+}
 
 export async function uploadPlatformProjectMediaFile(input: {
   file: File;
@@ -28,12 +40,20 @@ export async function uploadPlatformProjectMediaFile(input: {
     throw new Error(presignResult.error ?? "Presign failed");
   }
 
-  await putFileToPresignedUrl({ presign: presignResult.data, file: input.file });
+  const presign = presignResult.data;
+
+  try {
+    await putFileToPresignedUrl({ presign, file: input.file });
+  } catch (uploadError) {
+    await cleanupPresignOrphanBestEffort(input.portfolioId, presign.mediaId);
+    throw uploadError;
+  }
 
   const registerResult = await registerProjectMediaAction(input.portfolioId, {
-    storageKey: presignResult.data.storageKey,
+    storageKey: presign.storageKey,
   });
   if (!registerResult.success) {
+    await cleanupPresignOrphanBestEffort(input.portfolioId, presign.mediaId);
     throw new Error(registerResult.error ?? "Register failed");
   }
 

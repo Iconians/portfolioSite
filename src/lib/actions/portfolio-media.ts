@@ -9,8 +9,10 @@ import { getProjectWriteSource } from "@/lib/project-write/config";
 import { toPlatformProjectWriteUserMessage } from "@/lib/project-write/platform-action-errors";
 import { PLATFORM_GALLERY_SORT_ORDER_PATCH_BLOCKED_MESSAGE } from "@/lib/project-write/platform-media-reorder-policy";
 import {
+  cleanupPendingProjectMediaViaPlatform,
   deleteProjectMediaViaPlatform,
-  listProjectMediaViaPlatform,
+  listConfirmedProjectMediaViaPlatform,
+  listPendingProjectMediaViaPlatform,
   presignProjectMediaViaPlatform,
   registerProjectMediaViaPlatform,
   reorderProjectGalleryMediaViaPlatform,
@@ -24,6 +26,7 @@ import {
 import type {
   PlatformMediaPresignClientPayload,
   PlatformMediaRole,
+  ProjectPlatformMediaPickerItem,
 } from "@/lib/project-write/platform-media-types";
 import type { ActionResult } from "@/lib/types/actions";
 import type { PortfolioGalleryItem } from "@/lib/types/portfolio";
@@ -146,22 +149,45 @@ export async function registerProjectMediaAction(
 export async function listProjectPlatformMediaAction(
   portfolioId: string,
   options?: { role?: PlatformMediaRole }
-): Promise<
-  ActionResult<
-    Array<{
-      id: string;
-      publicUrl: string;
-      filename: string;
-      altText: string | null;
-      role: string;
-    }>
-  >
-> {
+): Promise<ActionResult<ProjectPlatformMediaPickerItem[]>> {
   try {
     await requireAdmin();
 
-    const items = await listProjectMediaViaPlatform(portfolioId, options);
+    const items = await listConfirmedProjectMediaViaPlatform(portfolioId, options);
     return { success: true, data: items };
+  } catch (error) {
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
+  }
+}
+
+export async function listProjectPendingPlatformMediaAction(
+  portfolioId: string,
+  options?: { role?: PlatformMediaRole }
+): Promise<ActionResult<ProjectPlatformMediaPickerItem[]>> {
+  try {
+    await requireAdmin();
+
+    const items = await listPendingProjectMediaViaPlatform(portfolioId, options);
+    return { success: true, data: items };
+  } catch (error) {
+    return { success: false, error: toPlatformProjectWriteUserMessage(error) };
+  }
+}
+
+export async function cleanupPendingProjectPlatformMediaAction(
+  portfolioId: string,
+  mediaId: string
+): Promise<ActionResult<void>> {
+  try {
+    const user = await requireAdmin();
+
+    await cleanupPendingProjectMediaViaPlatform(portfolioId, mediaId);
+    await logAdminAction(user.id, "delete", "platform_media", mediaId, {
+      portfolioId,
+      operation: "pending_cleanup",
+    }).catch(() => {});
+    await revalidatePublicProjectMediaPaths(portfolioId);
+    return { success: true, data: undefined };
   } catch (error) {
     return { success: false, error: toPlatformProjectWriteUserMessage(error) };
   }
