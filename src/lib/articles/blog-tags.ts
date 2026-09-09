@@ -1,9 +1,11 @@
 /** Filter pills shown on the blog index (excludes generic tags). */
 export const BLOG_TAG_FILTERS = [
   "All",
+  "Software Engineering",
+  "System Design",
+  "Business",
   "Algorithms",
   "Data Structures",
-  "TypeScript",
   "Next.js",
 ] as const;
 
@@ -12,11 +14,13 @@ export type BlogTagFilter = (typeof BLOG_TAG_FILTERS)[number];
 const EXCLUDED_PRIMARY_TAGS = new Set(["Programming", "Coding"]);
 
 const FILTER_TAG_SET = new Set<string>(
-  BLOG_TAG_FILTERS.filter((tag) => tag !== "All")
+  BLOG_TAG_FILTERS.filter((tag) => tag !== "All"),
 );
 
 /** Primary tag for cards: prefer filter-relevant tags, skip generic labels. */
-export function getPrimaryArticleTag(tags: string[] | undefined): string | undefined {
+export function getPrimaryArticleTag(
+  tags: string[] | undefined,
+): string | undefined {
   if (!tags?.length) {
     return undefined;
   }
@@ -34,7 +38,7 @@ export function getPrimaryArticleTag(tags: string[] | undefined): string | undef
 
 export function articleMatchesTagFilter(
   tags: string[] | undefined,
-  filter: BlogTagFilter
+  filter: BlogTagFilter,
 ): boolean {
   if (filter === "All") {
     return true;

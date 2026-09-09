@@ -26,7 +26,8 @@
     "audit:production": "npm audit --omit=dev --audit-level=high",
     "audit:all": "npm audit --audit-level=high",
     "ci:install": "npm ci && npm run ci",
-    "ci:github": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ci AUTH_SECRET=ci-placeholder-secret-min-32-chars-long!! NEXTAUTH_SECRET=ci-placeholder-secret-min-32-chars-long!! NEXTAUTH_URL=http://localhost:3000 PROJECT_READ_SOURCE=database PROJECT_WRITE_SOURCE=platform-api npm run ci"
+    "ci:github": "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ci AUTH_SECRET=ci-placeholder-secret-min-32-chars-long!! NEXTAUTH_SECRET=ci-placeholder-secret-min-32-chars-long!! NEXTAUTH_URL=http://localhost:3000 PROJECT_READ_SOURCE=database PROJECT_WRITE_SOURCE=platform-api npm run ci",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1114.0",
@@ -115,7 +116,7 @@
     "postcss": "8.5.25",
     "brace-expansion": "5.0.9",
     "minimatch": "10.2.6",
-    "sharp": "0.35.3",
+    "sharp": "0.35.4",
     "valibot": "1.4.2",
     "@prisma/dev": {
       "@hono/node-server": "2.0.12"

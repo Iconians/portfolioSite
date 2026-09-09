@@ -24,8 +24,9 @@ export default async function BlogIndex() {
                 <Heading variant="eyebrow">WRITING</Heading>
                 <Heading level={1}>Engineering articles</Heading>
                 <Text variant="description">
-                  Technical writing on algorithms, data structures, migrations,
-                  and engineering practice.
+                  Writing on software engineering, system design, architecture,
+                  algorithms, and the decisions behind building software that
+                  solves real problems.
                 </Text>
                 <Text variant="muted" className="text-sm">
                   {posts.length} articles
