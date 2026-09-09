@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 
 import { Section } from "@/components/layout/Section";
-import { Inline , Stack } from "@/components/layout/Stack";
+import { Inline, Stack } from "@/components/layout/Stack";
 import { Heading } from "@/components/typography/Heading";
 import { Text } from "@/components/typography/Text";
 import { Button } from "@/components/ui/button";
@@ -57,8 +57,8 @@ export default function FeaturedArticles({
         <Heading variant="eyebrow">WRITING</Heading>
         <Heading level={2}>Engineering articles</Heading>
         <Text variant="description">
-          Technical writing on algorithms, data structures, migrations, and
-          engineering practice.
+          Writing on software engineering, system design, architecture, and
+          building software around real business problems.
         </Text>
       </Stack>
 
