@@ -52,10 +52,13 @@ export function CtaForm() {
   const { form, status, isSubmitting, updateField, handleSubmit } =
     useInquiryForm();
 
+  const showForm = status.kind !== "success";
+
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
       <InquiryStatusBanner status={status} />
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4" autoComplete="on">
+      {showForm ? (
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4" autoComplete="on">
         <div className="flex w-full flex-col gap-2 sm:flex-row">
           {INQUIRY_FORM_FIELDS.slice(0, 2).map((field) => (
             <FormInput
@@ -107,6 +110,7 @@ export function CtaForm() {
           {isSubmitting ? "Sending..." : "Submit"}
         </Button>
       </form>
+      ) : null}
     </div>
   );
 }
