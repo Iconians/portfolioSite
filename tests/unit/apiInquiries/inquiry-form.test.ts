@@ -132,5 +132,6 @@ describe("CtaForm component contract", () => {
     expect(hookSource.includes("error: ${result.reason}")).toBe(false);
     expect(hookSource.includes("getInquiryFeedbackMessage")).toBe(true);
     expect(hookSource.includes("setForm(INITIAL_INQUIRY_FORM_STATE)")).toBe(true);
+    expect(source.includes('status.kind !== "success"')).toBe(true);
   });
 });
