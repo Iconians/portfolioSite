@@ -7,6 +7,7 @@ import { CONTACT_HREF } from "@/components/Nav/navigationLinks";
 import { Heading } from "@/components/typography/Heading";
 import { Text } from "@/components/typography/Text";
 import { Button } from "@/components/ui/button";
+import { CtaForm } from "@/lib/apiInquiries/ctaForm";
 import {
   ABOUT_VALUE_PRINCIPLES,
   ENGINEERING_PRINCIPLES,
@@ -99,9 +100,16 @@ export function AboutFocusSection() {
       </Stack>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         {FOCUS_AREAS.map((area) => (
-          <Surface key={area.title} variant="card" padding="default" className="h-full">
+          <Surface
+            key={area.title}
+            variant="card"
+            padding="default"
+            className="h-full"
+          >
             <Stack gap="sm">
-              <Heading level={3} className="text-xl">{area.title}</Heading>
+              <Heading level={3} className="text-xl">
+                {area.title}
+              </Heading>
               <Text variant="muted" className="text-sm leading-relaxed">
                 {area.description}
               </Text>
@@ -120,13 +128,16 @@ export function AboutPrinciplesSection() {
         <Heading variant="eyebrow">PRINCIPLES</Heading>
         <Heading level={2}>Engineering principles</Heading>
         <Text variant="description">
-          How I approach architecture, performance, and long-term maintainability.
+          How I approach architecture, performance, and long-term
+          maintainability.
         </Text>
       </Stack>
       <ul className="mb-8 list-none space-y-4">
         {ENGINEERING_PRINCIPLES.map((item) => (
           <li key={item.title} className="flex gap-3">
-            <span className="shrink-0 font-medium text-muted-foreground">•</span>
+            <span className="shrink-0 font-medium text-muted-foreground">
+              •
+            </span>
             <span>
               <strong className="font-semibold text-foreground">
                 {item.title}
@@ -155,7 +166,11 @@ export function AboutSkillsSection({
   return (
     <Section id="skills" className="py-16">
       <Stack gap="lg">
-        <AboutSkillsGroup title="Core technologies" items={skills} listKey="core" />
+        <AboutSkillsGroup
+          title="Core technologies"
+          items={skills}
+          listKey="core"
+        />
         <AboutSkillsGroup
           title="Engineering"
           items={engineeringSkills}
@@ -190,21 +205,14 @@ export function AboutCtaSection() {
     <Section className="py-16">
       <Surface variant="card" padding="default" className="text-center">
         <Stack gap="md" className="items-center">
-          <Heading level={2} className="text-2xl">Let&apos;s build together</Heading>
+          <Heading level={2} className="text-2xl">
+            Let&apos;s build together
+          </Heading>
           <Text variant="description" className="max-w-xl text-pretty">
             If you&apos;re looking for someone who thinks through the full
             system—from architecture to deployment—I&apos;d be glad to connect.
           </Text>
-          <Button asChild>
-            <a
-              href={CONTACT_HREF}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="no-underline hover:no-underline"
-            >
-              Get in touch
-            </a>
-          </Button>
+          <CtaForm />
         </Stack>
       </Surface>
     </Section>
